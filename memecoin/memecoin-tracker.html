@@ -16,7 +16,7 @@ body {
 
 .header {
   background: linear-gradient(135deg, #1a1a2e, #16213e);
-  padding: 16px 24px;
+  padding: 14px 20px;
   border-bottom: 1px solid #2a2a4a;
   display: flex;
   align-items: center;
@@ -26,7 +26,7 @@ body {
 }
 
 .header h1 {
-  font-size: 20px;
+  font-size: 18px;
   background: linear-gradient(90deg, #00f0ff, #b026ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -40,21 +40,21 @@ body {
   flex-wrap: wrap;
 }
 
-.controls select, .controls input {
+select, input[type="number"], input[type="text"] {
   background: #111;
   color: #e0e0e0;
   border: 1px solid #333;
-  padding: 7px 10px;
-  border-radius: 6px;
+  padding: 6px 10px;
+  border-radius: 5px;
   font-size: 12px;
 }
 
-.controls select:focus, .controls input:focus { outline: none; border-color: #00f0ff; }
+select:focus, input:focus { outline: none; border-color: #00f0ff; }
 
 .btn {
-  padding: 7px 14px;
+  padding: 6px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
@@ -63,15 +63,14 @@ body {
 
 .btn-primary { background: linear-gradient(135deg, #00f0ff, #0080ff); color: #000; }
 .btn-primary:hover { opacity: 0.85; }
-.btn-sm { padding: 4px 10px; font-size: 11px; }
 
 .status-bar {
   background: #111118;
-  padding: 8px 24px;
+  padding: 8px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: 11px;
   color: #888;
   border-bottom: 1px solid #1a1a2a;
 }
@@ -81,247 +80,120 @@ body {
   background: #00ff88;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 6px;
+  margin-right: 5px;
   animation: pulse 1.5s infinite;
 }
 
 .paused .live-dot { background: #ff3355; animation: none; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
 
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-/* Filter panel */
-.filter-panel {
-  background: #111118;
-  border-bottom: 1px solid #1a1a2a;
-  padding: 12px 24px;
+/* Filter bar */
+.filter-bar {
+  background: #0d0d16;
+  padding: 10px 20px;
   display: flex;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
   align-items: flex-end;
+  border-bottom: 1px solid #1a1a2a;
 }
 
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.fg { display: flex; flex-direction: column; gap: 3px; }
+.fg label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+.fg input, .fg select { width: 110px; }
 
-.filter-group label {
-  font-size: 10px;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.filter-group input, .filter-group select {
-  background: #0a0a0f;
-  color: #e0e0e0;
-  border: 1px solid #2a2a3a;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  width: 120px;
-}
-
-.filter-group input:focus, .filter-group select:focus { outline: none; border-color: #00f0ff; }
-
-.filter-group .toggle-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.toggle {
-  position: relative;
-  width: 36px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.toggle input { display: none; }
-
-.toggle .slider {
-  position: absolute;
-  inset: 0;
-  background: #333;
-  border-radius: 10px;
-  transition: 0.2s;
-}
-
-.toggle .slider::before {
-  content: '';
-  position: absolute;
-  width: 14px; height: 14px;
-  left: 3px; top: 3px;
-  background: #888;
-  border-radius: 50%;
-  transition: 0.2s;
-}
-
-.toggle input:checked + .slider { background: #00f0ff44; }
-.toggle input:checked + .slider::before { transform: translateX(16px); background: #00f0ff; }
-
-.filter-preset {
+.preset {
   padding: 5px 12px;
-  border-radius: 14px;
+  border-radius: 12px;
   font-size: 11px;
   cursor: pointer;
   border: 1px solid #333;
   background: #111;
   color: #aaa;
-  transition: all 0.2s;
-  white-space: nowrap;
+  transition: 0.2s;
 }
 
-.filter-preset:hover { border-color: #555; }
-.filter-preset.active { background: #00f0ff22; border-color: #00f0ff; color: #00f0ff; }
+.preset:hover { border-color: #555; }
+.preset.active { background: #00f0ff22; border-color: #00f0ff; color: #00f0ff; }
 
-.main { padding: 16px 24px; }
+.toggle-wrap { display: flex; align-items: center; gap: 6px; height: 30px; }
+.toggle-wrap label.tl { font-size: 11px; color: #aaa; cursor: pointer; }
 
-.stats-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
+.cb { width: 16px; height: 16px; accent-color: #00f0ff; cursor: pointer; }
+
+.main { padding: 14px 20px; }
+
+.stats-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
 
 .stat-box {
   background: #12121e;
   border: 1px solid #1e1e35;
-  border-radius: 8px;
-  padding: 10px 16px;
-  min-width: 130px;
+  border-radius: 7px;
+  padding: 8px 14px;
   flex: 1;
+  min-width: 110px;
 }
 
-.stat-box .stat-label { font-size: 10px; color: #666; margin-bottom: 3px; }
-.stat-box .stat-value { font-size: 18px; font-weight: 700; color: #fff; }
+.stat-box .sl { font-size: 9px; color: #555; margin-bottom: 2px; }
+.stat-box .sv { font-size: 16px; font-weight: 700; color: #fff; }
 
-.chain-chips {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
+.chips { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
 
 .chip {
-  padding: 5px 12px;
-  border-radius: 14px;
+  padding: 4px 11px;
+  border-radius: 12px;
   font-size: 11px;
   cursor: pointer;
   border: 1px solid #333;
   background: #111;
   color: #aaa;
-  transition: all 0.2s;
+  transition: 0.2s;
 }
 
 .chip.active { background: #00f0ff22; border-color: #00f0ff; color: #00f0ff; }
-.chip:hover { border-color: #555; }
+
+.hidden-msg {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background: #12121e;
+  border-radius: 5px;
+  border: 1px solid #1e1e35;
+}
 
 .pair-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  gap: 10px;
 }
 
 .pair-card {
   background: #12121e;
   border: 1px solid #1e1e35;
-  border-radius: 10px;
-  padding: 14px;
-  transition: all 0.2s;
+  border-radius: 9px;
+  padding: 12px;
   position: relative;
   overflow: hidden;
+  transition: 0.2s;
 }
 
-.pair-card:hover { border-color: #3a3a5a; transform: translateY(-1px); }
-.pair-card.new-flash { animation: flash 1.5s ease-out; }
-.pair-card.flagged { border-color: #ff335544; }
+.pair-card:hover { border-color: #3a3a5a; }
+.pair-card.flash { animation: flash 1.5s ease-out; }
+.pair-card.danger-border { border-color: #ff335544; }
 
 @keyframes flash {
-  0% { border-color: #00f0ff; box-shadow: 0 0 20px #00f0ff33; }
+  0% { border-color: #00f0ff; box-shadow: 0 0 15px #00f0ff33; }
   100% { border-color: #1e1e35; box-shadow: none; }
 }
 
-.pair-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.card-name { font-size: 14px; font-weight: 700; color: #fff; }
+.card-age { font-size: 10px; color: #555; margin-top: 2px; }
+.card-ca { font-size: 9px; color: #444; margin-top: 2px; cursor: pointer; word-break: break-all; }
+.card-ca:hover { color: #666; }
 
-.pair-name { font-size: 15px; font-weight: 700; color: #fff; }
-
-.pair-chain {
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.chain-solana { background: #9945ff22; color: #9945ff; }
-.chain-ethereum { background: #627eea22; color: #627eea; }
-.chain-bsc { background: #f3ba2f22; color: #f3ba2f; }
-.chain-base { background: #0052ff22; color: #0052ff; }
-.chain-other { background: #55555522; color: #888; }
-
-.pair-age { font-size: 11px; color: #666; margin-top: 2px; }
-.pair-addr { font-size: 10px; color: #444; margin-top: 2px; word-break: break-all; cursor: pointer; }
-.pair-addr:hover { color: #666; }
-
-.pair-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 10px;
-  font-size: 11px;
-}
-
-.meta-item { display: flex; flex-direction: column; gap: 1px; }
-.meta-label { color: #555; font-size: 10px; }
-.meta-value { color: #ccc; font-weight: 600; }
-.meta-value.green { color: #00ff88; }
-.meta-value.red { color: #ff3355; }
-.meta-value.yellow { color: #f3ba2f; }
-
-/* Safety score bar */
-.safety-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.safety-bar {
-  flex: 1;
-  height: 6px;
-  background: #1a1a2a;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.safety-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s;
-}
-
-.safety-label {
-  font-size: 10px;
-  font-weight: 700;
-  min-width: 55px;
-  text-align: right;
-}
-
-.flags {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.flag {
+.chain-tag {
   font-size: 9px;
   padding: 2px 6px;
   border-radius: 3px;
@@ -329,100 +201,128 @@ body {
   text-transform: uppercase;
 }
 
-.flag-danger { background: #ff335522; color: #ff3355; }
-.flag-warn { background: #f3ba2f22; color: #f3ba2f; }
-.flag-good { background: #00ff8822; color: #00ff88; }
+.ct-solana { background: #9945ff22; color: #9945ff; }
+.ct-ethereum { background: #627eea22; color: #627eea; }
+.ct-bsc { background: #f3ba2f22; color: #f3ba2f; }
+.ct-base { background: #0052ff22; color: #0052ff; }
+.ct-other { background: #33333322; color: #666; }
 
-.pair-links {
+/* Rug check result */
+.rug-result {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
-.pair-link {
+.rug-good { background: #00ff8815; color: #00ff88; border: 1px solid #00ff8833; }
+.rug-warn { background: #f3ba2f15; color: #f3ba2f; border: 1px solid #f3ba2f33; }
+.rug-bad { background: #ff335515; color: #ff3355; border: 1px solid #ff335533; }
+.rug-loading { background: #33333315; color: #666; border: 1px solid #33333333; }
+
+.rug-score-bar {
+  width: 60px;
+  height: 5px;
+  background: #1a1a2a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rug-score-fill { height: 100%; border-radius: 3px; }
+
+.flags { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 6px; }
+
+.flag {
+  font-size: 8px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.fl-danger { background: #ff335522; color: #ff3355; }
+.fl-warn { background: #f3ba2f22; color: #f3ba2f; }
+.fl-good { background: #00ff8822; color: #00ff88; }
+
+.card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 8px;
   font-size: 10px;
-  padding: 4px 9px;
-  border-radius: 5px;
+}
+
+.mi { display: flex; flex-direction: column; gap: 1px; }
+.ml { color: #444; font-size: 9px; }
+.mv { color: #bbb; font-weight: 600; }
+.mv.green { color: #00ff88; }
+.mv.red { color: #ff3355; }
+
+.card-links { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.cl {
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 4px;
   text-decoration: none;
   font-weight: 600;
-  transition: opacity 0.2s;
+  transition: 0.2s;
 }
 
-.pair-link:hover { opacity: 0.8; }
-.link-twitter { background: #1da1f222; color: #1da1f2; }
-.link-dex { background: #00f0ff22; color: #00f0ff; }
-.link-scan { background: #00ff8822; color: #00ff88; }
-.link-rugcheck { background: #b026ff22; color: #b026ff; }
+.cl:hover { opacity: 0.8; }
+.cl-tw { background: #1da1f222; color: #1da1f2; }
+.cl-dex { background: #00f0ff22; color: #00f0ff; }
+.cl-scan { background: #00ff8822; color: #00ff88; }
+.cl-rug { background: #b026ff22; color: #b026ff; }
 
-.traction-badge {
+.traction {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 9px;
-  padding: 2px 7px;
-  border-radius: 4px;
+  top: 8px;
+  right: 8px;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 3px;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.traction-hot { background: #ff335522; color: #ff3355; }
-.traction-warm { background: #f3ba2f22; color: #f3ba2f; }
-.traction-new { background: #00ff8822; color: #00ff88; }
+.tr-hot { background: #ff335522; color: #ff3355; }
+.tr-warm { background: #f3ba2f22; color: #f3ba2f; }
+.tr-new { background: #00ff8822; color: #00ff88; }
 
-.empty-state { text-align: center; padding: 50px 20px; color: #555; }
-.empty-state h2 { margin-bottom: 8px; color: #666; }
+.empty { text-align: center; padding: 40px 20px; color: #444; }
+.empty h2 { color: #555; margin-bottom: 6px; font-size: 16px; }
 
-.loading-spinner {
+.spinner {
   display: inline-block;
-  width: 14px; height: 14px;
+  width: 12px; height: 12px;
   border: 2px solid #333;
   border-top-color: #00f0ff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-right: 5px;
+  margin-right: 4px;
   vertical-align: middle;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.search-box {
-  background: #111;
-  border: 1px solid #333;
-  padding: 7px 10px;
-  border-radius: 6px;
-  color: #e0e0e0;
-  font-size: 12px;
-  width: 180px;
-}
-
-.search-box:focus { outline: none; border-color: #00f0ff; }
-
-.hidden-count {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 10px;
-  padding: 6px 12px;
-  background: #12121e;
-  border-radius: 6px;
-  border: 1px solid #1e1e35;
-  display: none;
-}
-
-.sound-toggle {
+.sound-btn {
   cursor: pointer;
-  font-size: 16px;
-  padding: 4px 8px;
-  border-radius: 5px;
+  font-size: 14px;
+  padding: 3px 6px;
+  border-radius: 4px;
   background: #111;
   border: 1px solid #333;
 }
 
 @media (max-width: 700px) {
-  .header { padding: 12px; }
-  .main { padding: 12px; }
+  .header, .main, .filter-bar { padding: 10px; }
   .pair-grid { grid-template-columns: 1fr; }
-  .filter-panel { padding: 10px 12px; }
-  .pair-meta { grid-template-columns: 1fr 1fr; }
+  .card-meta { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -431,785 +331,646 @@ body {
 <div class="header">
   <h1>MEMECOIN PAIR TRACKER</h1>
   <div class="controls">
-    <input type="text" class="search-box" id="searchInput" placeholder="Search token / CA...">
+    <input type="text" id="searchInput" placeholder="Search token / CA..." style="width:160px;">
     <select id="sortBy">
       <option value="newest">Newest First</option>
-      <option value="safety">Safest First</option>
+      <option value="rugScore">Best Rug Score</option>
       <option value="liquidity">Highest Liquidity</option>
       <option value="volume">Highest Volume</option>
       <option value="priceChange">Biggest Gainers</option>
-      <option value="txns">Most Transactions</option>
     </select>
     <select id="refreshInterval">
       <option value="5000">Refresh: 5s</option>
       <option value="10000" selected>Refresh: 10s</option>
       <option value="15000">Refresh: 15s</option>
       <option value="30000">Refresh: 30s</option>
-      <option value="0">Manual Only</option>
     </select>
-    <button class="btn btn-primary" onclick="fetchPairs()">Refresh Now</button>
-    <span class="sound-toggle" id="soundToggle" title="Alert sound on new pairs" onclick="toggleSound()">🔇</span>
+    <button class="btn btn-primary" onclick="fetchNewPairs()">Refresh</button>
+    <span class="sound-btn" id="soundBtn" onclick="toggleSound()">🔇</span>
   </div>
 </div>
 
 <div class="status-bar" id="statusBar">
-  <div>
-    <span class="live-dot"></span>
-    <span id="statusText">Connecting...</span>
-  </div>
-  <div id="lastUpdate">Last update: --</div>
+  <div><span class="live-dot"></span><span id="statusText">Starting up...</span></div>
+  <div id="lastUpdate">--</div>
 </div>
 
-<!-- SCAM FILTER PANEL -->
-<div class="filter-panel" id="filterPanel">
-  <div class="filter-group">
-    <label>Min Liquidity ($)</label>
-    <input type="number" id="filterMinLiq" value="1000" min="0" step="500">
+<div class="filter-bar">
+  <div class="fg">
+    <label>Min Liquidity</label>
+    <input type="number" id="fMinLiq" value="1000" min="0" step="500">
   </div>
-  <div class="filter-group">
-    <label>Min 24h Volume ($)</label>
-    <input type="number" id="filterMinVol" value="500" min="0" step="500">
+  <div class="fg">
+    <label>Min Volume 24h</label>
+    <input type="number" id="fMinVol" value="0" min="0" step="500">
   </div>
-  <div class="filter-group">
-    <label>Min Transactions (24h)</label>
-    <input type="number" id="filterMinTxns" value="10" min="0" step="5">
+  <div class="fg">
+    <label>Min Txns 24h</label>
+    <input type="number" id="fMinTxns" value="5" min="0" step="5">
   </div>
-  <div class="filter-group">
+  <div class="fg">
     <label>Max Age</label>
-    <select id="filterMaxAge">
-      <option value="0">Any</option>
+    <select id="fMaxAge">
       <option value="5">5 min</option>
       <option value="15">15 min</option>
       <option value="30">30 min</option>
       <option value="60" selected>1 hour</option>
       <option value="360">6 hours</option>
       <option value="1440">24 hours</option>
+      <option value="0">Any</option>
     </select>
   </div>
-  <div class="filter-group">
-    <label>Min Buy/Sell Ratio</label>
-    <input type="number" id="filterMinBuySell" value="0.3" min="0" max="10" step="0.1" title="Min ratio of sells to buys (low = possible honeypot)">
-  </div>
-  <div class="filter-group">
-    <label>Hide Honeypots</label>
-    <div class="toggle-row">
-      <label class="toggle">
-        <input type="checkbox" id="filterHoneypot" checked>
-        <span class="slider"></span>
-      </label>
+  <div class="fg">
+    <label>Options</label>
+    <div class="toggle-wrap">
+      <input type="checkbox" class="cb" id="fHideRugs" checked>
+      <label class="tl" for="fHideRugs">Hide Rugs</label>
     </div>
   </div>
-  <div class="filter-group">
-    <label>Hide Low Score</label>
-    <div class="toggle-row">
-      <label class="toggle">
-        <input type="checkbox" id="filterLowScore" checked>
-        <span class="slider"></span>
-      </label>
-    </div>
-  </div>
-  <div class="filter-group">
+  <div class="fg">
     <label>Presets</label>
-    <div style="display:flex;gap:5px;flex-wrap:wrap;">
-      <span class="filter-preset" onclick="applyPreset('degen')">Degen (No Filter)</span>
-      <span class="filter-preset active" onclick="applyPreset('safe')">Safe</span>
-      <span class="filter-preset" onclick="applyPreset('strict')">Strict</span>
+    <div style="display:flex;gap:4px;">
+      <span class="preset" onclick="setPreset('degen',this)">Degen</span>
+      <span class="preset active" onclick="setPreset('safe',this)">Safe</span>
+      <span class="preset" onclick="setPreset('strict',this)">Strict</span>
     </div>
   </div>
 </div>
 
 <div class="main">
   <div class="stats-row">
-    <div class="stat-box">
-      <div class="stat-label">New Pairs Found</div>
-      <div class="stat-value" id="statTotal">--</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Showing (After Filters)</div>
-      <div class="stat-value" id="statShowing">--</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Filtered Out (Trash)</div>
-      <div class="stat-value" id="statFiltered">--</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Avg Safety Score</div>
-      <div class="stat-value" id="statAvgSafety">--</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Top Gainer</div>
-      <div class="stat-value" id="statTopGainer">--</div>
-    </div>
+    <div class="stat-box"><div class="sl">Total Found</div><div class="sv" id="sTotal">--</div></div>
+    <div class="stat-box"><div class="sl">Showing</div><div class="sv" id="sShowing">--</div></div>
+    <div class="stat-box"><div class="sl">Rugs Filtered</div><div class="sv" id="sRugs">--</div></div>
+    <div class="stat-box"><div class="sl">Rug Checked</div><div class="sv" id="sChecked">--</div></div>
+    <div class="stat-box"><div class="sl">Top Gainer</div><div class="sv" id="sGainer">--</div></div>
   </div>
 
-  <div class="chain-chips">
-    <div class="chip active" data-chain="all" onclick="setChain(this,'all')">All Chains</div>
-    <div class="chip" data-chain="solana" onclick="setChain(this,'solana')">Solana</div>
-    <div class="chip" data-chain="ethereum" onclick="setChain(this,'ethereum')">Ethereum</div>
-    <div class="chip" data-chain="bsc" onclick="setChain(this,'bsc')">BSC</div>
-    <div class="chip" data-chain="base" onclick="setChain(this,'base')">Base</div>
+  <div class="chips">
+    <div class="chip active" onclick="setChain('all',this)">All</div>
+    <div class="chip" onclick="setChain('solana',this)">Solana</div>
+    <div class="chip" onclick="setChain('eth',this)">Ethereum</div>
+    <div class="chip" onclick="setChain('bsc',this)">BSC</div>
+    <div class="chip" onclick="setChain('base',this)">Base</div>
   </div>
 
-  <div class="hidden-count" id="hiddenCount"></div>
+  <div class="hidden-msg" id="hiddenMsg" style="display:none;"></div>
 
-  <div class="pair-grid" id="pairGrid">
-    <div class="empty-state">
-      <h2>Loading new pairs...</h2>
-      <p><span class="loading-spinner"></span> Fetching latest pairs from DEXScreener</p>
+  <div class="pair-grid" id="grid">
+    <div class="empty">
+      <h2>Loading brand new pairs...</h2>
+      <p><span class="spinner"></span> Fetching from GeckoTerminal + running rug checks</p>
     </div>
   </div>
 </div>
 
 <script>
-let allPairs = [];
-let seenAddresses = new Set();
-let refreshTimer = null;
+// ==================== STATE ====================
+let allPairs = new Map(); // pairId -> pair data
+let rugResults = new Map(); // tokenAddress -> { status, risks, score }
+let rugCheckQueue = [];
+let rugChecking = false;
+let seenIds = new Set();
 let chainFilter = 'all';
-let soundEnabled = false;
-let fetchInProgress = false;
-let pairScoreCache = new Map();
+let soundOn = false;
+let refreshTimer = null;
+let fetching = false;
+let rugCheckedCount = 0;
+let rugsFound = 0;
 
-// ==================== SAFETY SCORING ====================
-// This analyzes each pair for red flags and gives a 0-100 score
+// GeckoTerminal network IDs
+const NETWORKS = {
+  solana: 'solana',
+  eth: 'eth',
+  bsc: 'bsc',
+  base: 'base',
+};
 
-function scorePair(pair) {
-  const cached = pairScoreCache.get(pair.pairAddress);
-  if (cached && cached.ts > Date.now() - 30000) return cached;
+const CHAIN_LABELS = { solana: 'Solana', eth: 'Ethereum', bsc: 'BSC', base: 'Base' };
 
-  let score = 50; // start neutral
-  const flags = [];
-  const buys = pair.txns?.h24?.buys || 0;
-  const sells = pair.txns?.h24?.sells || 0;
-  const totalTxns = buys + sells;
-  const liq = pair.liquidity?.usd || 0;
-  const vol = pair.volume?.h24 || 0;
-  const fdv = pair.fdv || 0;
-  const priceChange5m = pair.priceChange?.m5 || 0;
-  const priceChange1h = pair.priceChange?.h1 || 0;
-  const priceChange24h = pair.priceChange?.h24 || 0;
+const EXPLORERS = {
+  solana: 'https://solscan.io/token/',
+  eth: 'https://etherscan.io/token/',
+  bsc: 'https://bscscan.com/token/',
+  base: 'https://basescan.org/token/',
+};
 
-  // --- HONEYPOT DETECTION ---
-  // If there are buys but zero sells, likely honeypot
-  if (buys > 10 && sells === 0) {
-    score -= 40;
-    flags.push({ text: 'HONEYPOT: 0 sells', type: 'danger' });
-  } else if (buys > 5 && sells <= 1) {
-    score -= 25;
-    flags.push({ text: 'Possible honeypot', type: 'danger' });
-  }
+// ==================== GECKO TERMINAL API ====================
+// This endpoint returns ACTUALLY new pools as they are created
 
-  // Very low sell ratio
-  if (totalTxns > 10) {
-    const sellRatio = sells / buys;
-    if (sellRatio < 0.1) {
-      score -= 20;
-      flags.push({ text: 'Sell ratio ' + (sellRatio * 100).toFixed(0) + '%', type: 'danger' });
-    } else if (sellRatio < 0.3) {
-      score -= 10;
-      flags.push({ text: 'Low sell ratio', type: 'warn' });
-    } else if (sellRatio >= 0.3) {
-      score += 5;
-      flags.push({ text: 'Healthy buy/sell', type: 'good' });
+async function fetchNewPairs() {
+  if (fetching) return;
+  fetching = true;
+  const st = document.getElementById('statusText');
+  st.innerHTML = '<span class="spinner"></span> Scanning all chains for new pairs...';
+
+  const prevSize = allPairs.size;
+  let newCount = 0;
+
+  try {
+    // Fetch new pools from all chains in parallel
+    const chains = Object.keys(NETWORKS);
+    const fetches = chains.map(chain =>
+      fetch(`https://api.geckoterminal.com/api/v2/networks/${NETWORKS[chain]}/new_pools?page=1`, {
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+      .then(data => ({ chain, data }))
+    );
+
+    // Also fetch page 2 for more coverage
+    const fetches2 = chains.map(chain =>
+      fetch(`https://api.geckoterminal.com/api/v2/networks/${NETWORKS[chain]}/new_pools?page=2`, {
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+      .then(data => ({ chain, data }))
+    );
+
+    const results = await Promise.all([...fetches, ...fetches2]);
+
+    for (const { chain, data } of results) {
+      if (!data || !data.data) continue;
+
+      for (const pool of data.data) {
+        const attrs = pool.attributes || {};
+        const id = pool.id; // e.g. "solana_abc123"
+        const pairAddr = attrs.address || '';
+
+        // Extract token info from the name (format: "TOKEN / QUOTE")
+        const nameParts = (attrs.name || '').split(' / ');
+        const baseSymbol = nameParts[0] || '???';
+        const quoteSymbol = nameParts[1] || '???';
+
+        // Parse the pool data into our format
+        const pair = {
+          id: id,
+          chain: chain,
+          pairAddress: pairAddr,
+          baseSymbol: baseSymbol.trim(),
+          quoteSymbol: quoteSymbol.trim(),
+          baseName: attrs.base_token_name || baseSymbol,
+          baseAddress: attrs.base_token_address || '',
+          quoteAddress: attrs.quote_token_address || '',
+          priceUsd: parseFloat(attrs.base_token_price_usd) || 0,
+          priceChange5m: parseFloat(attrs.price_change_percentage?.m5) || 0,
+          priceChange1h: parseFloat(attrs.price_change_percentage?.h1) || 0,
+          priceChange24h: parseFloat(attrs.price_change_percentage?.h24) || 0,
+          volume24h: parseFloat(attrs.volume_usd?.h24) || 0,
+          volume1h: parseFloat(attrs.volume_usd?.h1) || 0,
+          reserveUsd: parseFloat(attrs.reserve_in_usd) || 0, // this is liquidity
+          fdvUsd: parseFloat(attrs.fdv_usd) || 0,
+          txns24hBuys: attrs.transactions?.h24?.buys || 0,
+          txns24hSells: attrs.transactions?.h24?.sells || 0,
+          txns1hBuys: attrs.transactions?.h1?.buys || 0,
+          txns1hSells: attrs.transactions?.h1?.sells || 0,
+          createdAt: attrs.pool_created_at ? new Date(attrs.pool_created_at).getTime() : Date.now(),
+        };
+
+        const existed = allPairs.has(id);
+        allPairs.set(id, pair);
+
+        if (!existed) {
+          newCount++;
+          // Queue for rug check if Solana
+          if (chain === 'solana' && pair.baseAddress) {
+            queueRugCheck(pair.baseAddress);
+          }
+        }
+      }
     }
-  }
 
-  // --- LIQUIDITY CHECKS ---
-  if (liq < 500) {
-    score -= 25;
-    flags.push({ text: 'Micro liq: ' + formatUSD(liq), type: 'danger' });
-  } else if (liq < 2000) {
-    score -= 10;
-    flags.push({ text: 'Low liq', type: 'warn' });
-  } else if (liq >= 10000) {
-    score += 10;
-    flags.push({ text: 'Good liquidity', type: 'good' });
-  } else if (liq >= 5000) {
-    score += 5;
-  }
-
-  // --- VOLUME vs LIQUIDITY (wash trading detection) ---
-  if (liq > 0 && vol > 0) {
-    const volLiqRatio = vol / liq;
-    if (volLiqRatio > 50) {
-      score -= 15;
-      flags.push({ text: 'Suspicious vol/liq ratio', type: 'danger' });
-    } else if (volLiqRatio > 20) {
-      score -= 5;
-      flags.push({ text: 'High vol/liq ratio', type: 'warn' });
+    // Trim to 800 newest
+    if (allPairs.size > 800) {
+      const sorted = [...allPairs.entries()].sort((a, b) => b[1].createdAt - a[1].createdAt);
+      allPairs = new Map(sorted.slice(0, 800));
     }
+
+    if (newCount > 0 && soundOn && prevSize > 0) playAlert();
+
+    render();
+
+    const now = new Date();
+    document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+    st.innerHTML = `<span class="live-dot"></span> Live — ${allPairs.size} pairs | ${newCount} new this scan`;
+    document.getElementById('statusBar').classList.remove('paused');
+
+  } catch (err) {
+    console.error(err);
+    st.textContent = 'Error: ' + err.message;
+    document.getElementById('statusBar').classList.add('paused');
   }
 
-  // --- FDV vs LIQUIDITY (rug indicator) ---
-  if (fdv > 0 && liq > 0) {
-    const fdvLiqRatio = fdv / liq;
-    if (fdvLiqRatio > 100) {
-      score -= 15;
-      flags.push({ text: 'FDV/Liq ratio ' + fdvLiqRatio.toFixed(0) + 'x', type: 'danger' });
-    } else if (fdvLiqRatio > 30) {
-      score -= 5;
-      flags.push({ text: 'High FDV/Liq', type: 'warn' });
-    }
-  }
+  fetching = false;
 
-  // --- TRANSACTION COUNT ---
-  if (totalTxns < 5) {
-    score -= 10;
-    flags.push({ text: 'Very few txns', type: 'warn' });
-  } else if (totalTxns >= 100) {
-    score += 10;
-    flags.push({ text: totalTxns + ' txns', type: 'good' });
-  } else if (totalTxns >= 30) {
-    score += 5;
-  }
-
-  // --- PRICE DUMP DETECTION ---
-  if (priceChange5m < -50) {
-    score -= 20;
-    flags.push({ text: '5m dump ' + priceChange5m.toFixed(0) + '%', type: 'danger' });
-  } else if (priceChange1h < -70) {
-    score -= 15;
-    flags.push({ text: '1h dump ' + priceChange1h.toFixed(0) + '%', type: 'danger' });
-  }
-
-  // --- DEV/INSIDER PROXY: check if top holders own too much ---
-  // DEXScreener doesn't give holder data directly, but we can infer:
-  // If FDV is huge but liq is tiny and few txns, likely insider-held
-  if (fdv > 1000000 && liq < 5000 && totalTxns < 20) {
-    score -= 20;
-    flags.push({ text: 'Likely insider-held', type: 'danger' });
-  }
-
-  // If price pumped 1000%+ with low txns, probably dev manipulation
-  if (priceChange24h > 1000 && totalTxns < 30) {
-    score -= 15;
-    flags.push({ text: 'Pump w/ low txns', type: 'danger' });
-  }
-
-  // Clamp score
-  score = Math.max(0, Math.min(100, score));
-
-  const result = { score, flags, ts: Date.now() };
-  pairScoreCache.set(pair.pairAddress, result);
-  return result;
+  // Process rug check queue
+  processRugQueue();
 }
 
-function getSafetyColor(score) {
-  if (score >= 70) return '#00ff88';
-  if (score >= 40) return '#f3ba2f';
-  return '#ff3355';
+// ==================== RUG CHECK API ====================
+// Checks Solana tokens through RugCheck.xyz API
+
+function queueRugCheck(tokenAddress) {
+  if (rugResults.has(tokenAddress)) return;
+  rugResults.set(tokenAddress, { status: 'pending', risks: [], score: null });
+  rugCheckQueue.push(tokenAddress);
 }
 
-function getSafetyLabel(score) {
-  if (score >= 70) return 'SAFE';
-  if (score >= 40) return 'RISKY';
-  return 'DANGER';
+async function processRugQueue() {
+  if (rugChecking || rugCheckQueue.length === 0) return;
+  rugChecking = true;
+
+  while (rugCheckQueue.length > 0) {
+    const addr = rugCheckQueue.shift();
+    if (!addr) continue;
+
+    // Skip if already checked
+    const existing = rugResults.get(addr);
+    if (existing && existing.status !== 'pending') continue;
+
+    try {
+      const res = await fetch(`https://api.rugcheck.xyz/v1/tokens/${addr}/report/summary`);
+
+      if (res.ok) {
+        const data = await res.json();
+        const risks = data.risks || [];
+        const score = data.score != null ? data.score : null;
+        const tokenName = data.tokenMeta?.name || '';
+        const tokenSymbol = data.tokenMeta?.symbol || '';
+
+        // Determine rug status
+        let status = 'good';
+        const dangerRisks = risks.filter(r => r.level === 'danger' || r.level === 'critical');
+        const warnRisks = risks.filter(r => r.level === 'warn');
+
+        if (dangerRisks.length >= 2 || risks.some(r =>
+          r.name?.toLowerCase().includes('mint authority') ||
+          r.name?.toLowerCase().includes('freeze authority') ||
+          r.name?.toLowerCase().includes('honeypot')
+        )) {
+          status = 'bad';
+          rugsFound++;
+        } else if (dangerRisks.length >= 1 || warnRisks.length >= 2) {
+          status = 'warn';
+        }
+
+        // Check for high owner concentration (insider/dev holdings)
+        const topHolders = data.topHolders || [];
+        let topHolderPct = 0;
+        for (const h of topHolders) {
+          if (h.pct > topHolderPct) topHolderPct = h.pct;
+        }
+
+        if (topHolderPct > 50) {
+          risks.push({ name: `Top holder owns ${topHolderPct.toFixed(1)}%`, level: 'danger', description: 'Massive insider holding — likely dev wallet' });
+          if (status !== 'bad') status = 'bad';
+          if (status === 'good') rugsFound++;
+        } else if (topHolderPct > 20) {
+          risks.push({ name: `Top holder owns ${topHolderPct.toFixed(1)}%`, level: 'warn', description: 'High concentration' });
+          if (status === 'good') status = 'warn';
+        }
+
+        rugResults.set(addr, { status, risks, score, topHolderPct, tokenName, tokenSymbol });
+        rugCheckedCount++;
+      } else {
+        rugResults.set(addr, { status: 'unknown', risks: [], score: null });
+      }
+    } catch (e) {
+      rugResults.set(addr, { status: 'unknown', risks: [], score: null });
+    }
+
+    // Small delay to not hammer the API
+    await new Promise(r => setTimeout(r, 300));
+
+    // Re-render periodically as results come in
+    if (rugCheckQueue.length % 3 === 0) render();
+  }
+
+  rugChecking = false;
+  render(); // Final render after all checks done
 }
 
 // ==================== HELPERS ====================
 
-function formatUSD(n) {
-  if (n == null) return '--';
+function fmtUSD(n) {
+  if (!n && n !== 0) return '--';
   if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
   if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
   return '$' + n.toFixed(0);
 }
 
 function timeAgo(ts) {
-  const diff = Date.now() - ts;
-  const secs = Math.floor(diff / 1000);
-  if (secs < 60) return secs + 's ago';
-  const mins = Math.floor(secs / 60);
-  if (mins < 60) return mins + 'm ago';
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return hrs + 'h ago';
-  return Math.floor(hrs / 24) + 'd ago';
+  const d = Date.now() - ts;
+  const s = Math.floor(d / 1000);
+  if (s < 60) return s + 's ago';
+  const m = Math.floor(s / 60);
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h / 24) + 'd ago';
 }
 
-function getChainClass(id) {
-  id = (id || '').toLowerCase();
-  if (id.includes('solana')) return 'chain-solana';
-  if (id.includes('ethereum') || id === 'eth') return 'chain-ethereum';
-  if (id.includes('bsc') || id.includes('bnb')) return 'chain-bsc';
-  if (id.includes('base')) return 'chain-base';
-  return 'chain-other';
+function chainClass(c) {
+  return 'ct-' + (CHAIN_LABELS[c] ? c : 'other');
 }
 
-function getChainName(id) {
-  id = (id || '').toLowerCase();
-  if (id.includes('solana')) return 'solana';
-  if (id.includes('ethereum') || id === 'eth') return 'ethereum';
-  if (id.includes('bsc') || id.includes('bnb')) return 'bsc';
-  if (id.includes('base')) return 'base';
-  return id;
+function chainLabel(c) {
+  return CHAIN_LABELS[c] || c;
 }
 
-const EXPLORERS = {
-  solana: 'https://solscan.io/token/',
-  ethereum: 'https://etherscan.io/token/',
-  bsc: 'https://bscscan.com/token/',
-  base: 'https://basescan.org/token/',
-};
-
-function getExplorerURL(chainId, addr) {
-  const chain = getChainName(chainId);
-  return (EXPLORERS[chain] || '') + (addr || '');
+function playAlert() {
+  try {
+    const ctx = new AudioContext();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880; o.type = 'sine'; g.gain.value = 0.12;
+    o.start(); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+    o.stop(ctx.currentTime + 0.25);
+  } catch(e) {}
 }
 
-function getRugCheckURL(chainId, addr) {
-  const chain = getChainName(chainId);
-  if (chain === 'solana') return 'https://rugcheck.xyz/tokens/' + addr;
-  if (chain === 'ethereum') return 'https://tokensniffer.com/token/eth/' + addr;
-  if (chain === 'bsc') return 'https://tokensniffer.com/token/bsc/' + addr;
-  if (chain === 'base') return 'https://tokensniffer.com/token/base/' + addr;
-  return '#';
-}
-
-function copyCA(addr) {
-  navigator.clipboard.writeText(addr).catch(() => {});
-}
+function copyCA(addr) { navigator.clipboard.writeText(addr).catch(() => {}); }
 
 // ==================== RENDERING ====================
 
 function renderCard(pair) {
-  const bt = pair.baseToken || {};
-  const qt = pair.quoteToken || {};
-  const { score, flags } = scorePair(pair);
-  const safetyColor = getSafetyColor(score);
-  const safetyLabel = getSafetyLabel(score);
-  const isNew = !seenAddresses.has(pair.pairAddress);
+  const isNew = !seenIds.has(pair.id);
+  const rug = rugResults.get(pair.baseAddress) || null;
+  const buys = pair.txns24hBuys || 0;
+  const sells = pair.txns24hSells || 0;
+  const totalTxns = buys + sells;
+  const vol = pair.volume24h;
 
-  const buys = pair.txns?.h24?.buys || 0;
-  const sells = pair.txns?.h24?.sells || 0;
-  const pc5m = pair.priceChange?.m5;
-  const pc1h = pair.priceChange?.h1;
-  const pc24h = pair.priceChange?.h24;
+  // Traction
+  let trClass = 'tr-new', trLabel = 'NEW';
+  if (vol > 100000 || totalTxns > 500) { trClass = 'tr-hot'; trLabel = 'HOT'; }
+  else if (vol > 10000 || totalTxns > 50) { trClass = 'tr-warm'; trLabel = 'WARM'; }
 
-  const twitterSearch = `https://x.com/search?q=${encodeURIComponent(bt.symbol + ' OR ' + bt.name)}&f=live`;
-  const twitterCashtag = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol || '')}&f=live`;
-  const dexURL = `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
-  const explorerURL = getExplorerURL(pair.chainId, bt.address);
-  const rugcheckURL = getRugCheckURL(pair.chainId, bt.address);
+  // Rug check display
+  let rugHTML = '';
+  if (pair.chain === 'solana' && rug) {
+    if (rug.status === 'pending') {
+      rugHTML = `<div class="rug-result rug-loading"><span class="spinner"></span> Checking RugCheck.xyz...</div>`;
+    } else if (rug.status === 'bad') {
+      const topRisks = rug.risks.slice(0, 3).map(r => r.name).join(' | ');
+      rugHTML = `<div class="rug-result rug-bad">RUG DETECTED — ${topRisks}</div>`;
+    } else if (rug.status === 'warn') {
+      const topRisks = rug.risks.filter(r => r.level !== 'info').slice(0, 2).map(r => r.name).join(' | ');
+      rugHTML = `<div class="rug-result rug-warn">CAUTION — ${topRisks || 'Some risks found'}</div>`;
+    } else if (rug.status === 'good') {
+      rugHTML = `<div class="rug-result rug-good">PASSED — RugCheck OK${rug.score != null ? ' (Score: ' + rug.score + ')' : ''}</div>`;
+    } else {
+      rugHTML = `<div class="rug-result rug-loading">RugCheck unavailable</div>`;
+    }
+  } else if (pair.chain !== 'solana') {
+    // Non-Solana: basic heuristic flags
+    let hFlags = [];
+    if (buys > 10 && sells === 0) hFlags.push({ text: 'HONEYPOT: 0 sells', type: 'danger' });
+    if (pair.reserveUsd < 500) hFlags.push({ text: 'Micro liquidity', type: 'danger' });
+    if (pair.fdvUsd > 0 && pair.reserveUsd > 0 && pair.fdvUsd / pair.reserveUsd > 100)
+      hFlags.push({ text: 'FDV/Liq ' + (pair.fdvUsd / pair.reserveUsd).toFixed(0) + 'x', type: 'danger' });
+    if (vol > 0 && pair.reserveUsd > 0 && vol / pair.reserveUsd > 50)
+      hFlags.push({ text: 'Wash trading suspected', type: 'danger' });
+    if (buys > 5 && sells > 0 && sells / buys >= 0.3)
+      hFlags.push({ text: 'Healthy B/S ratio', type: 'good' });
 
-  const flagsHTML = flags.map(f =>
-    `<span class="flag flag-${f.type}">${f.text}</span>`
-  ).join('');
+    if (hFlags.length > 0) {
+      const hasDanger = hFlags.some(f => f.type === 'danger');
+      const cls = hasDanger ? 'rug-bad' : 'rug-warn';
+      rugHTML = `<div class="rug-result ${cls}">${hFlags.map(f => f.text).join(' | ')}</div>`;
+    }
+  }
 
-  const vol = pair.volume?.h24 || 0;
-  const txns = buys + sells;
-  let tractionClass = 'traction-new', tractionLabel = 'NEW';
-  if (vol > 100000 || txns > 500) { tractionClass = 'traction-hot'; tractionLabel = 'HOT'; }
-  else if (vol > 10000 || txns > 50) { tractionClass = 'traction-warm'; tractionLabel = 'WARM'; }
+  // Flags from rug check risks
+  let flagsHTML = '';
+  if (rug && rug.risks && rug.risks.length > 0) {
+    flagsHTML = '<div class="flags">' + rug.risks.slice(0, 5).map(r => {
+      const t = r.level === 'danger' || r.level === 'critical' ? 'danger' : r.level === 'warn' ? 'warn' : 'good';
+      return `<span class="flag fl-${t}">${r.name}</span>`;
+    }).join('') + '</div>';
+  }
+
+  // Links
+  const twSearch = `https://x.com/search?q=${encodeURIComponent(pair.baseSymbol + ' OR ' + pair.baseName)}&f=live`;
+  const twCash = `https://x.com/search?q=%24${encodeURIComponent(pair.baseSymbol)}&f=live`;
+  const dexURL = `https://dexscreener.com/${pair.chain === 'eth' ? 'ethereum' : pair.chain}/${pair.pairAddress}`;
+  const geckoURL = `https://www.geckoterminal.com/${pair.chain === 'eth' ? 'eth' : pair.chain}/pools/${pair.pairAddress}`;
+  const explorerURL = (EXPLORERS[pair.chain] || '') + pair.baseAddress;
+  const rugcheckURL = pair.chain === 'solana'
+    ? `https://rugcheck.xyz/tokens/${pair.baseAddress}`
+    : `https://tokensniffer.com/token/${pair.chain === 'eth' ? 'eth' : pair.chain}/${pair.baseAddress}`;
+
+  const isDanger = rug && rug.status === 'bad';
 
   return `
-    <div class="pair-card ${isNew ? 'new-flash' : ''} ${score < 30 ? 'flagged' : ''}" data-score="${score}">
-      <span class="traction-badge ${tractionClass}">${tractionLabel}</span>
-      <div class="pair-top">
+    <div class="pair-card ${isNew ? 'flash' : ''} ${isDanger ? 'danger-border' : ''}">
+      <span class="traction ${trClass}">${trLabel}</span>
+      <div class="card-top">
         <div>
-          <div class="pair-name">${bt.symbol || '???'} / ${qt.symbol || '???'}</div>
-          <div class="pair-age">${pair.pairCreatedAt ? timeAgo(pair.pairCreatedAt) : 'Unknown age'}</div>
-          <div class="pair-addr" onclick="copyCA('${bt.address || ''}')" title="Click to copy CA">${bt.address ? bt.address.slice(0, 6) + '...' + bt.address.slice(-4) + ' (copy)' : ''}</div>
+          <div class="card-name">${pair.baseSymbol} / ${pair.quoteSymbol}</div>
+          <div class="card-age">${timeAgo(pair.createdAt)} — ${pair.baseName}</div>
+          <div class="card-ca" onclick="copyCA('${pair.baseAddress}')" title="Click to copy">${pair.baseAddress ? pair.baseAddress.slice(0, 6) + '...' + pair.baseAddress.slice(-4) + ' [copy]' : ''}</div>
         </div>
-        <span class="pair-chain ${getChainClass(pair.chainId)}">${getChainName(pair.chainId)}</span>
+        <span class="chain-tag ${chainClass(pair.chain)}">${chainLabel(pair.chain)}</span>
       </div>
 
-      <div class="safety-row">
-        <span style="font-size:10px;color:#666;">Safety</span>
-        <div class="safety-bar">
-          <div class="safety-fill" style="width:${score}%;background:${safetyColor};"></div>
-        </div>
-        <span class="safety-label" style="color:${safetyColor};">${score}/100 ${safetyLabel}</span>
+      ${rugHTML}
+      ${flagsHTML}
+
+      <div class="card-meta">
+        <div class="mi"><span class="ml">Price</span><span class="mv">${pair.priceUsd ? '$' + pair.priceUsd.toFixed(8) : '--'}</span></div>
+        <div class="mi"><span class="ml">5m</span><span class="mv ${pair.priceChange5m > 0 ? 'green' : pair.priceChange5m < 0 ? 'red' : ''}">${pair.priceChange5m ? (pair.priceChange5m > 0 ? '+' : '') + pair.priceChange5m.toFixed(1) + '%' : '--'}</span></div>
+        <div class="mi"><span class="ml">1h</span><span class="mv ${pair.priceChange1h > 0 ? 'green' : pair.priceChange1h < 0 ? 'red' : ''}">${pair.priceChange1h ? (pair.priceChange1h > 0 ? '+' : '') + pair.priceChange1h.toFixed(1) + '%' : '--'}</span></div>
+        <div class="mi"><span class="ml">Liquidity</span><span class="mv">${fmtUSD(pair.reserveUsd)}</span></div>
+        <div class="mi"><span class="ml">Vol 24h</span><span class="mv">${fmtUSD(pair.volume24h)}</span></div>
+        <div class="mi"><span class="ml">FDV</span><span class="mv">${fmtUSD(pair.fdvUsd)}</span></div>
+        <div class="mi"><span class="ml">Buys 24h</span><span class="mv green">${buys}</span></div>
+        <div class="mi"><span class="ml">Sells 24h</span><span class="mv red">${sells}</span></div>
+        <div class="mi"><span class="ml">B/S Ratio</span><span class="mv ${buys > 0 && sells === 0 ? 'red' : ''}">${buys > 0 ? (sells / buys).toFixed(2) : '--'}</span></div>
       </div>
 
-      <div class="flags">${flagsHTML}</div>
-
-      <div class="pair-meta">
-        <div class="meta-item">
-          <span class="meta-label">Price</span>
-          <span class="meta-value">${pair.priceUsd ? '$' + parseFloat(pair.priceUsd).toFixed(8) : '--'}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">5m</span>
-          <span class="meta-value ${pc5m > 0 ? 'green' : pc5m < 0 ? 'red' : ''}">${pc5m != null ? (pc5m > 0 ? '+' : '') + pc5m.toFixed(1) + '%' : '--'}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">1h</span>
-          <span class="meta-value ${pc1h > 0 ? 'green' : pc1h < 0 ? 'red' : ''}">${pc1h != null ? (pc1h > 0 ? '+' : '') + pc1h.toFixed(1) + '%' : '--'}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Liquidity</span>
-          <span class="meta-value">${formatUSD(pair.liquidity?.usd)}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Volume 24h</span>
-          <span class="meta-value">${formatUSD(pair.volume?.h24)}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">FDV</span>
-          <span class="meta-value">${formatUSD(pair.fdv)}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Buys</span>
-          <span class="meta-value green">${buys}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Sells</span>
-          <span class="meta-value red">${sells}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">B/S Ratio</span>
-          <span class="meta-value ${buys > 0 && sells === 0 ? 'red' : ''}">${buys > 0 ? (sells / buys).toFixed(2) : '--'}</span>
-        </div>
-      </div>
-
-      <div class="pair-links">
-        <a href="${twitterSearch}" target="_blank" class="pair-link link-twitter">X Search</a>
-        <a href="${twitterCashtag}" target="_blank" class="pair-link link-twitter">$${bt.symbol || ''}</a>
-        <a href="${dexURL}" target="_blank" class="pair-link link-dex">DEXScreener</a>
-        <a href="${explorerURL}" target="_blank" class="pair-link link-scan">Explorer</a>
-        <a href="${rugcheckURL}" target="_blank" class="pair-link link-rugcheck">RugCheck</a>
+      <div class="card-links">
+        <a href="${twSearch}" target="_blank" class="cl cl-tw">X Search</a>
+        <a href="${twCash}" target="_blank" class="cl cl-tw">$${pair.baseSymbol}</a>
+        <a href="${dexURL}" target="_blank" class="cl cl-dex">DEXScreener</a>
+        <a href="${geckoURL}" target="_blank" class="cl cl-dex">GeckoTerminal</a>
+        <a href="${explorerURL}" target="_blank" class="cl cl-scan">Explorer</a>
+        <a href="${rugcheckURL}" target="_blank" class="cl cl-rug">RugCheck</a>
       </div>
     </div>
   `;
 }
 
-function getFilterValues() {
-  return {
-    minLiq: parseFloat(document.getElementById('filterMinLiq').value) || 0,
-    minVol: parseFloat(document.getElementById('filterMinVol').value) || 0,
-    minTxns: parseInt(document.getElementById('filterMinTxns').value) || 0,
-    maxAge: parseInt(document.getElementById('filterMaxAge').value) || 0,
-    minBuySell: parseFloat(document.getElementById('filterMinBuySell').value) || 0,
-    hideHoneypot: document.getElementById('filterHoneypot').checked,
-    hideLowScore: document.getElementById('filterLowScore').checked,
-  };
-}
-
-function applyFilters(pairs) {
-  const f = getFilterValues();
+function getFiltered() {
+  const fMinLiq = parseFloat(document.getElementById('fMinLiq').value) || 0;
+  const fMinVol = parseFloat(document.getElementById('fMinVol').value) || 0;
+  const fMinTxns = parseInt(document.getElementById('fMinTxns').value) || 0;
+  const fMaxAge = parseInt(document.getElementById('fMaxAge').value) || 0;
+  const fHideRugs = document.getElementById('fHideRugs').checked;
   const search = document.getElementById('searchInput').value.toLowerCase().trim();
   const now = Date.now();
 
-  return pairs.filter(p => {
-    // Chain filter
-    if (chainFilter !== 'all' && getChainName(p.chainId) !== chainFilter) return false;
+  let pairs = [...allPairs.values()];
+  let hiddenByRug = 0;
+
+  pairs = pairs.filter(p => {
+    // Chain
+    if (chainFilter !== 'all' && p.chain !== chainFilter) return false;
 
     // Search
     if (search) {
-      const name = (p.baseToken?.name || '').toLowerCase();
-      const symbol = (p.baseToken?.symbol || '').toLowerCase();
-      const addr = (p.baseToken?.address || '').toLowerCase();
-      if (!name.includes(search) && !symbol.includes(search) && !addr.includes(search)) return false;
+      const hay = (p.baseSymbol + ' ' + p.baseName + ' ' + p.baseAddress).toLowerCase();
+      if (!hay.includes(search)) return false;
     }
 
-    const liq = p.liquidity?.usd || 0;
-    const vol = p.volume?.h24 || 0;
-    const buys = p.txns?.h24?.buys || 0;
-    const sells = p.txns?.h24?.sells || 0;
-    const totalTxns = buys + sells;
+    // Min liq
+    if (p.reserveUsd < fMinLiq) return false;
 
-    // Min liquidity
-    if (liq < f.minLiq) return false;
+    // Min vol
+    if (p.volume24h < fMinVol) return false;
 
-    // Min volume
-    if (vol < f.minVol) return false;
-
-    // Min transactions
-    if (totalTxns < f.minTxns) return false;
+    // Min txns
+    if ((p.txns24hBuys + p.txns24hSells) < fMinTxns) return false;
 
     // Max age
-    if (f.maxAge > 0 && p.pairCreatedAt) {
-      const ageMinutes = (now - p.pairCreatedAt) / 60000;
-      if (ageMinutes > f.maxAge) return false;
+    if (fMaxAge > 0 && p.createdAt) {
+      if ((now - p.createdAt) / 60000 > fMaxAge) return false;
     }
 
-    // Buy/sell ratio
-    if (buys > 5 && f.minBuySell > 0) {
-      const ratio = sells / buys;
-      if (ratio < f.minBuySell) return false;
-    }
-
-    // Honeypot filter
-    if (f.hideHoneypot && buys > 10 && sells === 0) return false;
-
-    // Low score filter
-    if (f.hideLowScore) {
-      const { score } = scorePair(p);
-      if (score < 30) return false;
+    // Hide rugs
+    if (fHideRugs) {
+      const rug = rugResults.get(p.baseAddress);
+      if (rug && rug.status === 'bad') {
+        hiddenByRug++;
+        return false;
+      }
+      // Also hide obvious honeypots
+      if (p.txns24hBuys > 10 && p.txns24hSells === 0) {
+        hiddenByRug++;
+        return false;
+      }
     }
 
     return true;
   });
-}
 
-function sortPairs(pairs) {
-  const sortBy = document.getElementById('sortBy').value;
-  switch (sortBy) {
-    case 'newest':
-      pairs.sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0));
-      break;
-    case 'safety':
-      pairs.sort((a, b) => scorePair(b).score - scorePair(a).score);
-      break;
-    case 'liquidity':
-      pairs.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
-      break;
-    case 'volume':
-      pairs.sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0));
-      break;
-    case 'priceChange':
-      pairs.sort((a, b) => (b.priceChange?.h24 || -999) - (a.priceChange?.h24 || -999));
-      break;
-    case 'txns':
+  // Sort
+  const sort = document.getElementById('sortBy').value;
+  switch (sort) {
+    case 'newest': pairs.sort((a, b) => b.createdAt - a.createdAt); break;
+    case 'rugScore':
       pairs.sort((a, b) => {
-        const ta = (b.txns?.h24?.buys || 0) + (b.txns?.h24?.sells || 0);
-        const tb = (a.txns?.h24?.buys || 0) + (a.txns?.h24?.sells || 0);
-        return ta - tb;
+        const ra = rugResults.get(a.baseAddress);
+        const rb = rugResults.get(b.baseAddress);
+        const sa = ra ? (ra.status === 'good' ? 2 : ra.status === 'warn' ? 1 : 0) : -1;
+        const sb = rb ? (rb.status === 'good' ? 2 : rb.status === 'warn' ? 1 : 0) : -1;
+        return sb - sa;
       });
       break;
+    case 'liquidity': pairs.sort((a, b) => b.reserveUsd - a.reserveUsd); break;
+    case 'volume': pairs.sort((a, b) => b.volume24h - a.volume24h); break;
+    case 'priceChange': pairs.sort((a, b) => (b.priceChange24h || -999) - (a.priceChange24h || -999)); break;
   }
-  return pairs;
+
+  return { pairs, hiddenByRug };
 }
 
 function render() {
-  const grid = document.getElementById('pairGrid');
-  const filtered = sortPairs(applyFilters([...allPairs]));
-  const hiddenCount = allPairs.length - filtered.length;
+  const { pairs, hiddenByRug } = getFiltered();
 
-  // Stats
-  document.getElementById('statTotal').textContent = allPairs.length;
-  document.getElementById('statShowing').textContent = filtered.length;
-  document.getElementById('statFiltered').textContent = hiddenCount;
+  document.getElementById('sTotal').textContent = allPairs.size;
+  document.getElementById('sShowing').textContent = pairs.length;
+  document.getElementById('sRugs').textContent = rugsFound;
+  document.getElementById('sChecked').textContent = rugCheckedCount;
 
-  const scores = filtered.map(p => scorePair(p).score);
-  const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(0) : '--';
-  document.getElementById('statAvgSafety').textContent = avgScore + (avgScore !== '--' ? '/100' : '');
-
-  const topGainer = allPairs.reduce((best, p) => {
-    return (p.priceChange?.h24 || -999) > (best.priceChange?.h24 || -999) ? p : best;
-  }, allPairs[0] || {});
-  document.getElementById('statTopGainer').textContent = topGainer?.baseToken?.symbol
-    ? topGainer.baseToken.symbol + ' +' + (topGainer.priceChange?.h24 || 0).toFixed(0) + '%'
+  const allArr = [...allPairs.values()];
+  const top = allArr.reduce((b, p) => (p.priceChange24h || -999) > (b.priceChange24h || -999) ? p : b, allArr[0] || {});
+  document.getElementById('sGainer').textContent = top.baseSymbol
+    ? top.baseSymbol + ' +' + (top.priceChange24h || 0).toFixed(0) + '%'
     : '--';
 
-  // Hidden count
-  const hcEl = document.getElementById('hiddenCount');
-  if (hiddenCount > 0) {
-    hcEl.style.display = 'block';
-    hcEl.textContent = `${hiddenCount} pairs hidden by filters (honeypots, low liq, scams)`;
+  const hm = document.getElementById('hiddenMsg');
+  const totalHidden = allPairs.size - pairs.length;
+  if (totalHidden > 0) {
+    hm.style.display = 'block';
+    hm.textContent = `${totalHidden} pairs hidden (${hiddenByRug} confirmed rugs, rest filtered by liq/vol/age)`;
   } else {
-    hcEl.style.display = 'none';
+    hm.style.display = 'none';
   }
 
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><h2>No pairs passed filters</h2><p>Try loosening your filters or switch to "Degen" preset</p></div>`;
-    return;
+  const grid = document.getElementById('grid');
+  if (pairs.length === 0) {
+    grid.innerHTML = '<div class="empty"><h2>No pairs passed filters</h2><p>Try "Degen" preset or loosen filters</p></div>';
+  } else {
+    grid.innerHTML = pairs.map(renderCard).join('');
   }
 
-  grid.innerHTML = filtered.map(renderCard).join('');
-  allPairs.forEach(p => seenAddresses.add(p.pairAddress));
-}
-
-// ==================== DATA FETCHING ====================
-
-async function fetchPairs() {
-  if (fetchInProgress) return;
-  fetchInProgress = true;
-
-  const statusText = document.getElementById('statusText');
-  statusText.innerHTML = '<span class="loading-spinner"></span> Scanning for new pairs...';
-
-  const prevCount = allPairs.length;
-
-  try {
-    // Hit multiple endpoints in parallel for maximum coverage
-    const [profilesRes, boostsRes] = await Promise.all([
-      fetch('https://api.dexscreener.com/token-profiles/latest/v1').catch(() => null),
-      fetch('https://api.dexscreener.com/token-boosts/latest/v1').catch(() => null),
-    ]);
-
-    // Collect token addresses by chain
-    const tokensByChain = {};
-    const addToken = (chain, addr) => {
-      if (!addr) return;
-      chain = chain || 'solana';
-      if (!tokensByChain[chain]) tokensByChain[chain] = new Set();
-      tokensByChain[chain].add(addr);
-    };
-
-    if (profilesRes && profilesRes.ok) {
-      const profiles = await profilesRes.json();
-      for (const p of profiles) addToken(p.chainId, p.tokenAddress);
-    }
-
-    if (boostsRes && boostsRes.ok) {
-      const boosts = await boostsRes.json();
-      for (const b of boosts) addToken(b.chainId, b.tokenAddress);
-    }
-
-    // Batch fetch pair data per chain (API allows up to 30 addresses)
-    const pairFetches = [];
-    for (const [chain, addrSet] of Object.entries(tokensByChain)) {
-      const addrs = [...addrSet];
-      // Split into batches of 30
-      for (let i = 0; i < addrs.length; i += 30) {
-        const batch = addrs.slice(i, i + 30).join(',');
-        pairFetches.push(
-          fetch(`https://api.dexscreener.com/tokens/v1/${chain}/${batch}`)
-            .then(r => r.ok ? r.json() : [])
-            .catch(() => [])
-        );
-      }
-    }
-
-    // Also search for trending meme terms to catch more
-    const memeTerms = ['pepe', 'doge', 'shib', 'wojak', 'moon', 'inu', 'cat', 'ai', 'trump', 'elon'];
-    const randomTerms = memeTerms.sort(() => Math.random() - 0.5).slice(0, 3);
-    for (const term of randomTerms) {
-      pairFetches.push(
-        fetch(`https://api.dexscreener.com/latest/dex/search?q=${term}`)
-          .then(r => r.ok ? r.json().then(d => d.pairs || []) : [])
-          .catch(() => [])
-      );
-    }
-
-    const results = await Promise.all(pairFetches);
-
-    // Merge results
-    const existingMap = new Map(allPairs.map(p => [p.pairAddress, true]));
-    let newCount = 0;
-
-    for (const result of results) {
-      const pairs = Array.isArray(result) ? result : [];
-      for (const pair of pairs) {
-        if (!pair.pairAddress) continue;
-        if (existingMap.has(pair.pairAddress)) {
-          // Update existing
-          const idx = allPairs.findIndex(p => p.pairAddress === pair.pairAddress);
-          if (idx >= 0) allPairs[idx] = pair;
-        } else {
-          allPairs.push(pair);
-          existingMap.set(pair.pairAddress, true);
-          newCount++;
-        }
-      }
-    }
-
-    // Cap at 1000 pairs, keep newest
-    if (allPairs.length > 1000) {
-      allPairs.sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0));
-      allPairs = allPairs.slice(0, 1000);
-    }
-
-    // Play sound if new pairs found
-    if (newCount > 0 && soundEnabled && prevCount > 0) {
-      playAlert();
-    }
-
-    render();
-
-    const now = new Date();
-    document.getElementById('lastUpdate').textContent = 'Last: ' + now.toLocaleTimeString();
-    statusText.innerHTML = `<span class="live-dot"></span> Live — ${allPairs.length} pairs tracked | ${newCount} new`;
-    document.getElementById('statusBar').classList.remove('paused');
-
-  } catch (err) {
-    console.error('Fetch error:', err);
-    statusText.textContent = 'Error: ' + err.message;
-    document.getElementById('statusBar').classList.add('paused');
-  }
-
-  fetchInProgress = false;
+  allPairs.forEach((_, k) => {
+    const p = allPairs.get(k);
+    if (p) seenIds.add(p.id);
+  });
 }
 
 // ==================== CONTROLS ====================
 
-function setChain(el, chain) {
-  chainFilter = chain;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+function setChain(c, el) {
+  chainFilter = c;
+  document.querySelectorAll('.chip').forEach(e => e.classList.remove('active'));
   el.classList.add('active');
   render();
 }
 
-function applyPreset(preset) {
-  document.querySelectorAll('.filter-preset').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
+function setPreset(p, el) {
+  document.querySelectorAll('.preset').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
 
-  switch (preset) {
-    case 'degen':
-      document.getElementById('filterMinLiq').value = 0;
-      document.getElementById('filterMinVol').value = 0;
-      document.getElementById('filterMinTxns').value = 0;
-      document.getElementById('filterMaxAge').value = '0';
-      document.getElementById('filterMinBuySell').value = 0;
-      document.getElementById('filterHoneypot').checked = false;
-      document.getElementById('filterLowScore').checked = false;
-      break;
-    case 'safe':
-      document.getElementById('filterMinLiq').value = 1000;
-      document.getElementById('filterMinVol').value = 500;
-      document.getElementById('filterMinTxns').value = 10;
-      document.getElementById('filterMaxAge').value = '60';
-      document.getElementById('filterMinBuySell').value = 0.3;
-      document.getElementById('filterHoneypot').checked = true;
-      document.getElementById('filterLowScore').checked = true;
-      break;
-    case 'strict':
-      document.getElementById('filterMinLiq').value = 5000;
-      document.getElementById('filterMinVol').value = 5000;
-      document.getElementById('filterMinTxns').value = 50;
-      document.getElementById('filterMaxAge').value = '60';
-      document.getElementById('filterMinBuySell').value = 0.5;
-      document.getElementById('filterHoneypot').checked = true;
-      document.getElementById('filterLowScore').checked = true;
-      break;
+  if (p === 'degen') {
+    document.getElementById('fMinLiq').value = 0;
+    document.getElementById('fMinVol').value = 0;
+    document.getElementById('fMinTxns').value = 0;
+    document.getElementById('fMaxAge').value = '0';
+    document.getElementById('fHideRugs').checked = false;
+  } else if (p === 'safe') {
+    document.getElementById('fMinLiq').value = 1000;
+    document.getElementById('fMinVol').value = 0;
+    document.getElementById('fMinTxns').value = 5;
+    document.getElementById('fMaxAge').value = '60';
+    document.getElementById('fHideRugs').checked = true;
+  } else if (p === 'strict') {
+    document.getElementById('fMinLiq').value = 5000;
+    document.getElementById('fMinVol').value = 5000;
+    document.getElementById('fMinTxns').value = 30;
+    document.getElementById('fMaxAge').value = '60';
+    document.getElementById('fHideRugs').checked = true;
   }
   render();
 }
 
 function toggleSound() {
-  soundEnabled = !soundEnabled;
-  document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
-}
-
-function playAlert() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 800;
-    osc.type = 'sine';
-    gain.gain.value = 0.15;
-    osc.start();
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-    osc.stop(ctx.currentTime + 0.3);
-  } catch (e) {}
+  soundOn = !soundOn;
+  document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
 }
 
 function setupTimer() {
   if (refreshTimer) clearInterval(refreshTimer);
-  const interval = parseInt(document.getElementById('refreshInterval').value);
-  if (interval > 0) {
-    refreshTimer = setInterval(fetchPairs, interval);
-  }
+  const ms = parseInt(document.getElementById('refreshInterval').value);
+  if (ms > 0) refreshTimer = setInterval(fetchNewPairs, ms);
 }
 
-// Event listeners
+// Listeners
 document.getElementById('sortBy').addEventListener('change', render);
 document.getElementById('refreshInterval').addEventListener('change', setupTimer);
 document.getElementById('searchInput').addEventListener('input', render);
+['fMinLiq','fMinVol','fMinTxns','fMaxAge'].forEach(id =>
+  document.getElementById(id).addEventListener('change', render)
+);
+document.getElementById('fHideRugs').addEventListener('change', render);
 
-// Filter change listeners
-['filterMinLiq', 'filterMinVol', 'filterMinTxns', 'filterMaxAge', 'filterMinBuySell'].forEach(id => {
-  document.getElementById(id).addEventListener('change', render);
-});
-['filterHoneypot', 'filterLowScore'].forEach(id => {
-  document.getElementById(id).addEventListener('change', render);
-});
-
-// Start
-fetchPairs();
+// ==================== START ====================
+fetchNewPairs();
 setupTimer();
 </script>
 </body>
