@@ -1306,7 +1306,6 @@ function render() {
   }
 
   // Volume alerts
-  document.getElementById('volCount').textContent = volAlerts.length + ' alerts';
   const volSection = document.getElementById('volSection');
   if (volAlerts.length === 0) {
     volSection.innerHTML = '<div class="empty-state"><h3>No volume spikes detected yet</h3><p>Monitoring for unusual activity...</p></div>';
