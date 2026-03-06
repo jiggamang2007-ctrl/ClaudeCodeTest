@@ -3,604 +3,1360 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALPHA TRACKER</title>
+<title>Alpha Tracker</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#08080e;--bg2:#10101a;--bg3:#161625;--brd:#1e1e35;--cy:#00f0ff;--pu:#b026ff;--gn:#00ff88;--rd:#ff3355;--yl:#f3ba2f;--bl:#1da1f2;--dm:#444;--dm2:#333}
-body{background:var(--bg);color:#e0e0e0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
-::selection{background:var(--cy);color:#000}
-.hdr{background:linear-gradient(135deg,#12122a,#0a1628);padding:10px 16px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
-.hdr h1{font-size:16px;background:linear-gradient(90deg,var(--cy),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
-.hr{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-select,input[type=number],input[type=text]{background:var(--bg);color:#ccc;border:1px solid var(--dm2);padding:5px 8px;border-radius:4px;font-size:11px}
-select:focus,input:focus{outline:none;border-color:var(--cy)}
-.btn{padding:5px 12px;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;transition:.15s}
-.btn-c{background:var(--cy);color:#000}.btn-c:hover{opacity:.85}
-.sbar{background:var(--bg2);padding:5px 16px;display:flex;justify-content:space-between;font-size:10px;color:#666;border-bottom:1px solid var(--brd)}
-.dot{width:7px;height:7px;background:var(--gn);border-radius:50%;display:inline-block;margin-right:4px;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.tabs{display:flex;border-bottom:1px solid var(--brd);background:var(--bg2);padding:0 16px;position:sticky;top:42px;z-index:99}
-.tab{padding:8px 16px;font-size:11px;font-weight:600;cursor:pointer;color:#666;border-bottom:2px solid transparent;transition:.15s}
-.tab:hover{color:#aaa}.tab.on{color:var(--cy);border-color:var(--cy)}
-.tab .bd{font-size:9px;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:700}
-.bd-c{background:var(--cy);color:#000}.bd-r{background:var(--rd);color:#fff}.bd-y{background:var(--yl);color:#000}
-.pnl{display:none;padding:12px 16px}.pnl.on{display:block}
-.fb{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px}
-.fg{display:flex;flex-direction:column;gap:2px}
-.fg>label{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:.5px}
-.fg input,.fg select{width:95px}
-.pre{padding:4px 10px;border-radius:10px;font-size:10px;cursor:pointer;border:1px solid var(--dm2);background:var(--bg);color:#888;transition:.15s}
-.pre:hover{border-color:#555}.pre.on{background:rgba(0,240,255,.1);border-color:var(--cy);color:var(--cy)}
-.cb{width:15px;height:15px;accent-color:var(--cy);cursor:pointer}
-.stats{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
-.sb{background:var(--bg3);border:1px solid var(--brd);border-radius:5px;padding:6px 10px;flex:1;min-width:80px}
-.sb .sl{font-size:8px;color:#555}.sb .sv{font-size:14px;font-weight:700;color:#fff}
-.chips{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
-.ch{padding:3px 10px;border-radius:10px;font-size:10px;cursor:pointer;border:1px solid var(--dm2);background:var(--bg);color:#888;transition:.15s}
-.ch.on{background:rgba(0,240,255,.1);border-color:var(--cy);color:var(--cy)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px}
-.card{background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:10px;position:relative;transition:.15s}
-.card:hover{border-color:#3a3a5a}
-.card.glow{animation:cg 2s ease-out}
-.card.rbad{border-color:rgba(255,51,85,.3)}
-@keyframes cg{0%{border-color:var(--cy);box-shadow:0 0 12px rgba(0,240,255,.2)}100%{border-color:var(--brd);box-shadow:none}}
-.ct{display:flex;justify-content:space-between;margin-bottom:4px}
-.cn{font-size:13px;font-weight:700;color:#fff}
-.ca{font-size:9px;color:#555;margin-top:1px}
-.cc{font-size:8px;color:#383848;cursor:pointer;margin-top:1px;word-break:break-all;transition:.15s}
-.cc:hover{color:#666}
-.tg{font-size:8px;padding:2px 5px;border-radius:3px;font-weight:600;text-transform:uppercase}
-.tg-s{background:rgba(153,69,255,.15);color:#9945ff}
-.tg-e{background:rgba(98,126,234,.15);color:#627eea}
-.tg-b{background:rgba(243,186,47,.15);color:#f3ba2f}
-.tg-ba{background:rgba(0,82,255,.15);color:#0052ff}
-.tg-o{background:rgba(80,80,80,.15);color:#666}
-.rb{display:flex;align-items:center;gap:6px;margin-bottom:4px;padding:4px 8px;border-radius:4px;font-size:9px;font-weight:600}
-.rok{background:rgba(0,255,136,.08);color:var(--gn);border:1px solid rgba(0,255,136,.2)}
-.rw{background:rgba(243,186,47,.08);color:var(--yl);border:1px solid rgba(243,186,47,.2)}
-.rba{background:rgba(255,51,85,.08);color:var(--rd);border:1px solid rgba(255,51,85,.2)}
-.rl{background:rgba(50,50,50,.08);color:#555;border:1px solid rgba(50,50,50,.2)}
-.fl{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:3px}
-.fd{font-size:7px;padding:1px 4px;border-radius:2px;font-weight:600;background:rgba(255,51,85,.15);color:var(--rd)}
-.fw{font-size:7px;padding:1px 4px;border-radius:2px;font-weight:600;background:rgba(243,186,47,.15);color:var(--yl)}
-.fgx{font-size:7px;padding:1px 4px;border-radius:2px;font-weight:600;background:rgba(0,255,136,.15);color:var(--gn)}
-.bz{display:flex;align-items:center;gap:4px;margin-bottom:4px}
-.bz-bar{flex:1;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
-.bz-f{height:100%;border-radius:2px}
-.bz-l{font-size:8px;font-weight:700;min-width:30px;text-align:right}
-.cm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:6px;font-size:9px}
-.mi{display:flex;flex-direction:column}.ml{color:#383848;font-size:8px}.mv{color:#aaa;font-weight:600}
-.mv.g{color:var(--gn)}.mv.r{color:var(--rd)}.mv.y{color:var(--yl)}
-.lks{display:flex;gap:3px;flex-wrap:wrap}
-.lk{font-size:8px;padding:2px 6px;border-radius:3px;text-decoration:none;font-weight:600;transition:.15s}
-.lk:hover{opacity:.8}
-.lt{background:rgba(29,161,242,.12);color:var(--bl)}
-.ld{background:rgba(0,240,255,.12);color:var(--cy)}
-.ls{background:rgba(0,255,136,.12);color:var(--gn)}
-.lr{background:rgba(176,38,255,.12);color:var(--pu)}
-.tr{position:absolute;top:7px;right:7px;font-size:7px;padding:2px 5px;border-radius:3px;font-weight:700;text-transform:uppercase}
-.trh{background:rgba(255,51,85,.15);color:var(--rd)}.trw{background:rgba(243,186,47,.15);color:var(--yl)}.trn{background:rgba(0,255,136,.15);color:var(--gn)}
-.wlb{font-size:9px;cursor:pointer;padding:1px 5px;border-radius:3px;border:1px solid var(--dm2);background:var(--bg);color:#555;transition:.15s;margin-left:4px}
-.wlb:hover{border-color:var(--cy);color:var(--cy)}.wlb.wd{border-color:var(--yl);color:var(--yl);background:rgba(243,186,47,.1)}
-.va{background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.15);border-radius:6px;padding:8px;margin-bottom:6px;font-size:10px}
-.va .vn{font-weight:700;color:var(--cy);font-size:12px}
-.va .vs{color:#666;margin-top:2px}
-.ti{background:var(--bg3);border:1px solid var(--brd);border-radius:6px;padding:8px 10px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
-.ti:hover{border-color:#3a3a5a}
-.tl{display:flex;flex-direction:column;gap:1px}
-.tn{font-size:12px;font-weight:700;color:#fff}
-.ts2{font-size:9px;color:#555}
-.tsc{font-size:18px;font-weight:800;min-width:35px;text-align:center}
-.empty{text-align:center;padding:25px;color:#444}
-.empty h2{font-size:13px;color:#555;margin-bottom:4px}
-.sp{display:inline-block;width:10px;height:10px;border:2px solid #333;border-top-color:var(--cy);border-radius:50%;animation:spin .7s linear infinite;margin-right:3px;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-.log{background:var(--bg);border:1px solid var(--brd);border-radius:4px;padding:5px;max-height:50px;overflow-y:auto;font-size:8px;color:#444;font-family:'Cascadia Code',monospace;margin-bottom:6px;line-height:1.4}
-.toast{position:fixed;bottom:16px;right:16px;background:var(--bg3);border:1px solid var(--cy);border-radius:6px;padding:8px 14px;font-size:11px;color:var(--cy);z-index:200;opacity:0;transform:translateY(20px);transition:.3s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-.hmsg{font-size:10px;color:#555;margin-bottom:6px;padding:4px 8px;background:var(--bg3);border-radius:4px;border:1px solid var(--brd)}
-@media(max-width:700px){.hdr,.pnl{padding:8px}.grid{grid-template-columns:1fr}.cm{grid-template-columns:1fr 1fr}.tabs{overflow-x:auto}}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #09090f;
+  color: #ddd;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Header ── */
+.header {
+  background: #101020;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid #1c1c30;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header h1 {
+  font-size: 18px;
+  background: linear-gradient(90deg, #00e5ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header-controls select,
+.header-controls input[type="text"] {
+  background: #0c0c18;
+  color: #ccc;
+  border: 1px solid #2a2a40;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.header-controls select:focus,
+.header-controls input:focus {
+  outline: none;
+  border-color: #00e5ff;
+}
+
+.btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  background: #00e5ff;
+  color: #000;
+  transition: 0.15s;
+}
+
+.btn:hover { opacity: 0.85; }
+
+/* ── Status ── */
+.status {
+  background: #0c0c18;
+  padding: 6px 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #666;
+  border-bottom: 1px solid #1c1c30;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ── Filters ── */
+.filters {
+  background: #0c0c18;
+  padding: 10px 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 1px solid #1c1c30;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 11px;
+  color: #888;
+}
+
+.filter-group select,
+.filter-group input[type="number"] {
+  background: #09090f;
+  color: #ccc;
+  border: 1px solid #2a2a40;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  width: 90px;
+}
+
+.toggle-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #2a2a40;
+  background: #0c0c18;
+  color: #888;
+  transition: 0.15s;
+}
+
+.toggle-btn:hover { border-color: #555; }
+.toggle-btn.on { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; color: #00e5ff; }
+
+/* ── Main ── */
+.main { padding: 16px 20px; }
+
+/* ── Stats Bar ── */
+.stat-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #666;
+}
+
+.stat-bar span { color: #fff; font-weight: 700; }
+
+/* ── Section Headers ── */
+.section-head {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1c1c30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-head .dot-purple {
+  width: 8px;
+  height: 8px;
+  background: #a855f7;
+  border-radius: 50%;
+}
+
+.section-head .dot-blue {
+  width: 8px;
+  height: 8px;
+  background: #00e5ff;
+  border-radius: 50%;
+}
+
+.section-head .count {
+  font-size: 11px;
+  color: #666;
+  font-weight: 400;
+}
+
+/* ── Card Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+/* ── Pair Card ── */
+.card {
+  background: #111120;
+  border: 1px solid #1c1c30;
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  transition: 0.2s;
+}
+
+.card:hover { border-color: #2a2a50; }
+.card.new-glow { animation: newglow 2.5s ease-out; }
+.card.rug-border { border-color: rgba(255, 50, 80, 0.3); }
+
+@keyframes newglow {
+  0% { border-color: #00e5ff; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); }
+  100% { border-color: #1c1c30; box-shadow: none; }
+}
+
+/* Card top row */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.token-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.token-sub {
+  font-size: 11px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.token-ca {
+  font-size: 10px;
+  color: #383850;
+  margin-top: 3px;
+  cursor: pointer;
+  word-break: break-all;
+  transition: 0.15s;
+}
+
+.token-ca:hover { color: #666; }
+
+.chain-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.chain-sol { background: rgba(153, 69, 255, 0.12); color: #a855f7; }
+.chain-eth { background: rgba(98, 126, 234, 0.12); color: #627eea; }
+.chain-bsc { background: rgba(243, 186, 47, 0.12); color: #f3ba2f; }
+.chain-base { background: rgba(0, 82, 255, 0.12); color: #3b82f6; }
+
+.age-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+.age-hot { background: rgba(255, 50, 80, 0.12); color: #ff3355; }
+.age-warm { background: rgba(243, 186, 47, 0.12); color: #f3ba2f; }
+.age-fresh { background: rgba(0, 255, 136, 0.12); color: #00ff88; }
+
+/* Rug check result */
+.rug-box {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rug-safe { background: rgba(0, 255, 136, 0.08); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.15); }
+.rug-warn { background: rgba(243, 186, 47, 0.08); color: #f3ba2f; border: 1px solid rgba(243, 186, 47, 0.15); }
+.rug-danger { background: rgba(255, 50, 80, 0.08); color: #ff3355; border: 1px solid rgba(255, 50, 80, 0.15); }
+.rug-pending { background: rgba(100, 100, 100, 0.08); color: #555; border: 1px solid rgba(100, 100, 100, 0.15); }
+
+/* Buzz bar */
+.buzz-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.buzz-label {
+  font-size: 10px;
+  color: #555;
+  min-width: 32px;
+}
+
+.buzz-track {
+  flex: 1;
+  height: 4px;
+  background: #1c1c30;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.buzz-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.buzz-score {
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* Data grid */
+.data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.data-item label {
+  display: block;
+  font-size: 9px;
+  color: #444;
+  margin-bottom: 1px;
+}
+
+.data-item .val {
+  font-size: 12px;
+  font-weight: 600;
+  color: #bbb;
+}
+
+.val.green { color: #00ff88; }
+.val.red { color: #ff3355; }
+
+/* Action links */
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-link {
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.15s;
+}
+
+.action-link:hover { opacity: 0.8; }
+.al-twitter { background: rgba(29, 161, 242, 0.1); color: #1da1f2; }
+.al-dex { background: rgba(0, 229, 255, 0.1); color: #00e5ff; }
+.al-explorer { background: rgba(0, 255, 136, 0.1); color: #00ff88; }
+.al-rug { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+
+.star-btn {
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #2a2a40;
+  background: transparent;
+  color: #555;
+  transition: 0.15s;
+  margin-left: 6px;
+}
+
+.star-btn:hover { color: #f3ba2f; border-color: #f3ba2f; }
+.star-btn.starred { color: #f3ba2f; border-color: #f3ba2f; background: rgba(243, 186, 47, 0.1); }
+
+/* Volume alert */
+.vol-alert-card {
+  background: rgba(0, 229, 255, 0.04);
+  border: 1px solid rgba(0, 229, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.vol-alert-card .vol-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #00e5ff;
+}
+
+.vol-alert-card .vol-reason {
+  font-size: 11px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.vol-alert-card .vol-stats {
+  font-size: 11px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.vol-alert-card .vol-links {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Buzz list */
+.buzz-item {
+  background: #111120;
+  border: 1px solid #1c1c30;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buzz-item:hover { border-color: #2a2a50; }
+
+.buzz-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.buzz-item-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.buzz-item-sub {
+  font-size: 10px;
+  color: #555;
+}
+
+.buzz-item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buzz-number {
+  font-size: 22px;
+  font-weight: 800;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Log */
+.log-box {
+  background: #09090f;
+  border: 1px solid #1c1c30;
+  border-radius: 6px;
+  padding: 6px 10px;
+  max-height: 55px;
+  overflow-y: auto;
+  font-size: 9px;
+  color: #444;
+  font-family: 'Cascadia Code', 'Fira Code', monospace;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+/* Empty */
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #444;
+}
+
+.empty-state h3 {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+/* Spinner */
+.spin {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #333;
+  border-top-color: #00e5ff;
+  border-radius: 50%;
+  animation: sp 0.7s linear infinite;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #111120;
+  border: 1px solid #00e5ff;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: #00e5ff;
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+.toast.show { opacity: 1; transform: translateY(0); }
+
+.hidden-info {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+  .header, .main { padding: 10px; }
+  .grid { grid-template-columns: 1fr; }
+  .data-grid { grid-template-columns: 1fr 1fr; }
+}
 </style>
 </head>
 <body>
-<div class="hdr">
+
+<!-- HEADER -->
+<div class="header">
   <h1>ALPHA TRACKER</h1>
-  <div class="hr">
-    <input type="text" id="search" placeholder="Search / paste CA..." style="width:160px">
-    <select id="sort">
-      <option value="newest">Newest</option>
-      <option value="buzz">Buzz</option>
-      <option value="rug">Safest</option>
-      <option value="liq">Liquidity</option>
-      <option value="vol">Volume</option>
-      <option value="gain">Gainers</option>
-      <option value="volspike">Vol/Liq</option>
+  <div class="header-controls">
+    <input type="text" id="searchBox" placeholder="Search token or paste CA..." style="width: 200px;">
+    <select id="sortMode">
+      <option value="newest">Newest First</option>
+      <option value="buzz">Most Buzz</option>
+      <option value="volume">Most Volume</option>
+      <option value="gainers">Top Gainers</option>
+      <option value="safest">Safest First</option>
     </select>
-    <select id="interval">
-      <option value="8000">8s</option>
-      <option value="12000" selected>12s</option>
-      <option value="20000">20s</option>
-      <option value="30000">30s</option>
+    <select id="refreshRate">
+      <option value="8000">Refresh: 8s</option>
+      <option value="12000" selected>Refresh: 12s</option>
+      <option value="20000">Refresh: 20s</option>
     </select>
-    <button class="btn btn-c" onclick="doFetch()">Scan</button>
-    <span style="cursor:pointer;font-size:13px" id="sndB" onclick="snd=!snd;this.textContent=snd?'🔊':'🔇'" title="Sound">🔇</span>
+    <button class="btn" onclick="fetchAll()">Scan Now</button>
+    <span id="soundBtn" style="cursor:pointer;font-size:14px" onclick="sound=!sound;this.textContent=sound?'🔊':'🔇'" title="Sound alerts">🔇</span>
   </div>
 </div>
-<div class="sbar"><div><span class="dot"></span><span id="stxt">Starting...</span></div><div id="stm">--</div></div>
 
-<div class="tabs">
-  <div class="tab on" onclick="setTab('pairs',this)">New Pairs <span class="bd bd-c" id="tP">0</span></div>
-  <div class="tab" onclick="setTab('buzz',this)">Twitter Buzz <span class="bd bd-y" id="tB">0</span></div>
-  <div class="tab" onclick="setTab('vol',this)">Volume Bot <span class="bd bd-r" id="tV">0</span></div>
-  <div class="tab" onclick="setTab('wl',this)">Watchlist <span class="bd bd-c" id="tW">0</span></div>
+<!-- STATUS -->
+<div class="status">
+  <div><span class="live-dot"></span> <span id="statusText">Starting up...</span></div>
+  <div id="statusTime">--</div>
 </div>
 
-<!-- PAIRS -->
-<div class="pnl on" id="pnlPairs">
-  <div class="fb">
-    <div class="fg"><label>Min Liq</label><input type="number" id="fL" value="0" min="0" step="500"></div>
-    <div class="fg"><label>Min Vol</label><input type="number" id="fV" value="0" min="0" step="500"></div>
-    <div class="fg"><label>Min Txns</label><input type="number" id="fT" value="0" min="0" step="5"></div>
-    <div class="fg"><label>Token Age</label><select id="fA"><option value="0" selected>Any</option><option value="5">&lt;5m</option><option value="15">&lt;15m</option><option value="30">&lt;30m</option><option value="60">&lt;1h</option><option value="360">&lt;6h</option><option value="1440">&lt;24h</option></select></div>
-    <div class="fg"><label>Min Buzz</label><input type="number" id="fBz" value="0" min="0" max="100" step="10"></div>
-    <div class="fg"><label>Hide Rugs</label><div style="display:flex;align-items:center;gap:4px;height:26px"><input type="checkbox" class="cb" id="fR" checked></div></div>
-    <div class="fg"><label>Presets</label><div style="display:flex;gap:3px">
-      <span class="pre on" onclick="pre('degen',this)">Degen</span>
-      <span class="pre" onclick="pre('safe',this)">Safe</span>
-      <span class="pre" onclick="pre('strict',this)">Strict</span>
-      <span class="pre" onclick="pre('sniper',this)">Sniper</span>
-    </div></div>
+<!-- FILTERS -->
+<div class="filters">
+  <div class="filter-group">
+    <label>Chain:</label>
+    <div style="display:flex;gap:4px;">
+      <span class="toggle-btn on" onclick="setChain('all', this)">All</span>
+      <span class="toggle-btn" onclick="setChain('solana', this)">Solana</span>
+      <span class="toggle-btn" onclick="setChain('ethereum', this)">ETH</span>
+      <span class="toggle-btn" onclick="setChain('bsc', this)">BSC</span>
+      <span class="toggle-btn" onclick="setChain('base', this)">Base</span>
+    </div>
   </div>
-  <div class="stats">
-    <div class="sb"><div class="sl">TOTAL</div><div class="sv" id="xT">--</div></div>
-    <div class="sb"><div class="sl">SHOWING</div><div class="sv" id="xS">--</div></div>
-    <div class="sb"><div class="sl">RUGS</div><div class="sv" id="xR">--</div></div>
-    <div class="sb"><div class="sl">CHECKED</div><div class="sv" id="xC">--</div></div>
-    <div class="sb"><div class="sl">VOL ALERTS</div><div class="sv" id="xVA">--</div></div>
-    <div class="sb"><div class="sl">NEWEST</div><div class="sv" id="xN">--</div></div>
+
+  <div class="filter-group">
+    <label>Age:</label>
+    <select id="filterAge">
+      <option value="0" selected>Any</option>
+      <option value="5">Under 5 min</option>
+      <option value="15">Under 15 min</option>
+      <option value="30">Under 30 min</option>
+      <option value="60">Under 1 hour</option>
+    </select>
   </div>
-  <div class="chips" id="cch">
-    <div class="ch on" onclick="setC('all',this)">All</div>
-    <div class="ch" onclick="setC('solana',this)">Solana</div>
-    <div class="ch" onclick="setC('ethereum',this)">ETH</div>
-    <div class="ch" onclick="setC('bsc',this)">BSC</div>
-    <div class="ch" onclick="setC('base',this)">Base</div>
+
+  <div class="filter-group">
+    <label>Min Volume:</label>
+    <input type="number" id="filterVol" value="0" min="0" step="1000" style="width:80px">
   </div>
-  <div class="log" id="log"></div>
-  <div id="hm" class="hmsg" style="display:none"></div>
-  <div class="grid" id="grid"><div class="empty"><h2>Starting...</h2><p><span class="sp"></span>Scanning for new pairs</p></div></div>
+
+  <div class="filter-group">
+    <span class="toggle-btn on" id="hideRugsBtn" onclick="this.classList.toggle('on');render()">Hide Rugs</span>
+  </div>
+
+  <div class="filter-group">
+    <label>Quick:</label>
+    <div style="display:flex;gap:4px;">
+      <span class="toggle-btn on" onclick="applyPreset('all', this)">Show All</span>
+      <span class="toggle-btn" onclick="applyPreset('safe', this)">Safe Only</span>
+      <span class="toggle-btn" onclick="applyPreset('sniper', this)">Sniper</span>
+    </div>
+  </div>
 </div>
 
-<!-- BUZZ -->
-<div class="pnl" id="pnlBuzz">
-  <p style="font-size:10px;color:#555;margin-bottom:8px">Tokens ranked by social buzz score — volume velocity, buy pressure, txn count, price momentum, newness. Higher = more likely trending on X. Click to search.</p>
-  <div id="buzzL"></div>
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Stats -->
+  <div class="stat-bar">
+    <div>Total: <span id="sTotal">0</span></div>
+    <div>Showing: <span id="sShowing">0</span></div>
+    <div>Rugs caught: <span id="sRugs" style="color:#ff3355">0</span></div>
+    <div>Rug checked: <span id="sChecked">0</span></div>
+    <div>Newest: <span id="sNewest">--</span></div>
+  </div>
+
+  <!-- Log -->
+  <div class="log-box" id="logBox"></div>
+
+  <!-- Hidden info -->
+  <div class="hidden-info" id="hiddenInfo" style="display:none"></div>
+
+  <!-- PUMP.FUN NEW PAIRS -->
+  <div class="section-head">
+    <span class="dot-purple"></span>
+    Pump.fun New Pairs
+    <span class="count" id="pumpCount">0 pairs</span>
+  </div>
+  <div class="grid" id="pumpGrid">
+    <div class="empty-state"><h3>Loading pump.fun pairs...</h3><p><span class="spin"></span></p></div>
+  </div>
+
+  <!-- ALL OTHER PAIRS -->
+  <div class="section-head" style="margin-top: 20px;">
+    <span class="dot-blue"></span>
+    All New Pairs
+    <span class="count" id="allCount">0 pairs</span>
+  </div>
+  <div class="grid" id="allGrid">
+    <div class="empty-state"><h3>Loading...</h3><p><span class="spin"></span></p></div>
+  </div>
+
+  <!-- VOLUME SPIKES -->
+  <div class="section-head" style="margin-top: 20px;">
+    <span style="width:8px;height:8px;background:#ff3355;border-radius:50%;"></span>
+    Volume Spikes
+    <span class="count" id="volCount">0 alerts</span>
+  </div>
+  <div id="volSection"></div>
+
+  <!-- TWITTER BUZZ -->
+  <div class="section-head" style="margin-top: 20px;">
+    <span style="width:8px;height:8px;background:#1da1f2;border-radius:50%;"></span>
+    Twitter Buzz Rankings
+    <span class="count" id="buzzCount">0 trending</span>
+  </div>
+  <div id="buzzSection"></div>
+
 </div>
 
-<!-- VOLUME -->
-<div class="pnl" id="pnlVol">
-  <p style="font-size:10px;color:#555;margin-bottom:8px">Volume spike alerts — 5m volume exceeding 20% of liquidity, or 1h volume exceeding 5x liquidity. Breakout or rug signals.</p>
-  <div id="volL"></div>
-</div>
-
-<!-- WATCHLIST -->
-<div class="pnl" id="pnlWl">
-  <p style="font-size:10px;color:#555;margin-bottom:8px">Starred tokens. Auto-updates with live data.</p>
-  <div class="grid" id="wlG"><div class="empty"><h2>Empty</h2><p>Star any pair to track it</p></div></div>
-</div>
-
-<div class="toast" id="toast"></div>
+<div class="toast" id="toastEl"></div>
 
 <script>
-const P=new Map(),RC=new Map(),seen=new Set(),prevVol=new Map();
-const wl=new Set(JSON.parse(localStorage.getItem('wl')||'[]'));
-let chain='all',snd=false,timer=null,busy=false,rugQ=[],rugBusy=false,rugN=0,rugsB=0,volA=[],fetchN=0;
+// ============ STATE ============
+const pairs = new Map();
+const rugCache = new Map();
+const seenIds = new Set();
+const watchlist = new Set(JSON.parse(localStorage.getItem('alpha_wl') || '[]'));
+const prevVols = new Map();
 
-function lg(m){const e=document.getElementById('log'),t=new Date().toLocaleTimeString();e.innerHTML=`<span style="color:#555">[${t}]</span> ${m}<br>`+e.innerHTML;if(e.childNodes.length>50)e.innerHTML=e.innerHTML.split('<br>').slice(0,30).join('<br>');}
-function tst(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
+let activeChain = 'all';
+let sound = false;
+let refreshTimer = null;
+let isFetching = false;
+let rugQueue = [];
+let isRugChecking = false;
+let rugCheckedCount = 0;
+let rugsCaught = 0;
+let volAlerts = [];
+let scanNumber = 0;
 
-// ==================== MAIN FETCH ====================
-async function doFetch(){
-  if(busy)return;busy=true;fetchN++;
-  const st=document.getElementById('stxt');
-  st.innerHTML='<span class="sp"></span>Scanning...';
-  let added=0;
+// ============ LOGGING ============
+function log(msg) {
+  const box = document.getElementById('logBox');
+  const time = new Date().toLocaleTimeString();
+  box.innerHTML = `[${time}] ${msg}\n` + box.innerHTML;
+  if (box.innerHTML.length > 5000) box.innerHTML = box.innerHTML.slice(0, 3000);
+}
 
-  try{
-    // Strategy: hit multiple sources in parallel for maximum pair coverage
-    const allFetches=[];
+function toast(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
 
-    // 1) DEXScreener profiles + boosts (promoted/new tokens)
-    allFetches.push(fetch('https://api.dexscreener.com/token-profiles/latest/v1').then(r=>r.ok?r.json():[]).catch(()=>[]));
-    allFetches.push(fetch('https://api.dexscreener.com/token-boosts/latest/v1').then(r=>r.ok?r.json():[]).catch(()=>[]));
+// ============ MAIN FETCH ============
+async function fetchAll() {
+  if (isFetching) return;
+  isFetching = true;
+  scanNumber++;
+  document.getElementById('statusText').innerHTML = '<span class="spin"></span> Scanning...';
+  let newCount = 0;
 
-    // 2) pumpfun search — this is where the FRESHEST pairs are (2-5 min old)
-    allFetches.push(fetch('https://api.dexscreener.com/latest/dex/search?q=pumpfun').then(r=>r.ok?r.json():{}).then(d=>({type:'search',pairs:d.pairs||[]})).catch(()=>({type:'search',pairs:[]})));
-
-    // 3) GeckoTerminal new_pools for each chain (true new pairs endpoint)
-    // Rate limited at 30/min so we rotate: 2 chains per fetch cycle
-    const chains=['solana','eth','bsc','base'];
-    const gtChains=chains.slice((fetchN*2)%4,((fetchN*2)%4)+2);
-    for(const c of gtChains){
-      allFetches.push(
-        fetch(`https://api.geckoterminal.com/api/v2/networks/${c}/new_pools?page=1`,{headers:{'Accept':'application/json'}})
-          .then(r=>r.ok?r.json():null).then(d=>({type:'gecko',chain:c,data:d})).catch(()=>({type:'gecko',chain:c,data:null}))
-      );
+  try {
+    // Save previous volumes for spike detection
+    for (const [k, p] of pairs) {
+      prevVols.set(k, { v5: p.volume?.m5 || 0, v1h: p.volume?.h1 || 0, liq: p.liquidity?.usd || 0 });
     }
 
-    // 4) Rotating meme search terms for broader coverage
-    const terms=['pump','pepe','doge','moon','cat','ai','trump','shib','meme','bonk','wojak','based','frog','baby','elon','inu','floki','ape','chad','king','coin','fun'];
-    const pick=[];for(let i=0;i<3;i++)pick.push(terms[(fetchN*3+i)%terms.length]);
-    for(const t of pick){
-      allFetches.push(fetch(`https://api.dexscreener.com/latest/dex/search?q=${t}`).then(r=>r.ok?r.json():{}).then(d=>({type:'search',pairs:d.pairs||[]})).catch(()=>({type:'search',pairs:[]})));
+    // ── Source 1: Pump.fun search (freshest pairs, 0-30 min old) ──
+    const pumpRes = fetch('https://api.dexscreener.com/latest/dex/search?q=pumpfun')
+      .then(r => r.ok ? r.json() : {}).then(d => d.pairs || []).catch(() => []);
+
+    // ── Source 2: DEXScreener profiles + boosts (promoted tokens) ──
+    const profRes = fetch('https://api.dexscreener.com/token-profiles/latest/v1')
+      .then(r => r.ok ? r.json() : []).catch(() => []);
+    const boostRes = fetch('https://api.dexscreener.com/token-boosts/latest/v1')
+      .then(r => r.ok ? r.json() : []).catch(() => []);
+
+    // ── Source 3: Meme term search (rotate 3 terms per scan) ──
+    const terms = ['pump', 'pepe', 'doge', 'moon', 'cat', 'ai', 'trump', 'shib',
+                   'bonk', 'wojak', 'frog', 'elon', 'inu', 'floki', 'meme', 'sol',
+                   'chad', 'king', 'based', 'baby', 'fun', 'ape', 'bob'];
+    const picked = [];
+    for (let i = 0; i < 3; i++) picked.push(terms[(scanNumber * 3 + i) % terms.length]);
+
+    const searchFetches = picked.map(t =>
+      fetch(`https://api.dexscreener.com/latest/dex/search?q=${t}`)
+        .then(r => r.ok ? r.json() : {}).then(d => d.pairs || []).catch(() => [])
+    );
+
+    // ── Source 4: GeckoTerminal new pools (rotate 2 chains per scan) ──
+    const gtChains = ['solana', 'eth', 'bsc', 'base'];
+    const gtPick = [gtChains[(scanNumber * 2) % 4], gtChains[(scanNumber * 2 + 1) % 4]];
+    const geckoFetches = gtPick.map(c =>
+      fetch(`https://api.geckoterminal.com/api/v2/networks/${c}/new_pools?page=1`, { headers: { 'Accept': 'application/json' } })
+        .then(r => r.ok ? r.json() : null).then(d => ({ chain: c, pools: d?.data || [] })).catch(() => ({ chain: c, pools: [] }))
+    );
+
+    // Wait for all
+    const [pumpPairs, profiles, boosts, ...rest] = await Promise.all([pumpRes, profRes, boostRes, ...searchFetches, ...geckoFetches]);
+
+    const searchResults = rest.slice(0, picked.length);
+    const geckoResults = rest.slice(picked.length);
+
+    // Process pump.fun pairs
+    for (const p of pumpPairs) {
+      if (!p.pairAddress) continue;
+      if (!pairs.has(p.pairAddress)) { newCount++; queueRug(p); }
+      p._source = 'pumpfun';
+      pairs.set(p.pairAddress, p);
     }
 
-    const results=await Promise.all(allFetches);
-
-    // Process results
-    const tokensByChain={};
-    const addTok=(c,a)=>{if(!c||!a)return;if(!tokensByChain[c])tokensByChain[c]=new Set();tokensByChain[c].add(a);};
-
-    // Save prev volumes for spike detection
-    for(const [k,v] of P) prevVol.set(k,{v5:v.volume?.m5||0,v1h:v.volume?.h1||0,liq:v.liquidity?.usd||0});
-
-    let geckoCount=0,searchCount=0,profileCount=0;
-
-    for(const res of results){
-      if(Array.isArray(res)){
-        // Profiles or boosts
-        profileCount+=res.length;
-        for(const p of res) addTok(p.chainId,p.tokenAddress);
-      } else if(res?.type==='search'){
-        searchCount+=res.pairs.length;
-        for(const p of res.pairs){
-          if(!p.pairAddress)continue;
-          const ex=P.has(p.pairAddress);
-          P.set(p.pairAddress,p);
-          if(!ex){added++;queueRug(p);}
-        }
-      } else if(res?.type==='gecko'&&res.data?.data){
-        const pools=res.data.data;
-        geckoCount+=pools.length;
-        for(const pool of pools){
-          const a=pool.attributes||{};
-          const addr=a.address;
-          if(!addr)continue;
-          // Get token addresses for DEXScreener enrichment
-          if(a.base_token_address) addTok(res.chain,a.base_token_address);
-          // Also store as a lightweight pair if we don't have it
-          const gid='gecko_'+res.chain+'_'+addr;
-          if(!P.has(gid)&&!findByPoolAddr(addr)){
-            P.set(gid,{
-              pairAddress:addr,chainId:res.chain==='eth'?'ethereum':res.chain,dexId:a.dex_id||'',
-              baseToken:{address:a.base_token_address||'',name:a.base_token_name||a.name?.split(' / ')[0]||'',symbol:a.name?.split(' / ')[0]||'???'},
-              quoteToken:{symbol:a.name?.split(' / ')[1]||'SOL'},
-              priceUsd:a.base_token_price_usd||'0',
-              txns:{m5:{buys:a.transactions?.m5?.buys||0,sells:a.transactions?.m5?.sells||0},h1:{buys:a.transactions?.h1?.buys||0,sells:a.transactions?.h1?.sells||0},h24:{buys:a.transactions?.h24?.buys||0,sells:a.transactions?.h24?.sells||0}},
-              volume:{m5:parseFloat(a.volume_usd?.m5)||0,h1:parseFloat(a.volume_usd?.h1)||0,h24:parseFloat(a.volume_usd?.h24)||0},
-              priceChange:{m5:parseFloat(a.price_change_percentage?.m5)||0,h1:parseFloat(a.price_change_percentage?.h1)||0,h24:parseFloat(a.price_change_percentage?.h24)||0},
-              liquidity:{usd:parseFloat(a.reserve_in_usd)||0},fdv:parseFloat(a.fdv_usd)||0,
-              pairCreatedAt:a.pool_created_at?new Date(a.pool_created_at).getTime():Date.now(),
-              _src:'gecko'
-            });
-            added++;
-          }
-        }
+    // Process search results
+    let searchTotal = 0;
+    for (const batch of searchResults) {
+      searchTotal += batch.length;
+      for (const p of batch) {
+        if (!p.pairAddress) continue;
+        if (!pairs.has(p.pairAddress)) { newCount++; queueRug(p); }
+        if (!p._source) p._source = 'search';
+        pairs.set(p.pairAddress, p);
       }
     }
 
-    // Enrich tokens from profiles/boosts with DEXScreener pair data
-    const enrichFetches=[];
-    for(const [ch,addrs] of Object.entries(tokensByChain)){
-      const arr=[...addrs];
-      for(let i=0;i<arr.length;i+=30){
+    // Process profiles/boosts → need to fetch pair data
+    const tokensByChain = {};
+    const addToken = (chain, addr) => {
+      if (!chain || !addr) return;
+      if (!tokensByChain[chain]) tokensByChain[chain] = new Set();
+      tokensByChain[chain].add(addr);
+    };
+    for (const p of profiles) addToken(p.chainId, p.tokenAddress);
+    for (const b of boosts) addToken(b.chainId, b.tokenAddress);
+
+    // Fetch pair data for profile/boost tokens
+    const enrichFetches = [];
+    for (const [ch, addrs] of Object.entries(tokensByChain)) {
+      const arr = [...addrs];
+      for (let i = 0; i < arr.length; i += 30) {
         enrichFetches.push(
-          fetch(`https://api.dexscreener.com/tokens/v1/${ch}/${arr.slice(i,i+30).join(',')}`)
-            .then(r=>r.ok?r.json():[]).catch(()=>[])
+          fetch(`https://api.dexscreener.com/tokens/v1/${ch}/${arr.slice(i, i + 30).join(',')}`)
+            .then(r => r.ok ? r.json() : []).catch(() => [])
         );
       }
     }
 
-    if(enrichFetches.length){
-      const enrichResults=await Promise.all(enrichFetches);
-      for(const res of enrichResults){
-        if(!Array.isArray(res))continue;
-        for(const p of res){
-          if(!p.pairAddress)continue;
-          const ex=P.has(p.pairAddress);
-          P.set(p.pairAddress,p);
-          if(!ex){added++;queueRug(p);}
+    if (enrichFetches.length) {
+      const enriched = await Promise.all(enrichFetches);
+      for (const batch of enriched) {
+        if (!Array.isArray(batch)) continue;
+        for (const p of batch) {
+          if (!p.pairAddress) continue;
+          if (!pairs.has(p.pairAddress)) { newCount++; queueRug(p); }
+          if (!p._source) p._source = 'profile';
+          pairs.set(p.pairAddress, p);
         }
       }
     }
 
-    detectVolSpikes();
-
-    // Cap at 2000
-    if(P.size>2000){
-      const s=[...P.entries()].sort((a,b)=>(b[1].pairCreatedAt||0)-(a[1].pairCreatedAt||0));
-      P.clear();for(const [k,v] of s.slice(0,1500))P.set(k,v);
+    // Process GeckoTerminal pools
+    let geckoTotal = 0;
+    for (const { chain, pools } of geckoResults) {
+      geckoTotal += pools.length;
+      for (const pool of pools) {
+        const a = pool.attributes || {};
+        if (!a.address) continue;
+        const gid = 'gt_' + chain + '_' + a.address;
+        if (!pairs.has(gid) && !hasPairByAddr(a.address)) {
+          const nameParts = (a.name || '').split(' / ');
+          pairs.set(gid, {
+            pairAddress: a.address,
+            chainId: chain === 'eth' ? 'ethereum' : chain,
+            dexId: a.dex_id || '',
+            baseToken: { address: a.base_token_address || '', name: a.base_token_name || nameParts[0] || '', symbol: nameParts[0] || '???' },
+            quoteToken: { symbol: nameParts[1] || 'SOL' },
+            priceUsd: a.base_token_price_usd || '0',
+            txns: {
+              m5: { buys: a.transactions?.m5?.buys || 0, sells: a.transactions?.m5?.sells || 0 },
+              h1: { buys: a.transactions?.h1?.buys || 0, sells: a.transactions?.h1?.sells || 0 },
+              h24: { buys: a.transactions?.h24?.buys || 0, sells: a.transactions?.h24?.sells || 0 },
+            },
+            volume: { m5: parseFloat(a.volume_usd?.m5) || 0, h1: parseFloat(a.volume_usd?.h1) || 0, h24: parseFloat(a.volume_usd?.h24) || 0 },
+            priceChange: { m5: parseFloat(a.price_change_percentage?.m5) || 0, h1: parseFloat(a.price_change_percentage?.h1) || 0, h24: parseFloat(a.price_change_percentage?.h24) || 0 },
+            liquidity: { usd: parseFloat(a.reserve_in_usd) || 0 },
+            fdv: parseFloat(a.fdv_usd) || 0,
+            pairCreatedAt: a.pool_created_at ? new Date(a.pool_created_at).getTime() : Date.now(),
+            _source: 'gecko'
+          });
+          newCount++;
+        }
+      }
     }
 
-    if(added>0&&snd)playAlert();
-    lg(`<span style="color:${added>0?'var(--gn)':'#555'}">+${added} new</span> | ${P.size} total | Profiles:${profileCount} Search:${searchCount} Gecko:${geckoCount} | Terms: ${pick.join(',')}`);
-    renderAll();
-    st.innerHTML=`<span class="dot"></span>${P.size} pairs | +${added} new`;
-    document.getElementById('stm').textContent=new Date().toLocaleTimeString();
-  }catch(e){
-    lg(`<span style="color:var(--rd)">ERR: ${e.message}</span>`);
-    st.textContent='Error: '+e.message;
-  }
-  busy=false;
-  processRug();
-}
+    // Volume spike detection
+    detectVolSpikes();
 
-function findByPoolAddr(addr){for(const [k,v] of P)if(v.pairAddress===addr)return true;return false;}
+    // Cap at 2000 pairs
+    if (pairs.size > 2000) {
+      const sorted = [...pairs.entries()].sort((a, b) => (b[1].pairCreatedAt || 0) - (a[1].pairCreatedAt || 0));
+      pairs.clear();
+      for (const [k, v] of sorted.slice(0, 1500)) pairs.set(k, v);
+    }
 
-function queueRug(pair){
-  const ch=chn(pair.chainId);
-  const addr=pair.baseToken?.address;
-  if(ch==='solana'&&addr&&!RC.has(addr)){RC.set(addr,{status:'pending'});rugQ.push(addr);}
-}
+    if (newCount > 0 && sound) playAlert();
 
-// ==================== RUGCHECK ====================
-async function processRug(){
-  if(rugBusy||rugQ.length===0)return;rugBusy=true;
-  lg(`RugCheck queue: ${rugQ.length}`);
-  while(rugQ.length>0){
-    const addr=rugQ.shift();
-    const ex=RC.get(addr);if(ex&&ex.status!=='pending')continue;
-    try{
-      const r=await fetch(`https://api.rugcheck.xyz/v1/tokens/${addr}/report/summary`);
-      if(r.ok){
-        const d=await r.json();
-        const risks=d.risks||[];const score=d.score??d.score_normalised??null;const lp=d.lpLockedPct??null;
-        let status='good';
-        const nm=risks.map(r=>(r.name||'').toLowerCase());
-        const mint=nm.some(n=>n.includes('mint'));const freeze=nm.some(n=>n.includes('freeze'));
-        const honey=nm.some(n=>n.includes('honeypot'));
-        const dangerN=risks.filter(r=>r.level==='danger'||r.level==='critical').length;
-        if(honey||(mint&&freeze)||dangerN>=3){status='bad';rugsB++;}
-        else if(mint||freeze||dangerN>=1)status='warn';
-        RC.set(addr,{status,risks,score,lp});rugN++;
-      }else{RC.set(addr,{status:'unknown',risks:[],score:null});rugN++;}
-    }catch(e){RC.set(addr,{status:'unknown',risks:[],score:null});rugN++;}
-    await new Promise(r=>setTimeout(r,350));
-    if(rugQ.length%5===0)renderAll();
-  }
-  rugBusy=false;renderAll();
-}
+    log(`+${newCount} new | pump:${pumpPairs.length} search:${searchTotal} profiles:${profiles.length} gecko:${geckoTotal} | total:${pairs.size} | terms: ${picked.join(',')}`);
 
-// ==================== VOLUME SPIKES ====================
-function detectVolSpikes(){
-  volA=[];
-  for(const [k,p] of P){
-    const v5=p.volume?.m5||0;const v1h=p.volume?.h1||0;const liq=p.liquidity?.usd||0;
-    const prev=prevVol.get(k);
-    if(liq>200&&v5>liq*0.2) volA.push({p,reason:`5m vol ${fmtU(v5)} = ${((v5/liq)*100).toFixed(0)}% of liq`,i:v5/liq});
-    if(prev&&prev.v5>0&&v5>prev.v5*3) volA.push({p,reason:`5m vol jumped ${(v5/prev.v5).toFixed(1)}x`,i:v5/prev.v5});
-    if(liq>500&&v1h>liq*5) volA.push({p,reason:`1h vol ${fmtU(v1h)} = ${(v1h/liq).toFixed(0)}x liq`,i:v1h/liq});
-  }
-  const byA=new Map();
-  for(const a of volA){const e=byA.get(a.p.pairAddress);if(!e||a.i>e.i)byA.set(a.p.pairAddress,a);}
-  volA=[...byA.values()].sort((a,b)=>b.i-a.i).slice(0,30);
-}
+    render();
+    document.getElementById('statusText').innerHTML = `<span class="live-dot"></span> Live — ${pairs.size} pairs tracked, +${newCount} new`;
+    document.getElementById('statusTime').textContent = new Date().toLocaleTimeString();
 
-// ==================== BUZZ SCORE ====================
-function bz(p){
-  let s=0;
-  const b=p.txns?.h24?.buys||0,sl=p.txns?.h24?.sells||0,b5=p.txns?.m5?.buys||0;
-  const v=p.volume?.h24||0,v5=p.volume?.m5||0,v1=p.volume?.h1||0,liq=p.liquidity?.usd||0;
-  const pc5=p.priceChange?.m5||0,pc1=p.priceChange?.h1||0;
-  const age=p.pairCreatedAt?(Date.now()-p.pairCreatedAt)/60000:9999;
-  if(b>0)s+=Math.min(b/Math.max(sl,1)*8,25);
-  s+=Math.min(b5*3,20);
-  if(liq>0)s+=Math.min((v1/liq)*5,20);
-  if(pc5>0)s+=Math.min(pc5*.3,15);
-  if(pc1>0)s+=Math.min(pc1*.1,10);
-  if(age<10)s+=15;else if(age<30)s+=10;else if(age<60)s+=5;
-  s+=Math.min((b+sl)*.1,10);
-  return Math.min(Math.round(s),100);
-}
-
-// ==================== HELPERS ====================
-function fmtU(n){return n==null?'--':n>=1e6?'$'+(n/1e6).toFixed(2)+'M':n>=1e3?'$'+(n/1e3).toFixed(1)+'K':'$'+(n||0).toFixed(0);}
-function ago(t){if(!t)return'?';const s=Math.floor((Date.now()-t)/1000);if(s<60)return s+'s';const m=Math.floor(s/60);if(m<60)return m+'m';const h=Math.floor(m/60);return h<24?h+'h':Math.floor(h/24)+'d';}
-function chn(id){id=(id||'').toLowerCase();if(id.includes('solana'))return'solana';if(id.includes('ethereum')||id==='eth')return'ethereum';if(id.includes('bsc')||id.includes('bnb'))return'bsc';if(id.includes('base'))return'base';return id;}
-function tcls(id){const c=chn(id);return c==='solana'?'tg-s':c==='ethereum'?'tg-e':c==='bsc'?'tg-b':c==='base'?'tg-ba':'tg-o';}
-function playAlert(){try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;o.type='sine';g.gain.value=.1;o.start();g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2);o.stop(c.currentTime+.2);}catch(e){}}
-function twl(a){if(wl.has(a)){wl.delete(a);tst('Removed');}else{wl.add(a);tst('Watching!');}localStorage.setItem('wl',JSON.stringify([...wl]));renderAll();}
-function cpca(a){navigator.clipboard.writeText(a).catch(()=>{});tst('CA copied!');}
-
-// ==================== CARD ====================
-function card(p,showW=true){
-  const bt=p.baseToken||{},qt=p.quoteToken||{},isN=!seen.has(p.pairAddress||'');
-  const rug=RC.get(bt.address),b=p.txns?.h24?.buys||0,s=p.txns?.h24?.sells||0;
-  const v=p.volume?.h24||0,liq=p.liquidity?.usd||0,pc5=p.priceChange?.m5,pc1=p.priceChange?.h1;
-  const buzz=bz(p),isSol=chn(p.chainId)==='solana',inW=wl.has(p.pairAddress);
-
-  let tr='trn',trl='NEW';
-  if(v>100000||(b+s)>500){tr='trh';trl='HOT';}
-  else if(v>10000||(b+s)>50){tr='trw';trl='WARM';}
-
-  let rh='';
-  if(isSol&&rug){
-    if(rug.status==='pending')rh='<div class="rb rl"><span class="sp"></span>Checking...</div>';
-    else if(rug.status==='bad'){const rn=(rug.risks||[]).slice(0,3).map(r=>r.name||'Risk').join(' | ');rh=`<div class="rb rba">RUG: ${rn}</div>`;}
-    else if(rug.status==='warn'){const rn=(rug.risks||[]).filter(r=>r.level!=='info').slice(0,2).map(r=>r.name).join(' | ');rh=`<div class="rb rw">CAUTION: ${rn||'Risks'}</div>`;}
-    else if(rug.status==='good')rh=`<div class="rb rok">SAFE — Score:${rug.score??'?'}${rug.lp!=null?' LP:'+rug.lp+'%':''}</div>`;
-  }else if(!isSol){
-    const f=[];
-    if(b>10&&s===0)f.push('HONEYPOT');
-    if(liq>0&&liq<500)f.push('Micro liq');
-    if(p.fdv&&liq>0&&p.fdv/liq>100)f.push('FDV/Liq:'+(p.fdv/liq).toFixed(0)+'x');
-    if(f.length)rh=`<div class="rb ${f[0]==='HONEYPOT'?'rba':'rw'}">${f.join(' | ')}</div>`;
+  } catch (err) {
+    log(`ERROR: ${err.message}`);
+    document.getElementById('statusText').textContent = 'Error: ' + err.message;
   }
 
-  let fh='';
-  if(rug&&rug.risks?.length)fh='<div class="fl">'+rug.risks.slice(0,5).map(r=>`<span class="${(r.level==='danger'||r.level==='critical')?'fd':r.level==='warn'?'fw':'fgx'}">${r.name||'risk'}</span>`).join('')+'</div>';
+  isFetching = false;
+  processRugQueue();
+}
 
-  const bc=buzz>=60?'var(--rd)':buzz>=30?'var(--yl)':'var(--cy)';
-  const bzh=`<div class="bz"><span style="font-size:7px;color:#444">BUZZ</span><div class="bz-bar"><div class="bz-f" style="width:${buzz}%;background:${bc}"></div></div><span class="bz-l" style="color:${bc}">${buzz}</span></div>`;
+function hasPairByAddr(addr) {
+  for (const [, p] of pairs) if (p.pairAddress === addr) return true;
+  return false;
+}
 
-  const tw=`https://x.com/search?q=${encodeURIComponent((bt.symbol||'')+' OR '+(bt.name||''))}&f=live`;
-  const tw$=`https://x.com/search?q=%24${encodeURIComponent(bt.symbol||'')}&f=live`;
-  const dex=`https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
-  const exp=(chn(p.chainId)==='solana'?'https://solscan.io/token/':chn(p.chainId)==='ethereum'?'https://etherscan.io/token/':chn(p.chainId)==='bsc'?'https://bscscan.com/token/':'https://basescan.org/token/')+(bt.address||'');
-  const rgu=isSol?`https://rugcheck.xyz/tokens/${bt.address}`:`https://tokensniffer.com/token/${chn(p.chainId)==='ethereum'?'eth':chn(p.chainId)}/${bt.address}`;
-  const wb=showW?`<span class="wlb ${inW?'wd':''}" onclick="twl('${p.pairAddress}')">${inW?'★':'☆'}</span>`:'';
+// ============ RUGCHECK ============
+function queueRug(pair) {
+  const addr = pair.baseToken?.address;
+  const ch = chainId(pair.chainId);
+  if (ch === 'solana' && addr && !rugCache.has(addr)) {
+    rugCache.set(addr, { status: 'pending' });
+    rugQueue.push(addr);
+  }
+}
 
-  return `<div class="card ${isN?'glow':''} ${rug&&rug.status==='bad'?'rbad':''}">
-    <span class="tr ${tr}">${trl}</span>
-    <div class="ct"><div>
-      <div class="cn">${bt.symbol||'???'} / ${qt.symbol||'???'} ${wb}</div>
-      <div class="ca">${ago(p.pairCreatedAt)} ago · ${bt.name||''} · ${p.dexId||''}</div>
-      <div class="cc" onclick="cpca('${bt.address||''}')">${bt.address?(bt.address.slice(0,6)+'...'+bt.address.slice(-4)+' [copy]'):''}</div>
-    </div><span class="tg ${tcls(p.chainId)}">${chn(p.chainId)}</span></div>
-    ${rh}${fh}${bzh}
-    <div class="cm">
-      <div class="mi"><span class="ml">Price</span><span class="mv">${p.priceUsd?'$'+parseFloat(p.priceUsd).toFixed(8):'--'}</span></div>
-      <div class="mi"><span class="ml">5m</span><span class="mv ${pc5>0?'g':pc5<0?'r':''}">${pc5!=null?(pc5>0?'+':'')+pc5.toFixed(1)+'%':'--'}</span></div>
-      <div class="mi"><span class="ml">1h</span><span class="mv ${pc1>0?'g':pc1<0?'r':''}">${pc1!=null?(pc1>0?'+':'')+pc1.toFixed(1)+'%':'--'}</span></div>
-      <div class="mi"><span class="ml">Liquidity</span><span class="mv">${fmtU(liq)}</span></div>
-      <div class="mi"><span class="ml">Vol 24h</span><span class="mv">${fmtU(v)}</span></div>
-      <div class="mi"><span class="ml">Vol 5m</span><span class="mv">${fmtU(p.volume?.m5)}</span></div>
-      <div class="mi"><span class="ml">FDV</span><span class="mv">${fmtU(p.fdv)}</span></div>
-      <div class="mi"><span class="ml">Buys</span><span class="mv g">${b}</span></div>
-      <div class="mi"><span class="ml">Sells</span><span class="mv r">${s}</span></div>
+async function processRugQueue() {
+  if (isRugChecking || rugQueue.length === 0) return;
+  isRugChecking = true;
+
+  while (rugQueue.length > 0) {
+    const addr = rugQueue.shift();
+    const cached = rugCache.get(addr);
+    if (cached && cached.status !== 'pending') continue;
+
+    try {
+      const res = await fetch(`https://api.rugcheck.xyz/v1/tokens/${addr}/report/summary`);
+      if (res.ok) {
+        const data = await res.json();
+        const risks = data.risks || [];
+        const score = data.score ?? data.score_normalised ?? null;
+        const lpLocked = data.lpLockedPct ?? null;
+
+        const riskNames = risks.map(r => (r.name || '').toLowerCase());
+        const hasMint = riskNames.some(n => n.includes('mint'));
+        const hasFreeze = riskNames.some(n => n.includes('freeze'));
+        const hasHoneypot = riskNames.some(n => n.includes('honeypot'));
+        const dangerCount = risks.filter(r => r.level === 'danger' || r.level === 'critical').length;
+
+        let status = 'good';
+        if (hasHoneypot || (hasMint && hasFreeze) || dangerCount >= 3) { status = 'bad'; rugsCaught++; }
+        else if (hasMint || hasFreeze || dangerCount >= 1) { status = 'warn'; }
+
+        rugCache.set(addr, { status, risks, score, lpLocked });
+        rugCheckedCount++;
+      } else {
+        rugCache.set(addr, { status: 'unknown', risks: [], score: null });
+        rugCheckedCount++;
+      }
+    } catch {
+      rugCache.set(addr, { status: 'unknown', risks: [], score: null });
+      rugCheckedCount++;
+    }
+
+    await new Promise(r => setTimeout(r, 350));
+    if (rugQueue.length % 5 === 0) render();
+  }
+
+  isRugChecking = false;
+  render();
+}
+
+// ============ VOLUME SPIKES ============
+function detectVolSpikes() {
+  volAlerts = [];
+  for (const [k, p] of pairs) {
+    const v5 = p.volume?.m5 || 0;
+    const v1h = p.volume?.h1 || 0;
+    const liq = p.liquidity?.usd || 0;
+    const prev = prevVols.get(k);
+
+    if (liq > 200 && v5 > liq * 0.2)
+      volAlerts.push({ pair: p, reason: `5m volume (${fmtUsd(v5)}) = ${((v5 / liq) * 100).toFixed(0)}% of liquidity`, score: v5 / liq });
+
+    if (prev && prev.v5 > 100 && v5 > prev.v5 * 3)
+      volAlerts.push({ pair: p, reason: `5m volume jumped ${(v5 / prev.v5).toFixed(1)}x since last scan`, score: v5 / prev.v5 });
+
+    if (liq > 500 && v1h > liq * 5)
+      volAlerts.push({ pair: p, reason: `1h volume (${fmtUsd(v1h)}) = ${(v1h / liq).toFixed(0)}x liquidity`, score: v1h / liq });
+  }
+
+  // Dedupe
+  const best = new Map();
+  for (const a of volAlerts) {
+    const k = a.pair.pairAddress;
+    if (!best.has(k) || a.score > best.get(k).score) best.set(k, a);
+  }
+  volAlerts = [...best.values()].sort((a, b) => b.score - a.score).slice(0, 20);
+}
+
+// ============ BUZZ SCORE ============
+function buzzScore(p) {
+  let score = 0;
+  const buys = p.txns?.h24?.buys || 0;
+  const sells = p.txns?.h24?.sells || 0;
+  const buys5m = p.txns?.m5?.buys || 0;
+  const vol1h = p.volume?.h1 || 0;
+  const liq = p.liquidity?.usd || 0;
+  const pc5 = p.priceChange?.m5 || 0;
+  const pc1h = p.priceChange?.h1 || 0;
+  const age = p.pairCreatedAt ? (Date.now() - p.pairCreatedAt) / 60000 : 9999;
+
+  if (buys > 0) score += Math.min((buys / Math.max(sells, 1)) * 8, 25);
+  score += Math.min(buys5m * 3, 20);
+  if (liq > 0) score += Math.min((vol1h / liq) * 5, 20);
+  if (pc5 > 0) score += Math.min(pc5 * 0.3, 15);
+  if (pc1h > 0) score += Math.min(pc1h * 0.1, 10);
+  if (age < 10) score += 15; else if (age < 30) score += 10; else if (age < 60) score += 5;
+  score += Math.min((buys + sells) * 0.1, 10);
+
+  return Math.min(Math.round(score), 100);
+}
+
+// ============ HELPERS ============
+function fmtUsd(n) {
+  if (n == null) return '--';
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+  return '$' + (n || 0).toFixed(0);
+}
+
+function timeAgo(ts) {
+  if (!ts) return '?';
+  const sec = Math.floor((Date.now() - ts) / 1000);
+  if (sec < 60) return sec + 's';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return min + 'm';
+  const hr = Math.floor(min / 60);
+  return hr < 24 ? hr + 'h' : Math.floor(hr / 24) + 'd';
+}
+
+function chainId(id) {
+  id = (id || '').toLowerCase();
+  if (id.includes('solana')) return 'solana';
+  if (id.includes('ethereum') || id === 'eth') return 'ethereum';
+  if (id.includes('bsc') || id.includes('bnb')) return 'bsc';
+  if (id.includes('base')) return 'base';
+  return id;
+}
+
+function chainBadgeClass(id) {
+  const c = chainId(id);
+  if (c === 'solana') return 'chain-sol';
+  if (c === 'ethereum') return 'chain-eth';
+  if (c === 'bsc') return 'chain-bsc';
+  if (c === 'base') return 'chain-base';
+  return '';
+}
+
+function playAlert() {
+  try {
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = 880; osc.type = 'sine'; gain.gain.value = 0.1;
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    osc.stop(ctx.currentTime + 0.2);
+  } catch {}
+}
+
+function toggleWatch(addr) {
+  if (watchlist.has(addr)) { watchlist.delete(addr); toast('Removed'); }
+  else { watchlist.add(addr); toast('Watching!'); }
+  localStorage.setItem('alpha_wl', JSON.stringify([...watchlist]));
+  render();
+}
+
+function copyCA(addr) {
+  navigator.clipboard.writeText(addr).catch(() => {});
+  toast('CA copied!');
+}
+
+// ============ CARD HTML ============
+function buildCard(p) {
+  const bt = p.baseToken || {};
+  const qt = p.quoteToken || {};
+  const isNew = !seenIds.has(p.pairAddress);
+  const rug = rugCache.get(bt.address);
+  const buys = p.txns?.h24?.buys || 0;
+  const sells = p.txns?.h24?.sells || 0;
+  const vol = p.volume?.h24 || 0;
+  const liq = p.liquidity?.usd || 0;
+  const pc5 = p.priceChange?.m5;
+  const pc1h = p.priceChange?.h1;
+  const buzz = buzzScore(p);
+  const isSol = chainId(p.chainId) === 'solana';
+  const inWL = watchlist.has(p.pairAddress);
+  const ageMin = p.pairCreatedAt ? (Date.now() - p.pairCreatedAt) / 60000 : 999;
+
+  // Age badge
+  let ageClass = 'age-warm', ageText = timeAgo(p.pairCreatedAt);
+  if (ageMin < 5) { ageClass = 'age-fresh'; ageText = timeAgo(p.pairCreatedAt) + ' FRESH'; }
+  else if (ageMin > 60) { ageClass = 'age-hot'; }
+
+  // Rug display
+  let rugHTML = '';
+  if (isSol && rug) {
+    if (rug.status === 'pending') rugHTML = '<div class="rug-box rug-pending"><span class="spin"></span> Checking RugCheck...</div>';
+    else if (rug.status === 'bad') {
+      const names = (rug.risks || []).slice(0, 3).map(r => r.name || 'Risk').join(' · ');
+      rugHTML = `<div class="rug-box rug-danger">⚠ RUG — ${names}</div>`;
+    } else if (rug.status === 'warn') {
+      const names = (rug.risks || []).filter(r => r.level !== 'info').slice(0, 2).map(r => r.name).join(' · ');
+      rugHTML = `<div class="rug-box rug-warn">⚠ Caution — ${names || 'Risks found'}</div>`;
+    } else if (rug.status === 'good') {
+      rugHTML = `<div class="rug-box rug-safe">✓ Safe — Score: ${rug.score ?? '?'}${rug.lpLocked != null ? ' · LP Locked: ' + rug.lpLocked + '%' : ''}</div>`;
+    }
+  } else if (!isSol) {
+    const warnings = [];
+    if (buys > 10 && sells === 0) warnings.push('⚠ Honeypot: 0 sells');
+    if (liq > 0 && liq < 500) warnings.push('Low liquidity');
+    if (warnings.length) {
+      rugHTML = `<div class="rug-box ${warnings[0].includes('Honeypot') ? 'rug-danger' : 'rug-warn'}">${warnings.join(' · ')}</div>`;
+    }
+  }
+
+  // Buzz bar
+  const buzzColor = buzz >= 60 ? '#ff3355' : buzz >= 30 ? '#f3ba2f' : '#00e5ff';
+  const buzzHTML = `<div class="buzz-row">
+    <span class="buzz-label">Buzz</span>
+    <div class="buzz-track"><div class="buzz-fill" style="width:${buzz}%;background:${buzzColor}"></div></div>
+    <span class="buzz-score" style="color:${buzzColor}">${buzz}</span>
+  </div>`;
+
+  // Links
+  const twSearch = `https://x.com/search?q=${encodeURIComponent((bt.symbol || '') + ' OR ' + (bt.name || ''))}&f=live`;
+  const twCash = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol || '')}&f=live`;
+  const dexUrl = `https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
+  const explorer = (chainId(p.chainId) === 'solana' ? 'https://solscan.io/token/' :
+    chainId(p.chainId) === 'ethereum' ? 'https://etherscan.io/token/' :
+    chainId(p.chainId) === 'bsc' ? 'https://bscscan.com/token/' : 'https://basescan.org/token/') + (bt.address || '');
+  const rugUrl = isSol ? `https://rugcheck.xyz/tokens/${bt.address}` :
+    `https://tokensniffer.com/token/${chainId(p.chainId) === 'ethereum' ? 'eth' : chainId(p.chainId)}/${bt.address}`;
+
+  return `<div class="card ${isNew ? 'new-glow' : ''} ${rug && rug.status === 'bad' ? 'rug-border' : ''}">
+    <span class="age-badge ${ageClass}">${ageText}</span>
+    <div class="card-top">
+      <div>
+        <div class="token-name">
+          ${bt.symbol || '???'} / ${qt.symbol || '???'}
+          <span class="star-btn ${inWL ? 'starred' : ''}" onclick="toggleWatch('${p.pairAddress}')">${inWL ? '★' : '☆'}</span>
+        </div>
+        <div class="token-sub">${bt.name || ''} · ${p.dexId || chainId(p.chainId)}</div>
+        <div class="token-ca" onclick="copyCA('${bt.address || ''}')">${bt.address ? bt.address.slice(0, 8) + '...' + bt.address.slice(-6) + '  [click to copy]' : ''}</div>
+      </div>
+      <span class="chain-badge ${chainBadgeClass(p.chainId)}">${chainId(p.chainId)}</span>
     </div>
-    <div class="lks">
-      <a href="${tw}" target="_blank" class="lk lt">X Search</a>
-      <a href="${tw$}" target="_blank" class="lk lt">$${bt.symbol||''}</a>
-      <a href="${dex}" target="_blank" class="lk ld">DEXScreener</a>
-      <a href="${exp}" target="_blank" class="lk ls">Explorer</a>
-      <a href="${rgu}" target="_blank" class="lk lr">RugCheck</a>
+
+    ${rugHTML}
+    ${buzzHTML}
+
+    <div class="data-grid">
+      <div class="data-item"><label>Price</label><div class="val">${p.priceUsd ? '$' + parseFloat(p.priceUsd).toFixed(8) : '--'}</div></div>
+      <div class="data-item"><label>5 min</label><div class="val ${pc5 > 0 ? 'green' : pc5 < 0 ? 'red' : ''}">${pc5 != null ? (pc5 > 0 ? '+' : '') + pc5.toFixed(1) + '%' : '--'}</div></div>
+      <div class="data-item"><label>1 hour</label><div class="val ${pc1h > 0 ? 'green' : pc1h < 0 ? 'red' : ''}">${pc1h != null ? (pc1h > 0 ? '+' : '') + pc1h.toFixed(1) + '%' : '--'}</div></div>
+      <div class="data-item"><label>Liquidity</label><div class="val">${fmtUsd(liq)}</div></div>
+      <div class="data-item"><label>Volume 24h</label><div class="val">${fmtUsd(vol)}</div></div>
+      <div class="data-item"><label>Volume 5m</label><div class="val">${fmtUsd(p.volume?.m5)}</div></div>
+      <div class="data-item"><label>Market Cap</label><div class="val">${fmtUsd(p.fdv || p.marketCap)}</div></div>
+      <div class="data-item"><label>Buys (24h)</label><div class="val green">${buys}</div></div>
+      <div class="data-item"><label>Sells (24h)</label><div class="val red">${sells}</div></div>
+    </div>
+
+    <div class="actions">
+      <a href="${twSearch}" target="_blank" class="action-link al-twitter">Search X</a>
+      <a href="${twCash}" target="_blank" class="action-link al-twitter">$${bt.symbol || ''}</a>
+      <a href="${dexUrl}" target="_blank" class="action-link al-dex">DEXScreener</a>
+      <a href="${explorer}" target="_blank" class="action-link al-explorer">Explorer</a>
+      <a href="${rugUrl}" target="_blank" class="action-link al-rug">RugCheck</a>
     </div>
   </div>`;
 }
 
-// ==================== RENDER ====================
-function renderAll(){renderPairs();renderBuzz();renderVol();renderWL();}
+// ============ FILTERS ============
+function getFiltered(pairList) {
+  const filterAge = parseInt(document.getElementById('filterAge').value) || 0;
+  const filterVol = parseFloat(document.getElementById('filterVol').value) || 0;
+  const hideRugs = document.getElementById('hideRugsBtn').classList.contains('on');
+  const query = document.getElementById('searchBox').value.toLowerCase().trim();
+  const now = Date.now();
+  let rugHidden = 0;
 
-function renderPairs(){
-  const fL=parseFloat(document.getElementById('fL').value)||0;
-  const fV2=parseFloat(document.getElementById('fV').value)||0;
-  const fT=parseInt(document.getElementById('fT').value)||0;
-  const fA=parseInt(document.getElementById('fA').value)||0;
-  const fBz=parseInt(document.getElementById('fBz').value)||0;
-  const fR=document.getElementById('fR').checked;
-  const q=document.getElementById('search').value.toLowerCase().trim();
-  const now=Date.now();
-  let pairs=[...P.values()],rH=0;
+  const filtered = pairList.filter(p => {
+    if (activeChain !== 'all' && chainId(p.chainId) !== activeChain) return false;
 
-  pairs=pairs.filter(p=>{
-    if(chain!=='all'&&chn(p.chainId)!==chain)return false;
-    if(q){const h=((p.baseToken?.symbol||'')+' '+(p.baseToken?.name||'')+' '+(p.baseToken?.address||'')).toLowerCase();if(!h.includes(q))return false;}
-    if((p.liquidity?.usd||0)<fL)return false;
-    if((p.volume?.h24||0)<fV2)return false;
-    if(((p.txns?.h24?.buys||0)+(p.txns?.h24?.sells||0))<fT)return false;
-    if(fA>0&&p.pairCreatedAt&&(now-p.pairCreatedAt)/60000>fA)return false;
-    if(fBz>0&&bz(p)<fBz)return false;
-    if(fR){const r=RC.get(p.baseToken?.address);if(r&&r.status==='bad'){rH++;return false;}if((p.txns?.h24?.buys||0)>10&&(p.txns?.h24?.sells||0)===0){rH++;return false;}}
+    if (query) {
+      const hay = ((p.baseToken?.symbol || '') + ' ' + (p.baseToken?.name || '') + ' ' + (p.baseToken?.address || '')).toLowerCase();
+      if (!hay.includes(query)) return false;
+    }
+
+    if ((p.volume?.h24 || 0) < filterVol) return false;
+
+    if (filterAge > 0 && p.pairCreatedAt && (now - p.pairCreatedAt) / 60000 > filterAge) return false;
+
+    if (hideRugs) {
+      const rug = rugCache.get(p.baseToken?.address);
+      if (rug && rug.status === 'bad') { rugHidden++; return false; }
+      if ((p.txns?.h24?.buys || 0) > 10 && (p.txns?.h24?.sells || 0) === 0) { rugHidden++; return false; }
+    }
+
     return true;
   });
 
-  const so=document.getElementById('sort').value;
-  if(so==='newest')pairs.sort((a,b)=>(b.pairCreatedAt||0)-(a.pairCreatedAt||0));
-  else if(so==='buzz')pairs.sort((a,b)=>bz(b)-bz(a));
-  else if(so==='rug')pairs.sort((a,b)=>{const ra=RC.get(a.baseToken?.address),rb=RC.get(b.baseToken?.address);return(rb?rb.status==='good'?2:rb.status==='warn'?1:0:-1)-(ra?ra.status==='good'?2:ra.status==='warn'?1:0:-1);});
-  else if(so==='liq')pairs.sort((a,b)=>(b.liquidity?.usd||0)-(a.liquidity?.usd||0));
-  else if(so==='vol')pairs.sort((a,b)=>(b.volume?.h24||0)-(a.volume?.h24||0));
-  else if(so==='gain')pairs.sort((a,b)=>(b.priceChange?.h24||-999)-(a.priceChange?.h24||-999));
-  else if(so==='volspike')pairs.sort((a,b)=>((b.volume?.m5||0)/(b.liquidity?.usd||1))-((a.volume?.m5||0)/(a.liquidity?.usd||1)));
-
-  document.getElementById('xT').textContent=P.size;
-  document.getElementById('xS').textContent=pairs.length;
-  document.getElementById('xR').textContent=rugsB;
-  document.getElementById('xC').textContent=rugN;
-  document.getElementById('xVA').textContent=volA.length;
-  document.getElementById('tP').textContent=pairs.length;
-  document.getElementById('tV').textContent=volA.length;
-
-  // Newest pair age
-  const newest=[...P.values()].reduce((b,p)=>(p.pairCreatedAt||0)>(b.pairCreatedAt||0)?p:b,[...P.values()][0]||{});
-  document.getElementById('xN').textContent=newest.pairCreatedAt?ago(newest.pairCreatedAt):'--';
-
-  const hm=document.getElementById('hm');
-  const hid=P.size-pairs.length;
-  if(hid>0){hm.style.display='block';hm.textContent=`${hid} hidden (${rH} rugs)`;}else hm.style.display='none';
-
-  const g=document.getElementById('grid');
-  if(!pairs.length)g.innerHTML='<div class="empty"><h2>No pairs match</h2><p>Try Degen preset</p></div>';
-  else g.innerHTML=pairs.slice(0,150).map(p=>card(p)).join('');
-  P.forEach(p=>seen.add(p.pairAddress||''));
+  return { filtered, rugHidden };
 }
 
-function renderBuzz(){
-  const items=[...P.values()].map(p=>({p,b:bz(p)})).filter(x=>x.b>0).sort((a,b)=>b.b-a.b).slice(0,40);
-  document.getElementById('tB').textContent=items.filter(x=>x.b>=40).length;
-  const el=document.getElementById('buzzL');
-  if(!items.length){el.innerHTML='<div class="empty"><h2>No buzz</h2></div>';return;}
-  el.innerHTML=items.map(({p,b})=>{
-    const bt=p.baseToken||{},c=b>=60?'var(--rd)':b>=30?'var(--yl)':'var(--cy)';
-    const tw=`https://x.com/search?q=${encodeURIComponent((bt.symbol||'')+' '+(bt.name||''))}&f=live`;
-    const tw$=`https://x.com/search?q=%24${encodeURIComponent(bt.symbol||'')}&f=live`;
-    return `<div class="ti"><div class="tl">
-      <div class="tn">${bt.symbol||'???'} <span style="color:#555;font-size:9px">${bt.name||''}</span></div>
-      <div class="ts2">${chn(p.chainId)} · ${ago(p.pairCreatedAt)} · Liq:${fmtU(p.liquidity?.usd)} · Vol:${fmtU(p.volume?.h24)} · B/S:<span style="color:var(--gn)">${p.txns?.h24?.buys||0}</span>/<span style="color:var(--rd)">${p.txns?.h24?.sells||0}</span></div>
-    </div><div style="display:flex;gap:4px;align-items:center">
-      <a href="${tw}" target="_blank" class="lk lt">X</a><a href="${tw$}" target="_blank" class="lk lt">$${bt.symbol||''}</a>
-      <div class="tsc" style="color:${c}">${b}</div>
-    </div></div>`;
-  }).join('');
+function sortPairs(list) {
+  const mode = document.getElementById('sortMode').value;
+  const sorted = [...list];
+  switch (mode) {
+    case 'newest': sorted.sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0)); break;
+    case 'buzz': sorted.sort((a, b) => buzzScore(b) - buzzScore(a)); break;
+    case 'volume': sorted.sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0)); break;
+    case 'gainers': sorted.sort((a, b) => (b.priceChange?.h24 || -999) - (a.priceChange?.h24 || -999)); break;
+    case 'safest': sorted.sort((a, b) => {
+      const ra = rugCache.get(a.baseToken?.address);
+      const rb = rugCache.get(b.baseToken?.address);
+      return (rb ? rb.status === 'good' ? 2 : rb.status === 'warn' ? 1 : 0 : -1) -
+             (ra ? ra.status === 'good' ? 2 : ra.status === 'warn' ? 1 : 0 : -1);
+    }); break;
+  }
+  return sorted;
 }
 
-function renderVol(){
-  const el=document.getElementById('volL');
-  if(!volA.length){el.innerHTML='<div class="empty"><h2>No spikes</h2><p>Monitoring...</p></div>';return;}
-  el.innerHTML=volA.map(a=>{
-    const p=a.p,bt=p.baseToken||{};
-    const dex=`https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
-    const tw=`https://x.com/search?q=${encodeURIComponent((bt.symbol||'')+' '+(bt.name||''))}&f=live`;
-    return `<div class="va"><div style="display:flex;justify-content:space-between;align-items:center"><div>
-      <div class="vn">${bt.symbol||'???'} / ${p.quoteToken?.symbol||'???'}</div>
-      <div class="vs">${a.reason}</div>
-      <div class="vs">${chn(p.chainId)} · Liq:${fmtU(p.liquidity?.usd)} · Vol5m:${fmtU(p.volume?.m5)} · Vol1h:${fmtU(p.volume?.h1)}</div>
-    </div><div style="display:flex;gap:4px"><a href="${tw}" target="_blank" class="lk lt">X</a><a href="${dex}" target="_blank" class="lk ld">Chart</a></div></div></div>`;
-  }).join('');
+// ============ RENDER ============
+function render() {
+  const allPairs = [...pairs.values()];
+
+  // Split pump.fun pairs from others
+  const pumpPairs = allPairs.filter(p => (p.dexId || '').toLowerCase() === 'pumpfun' || p._source === 'pumpfun');
+  const otherPairs = allPairs.filter(p => !((p.dexId || '').toLowerCase() === 'pumpfun' || p._source === 'pumpfun'));
+
+  // Apply filters
+  const { filtered: filteredPump, rugHidden: rh1 } = getFiltered(pumpPairs);
+  const { filtered: filteredOther, rugHidden: rh2 } = getFiltered(otherPairs);
+  const totalRugHidden = rh1 + rh2;
+
+  const sortedPump = sortPairs(filteredPump);
+  const sortedOther = sortPairs(filteredOther);
+
+  // Stats
+  document.getElementById('sTotal').textContent = pairs.size;
+  document.getElementById('sShowing').textContent = sortedPump.length + sortedOther.length;
+  document.getElementById('sRugs').textContent = rugsCaught;
+  document.getElementById('sChecked').textContent = rugCheckedCount;
+
+  const newest = allPairs.reduce((best, p) => (p.pairCreatedAt || 0) > (best.pairCreatedAt || 0) ? p : best, allPairs[0] || {});
+  document.getElementById('sNewest').textContent = newest.pairCreatedAt ? timeAgo(newest.pairCreatedAt) + ' ago' : '--';
+
+  // Hidden info
+  const totalHidden = allPairs.length - sortedPump.length - sortedOther.length;
+  const hiddenEl = document.getElementById('hiddenInfo');
+  if (totalHidden > 0) {
+    hiddenEl.style.display = 'block';
+    hiddenEl.textContent = `${totalHidden} pairs hidden by filters (${totalRugHidden} rugs)`;
+  } else {
+    hiddenEl.style.display = 'none';
+  }
+
+  // Pump.fun grid
+  document.getElementById('pumpCount').textContent = sortedPump.length + ' pairs';
+  const pumpGrid = document.getElementById('pumpGrid');
+  if (sortedPump.length === 0) {
+    pumpGrid.innerHTML = '<div class="empty-state"><h3>No pump.fun pairs match filters</h3></div>';
+  } else {
+    pumpGrid.innerHTML = sortedPump.slice(0, 60).map(buildCard).join('');
+  }
+
+  // Other pairs grid
+  document.getElementById('allCount').textContent = sortedOther.length + ' pairs';
+  const allGrid = document.getElementById('allGrid');
+  if (sortedOther.length === 0) {
+    allGrid.innerHTML = '<div class="empty-state"><h3>No other pairs match filters</h3></div>';
+  } else {
+    allGrid.innerHTML = sortedOther.slice(0, 60).map(buildCard).join('');
+  }
+
+  // Volume alerts
+  document.getElementById('volCount').textContent = volAlerts.length + ' alerts';
+  const volSection = document.getElementById('volSection');
+  if (volAlerts.length === 0) {
+    volSection.innerHTML = '<div class="empty-state"><h3>No volume spikes detected yet</h3><p>Monitoring for unusual activity...</p></div>';
+  } else {
+    volSection.innerHTML = volAlerts.slice(0, 15).map(a => {
+      const p = a.pair, bt = p.baseToken || {};
+      const tw = `https://x.com/search?q=${encodeURIComponent((bt.symbol || '') + ' ' + (bt.name || ''))}&f=live`;
+      const dex = `https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
+      return `<div class="vol-alert-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="vol-name">${bt.symbol || '???'} / ${p.quoteToken?.symbol || '???'}</div>
+            <div class="vol-reason">${a.reason}</div>
+            <div class="vol-stats">${chainId(p.chainId)} · Liq: ${fmtUsd(p.liquidity?.usd)} · Vol 5m: ${fmtUsd(p.volume?.m5)} · Vol 1h: ${fmtUsd(p.volume?.h1)}</div>
+          </div>
+          <div class="vol-links">
+            <a href="${tw}" target="_blank" class="action-link al-twitter">X</a>
+            <a href="${dex}" target="_blank" class="action-link al-dex">Chart</a>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Buzz rankings
+  const buzzItems = allPairs.map(p => ({ p, b: buzzScore(p) })).filter(x => x.b > 5).sort((a, b) => b.b - a.b).slice(0, 25);
+  document.getElementById('buzzCount').textContent = buzzItems.filter(x => x.b >= 40).length + ' trending';
+  const buzzSection = document.getElementById('buzzSection');
+  if (buzzItems.length === 0) {
+    buzzSection.innerHTML = '<div class="empty-state"><h3>No buzz data yet</h3></div>';
+  } else {
+    buzzSection.innerHTML = buzzItems.map(({ p, b }) => {
+      const bt = p.baseToken || {};
+      const color = b >= 60 ? '#ff3355' : b >= 30 ? '#f3ba2f' : '#00e5ff';
+      const tw = `https://x.com/search?q=${encodeURIComponent((bt.symbol || '') + ' ' + (bt.name || ''))}&f=live`;
+      const twCash = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol || '')}&f=live`;
+      return `<div class="buzz-item">
+        <div class="buzz-item-left">
+          <div class="buzz-item-name">${bt.symbol || '???'} <span style="color:#555;font-size:10px">${bt.name || ''}</span></div>
+          <div class="buzz-item-sub">${chainId(p.chainId)} · ${timeAgo(p.pairCreatedAt)} old · Liq: ${fmtUsd(p.liquidity?.usd)} · Vol: ${fmtUsd(p.volume?.h24)} · Buys: <span style="color:#00ff88">${p.txns?.h24?.buys || 0}</span> Sells: <span style="color:#ff3355">${p.txns?.h24?.sells || 0}</span></div>
+        </div>
+        <div class="buzz-item-right">
+          <a href="${tw}" target="_blank" class="action-link al-twitter">X</a>
+          <a href="${twCash}" target="_blank" class="action-link al-twitter">$${bt.symbol || ''}</a>
+          <div class="buzz-number" style="color:${color}">${b}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Mark seen
+  pairs.forEach(p => seenIds.add(p.pairAddress));
 }
 
-function renderWL(){
-  document.getElementById('tW').textContent=wl.size;
-  const g=document.getElementById('wlG');
-  if(!wl.size){g.innerHTML='<div class="empty"><h2>Empty</h2><p>Star any pair</p></div>';return;}
-  const pairs=[...wl].map(a=>P.get(a)).filter(Boolean);
-  if(!pairs.length){g.innerHTML='<div class="empty"><h2>Loading...</h2></div>';return;}
-  g.innerHTML=pairs.map(p=>card(p,true)).join('');
+// ============ CONTROLS ============
+function setChain(c, el) {
+  activeChain = c;
+  document.querySelectorAll('.filters .toggle-btn').forEach(b => {
+    if (b.parentElement.previousElementSibling?.textContent.trim() === 'Chain:') b.classList.remove('on');
+  });
+  el.classList.add('on');
+  render();
 }
 
-// ==================== CONTROLS ====================
-function setTab(n,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));el.classList.add('on');document.getElementById('pnl'+n.charAt(0).toUpperCase()+n.slice(1)).classList.add('on');}
-function setC(c,el){chain=c;document.querySelectorAll('.ch').forEach(e=>e.classList.remove('on'));el.classList.add('on');renderPairs();}
-function pre(p,el){
-  document.querySelectorAll('.pre').forEach(e=>e.classList.remove('on'));el.classList.add('on');
-  const f={degen:{l:0,v:0,t:0,a:'0',b:0,r:false},safe:{l:1000,v:0,t:10,a:'60',b:0,r:true},strict:{l:5000,v:5000,t:50,a:'60',b:20,r:true},sniper:{l:0,v:0,t:3,a:'5',b:20,r:true}}[p];
-  document.getElementById('fL').value=f.l;document.getElementById('fV').value=f.v;
-  document.getElementById('fT').value=f.t;document.getElementById('fA').value=f.a;
-  document.getElementById('fBz').value=f.b;document.getElementById('fR').checked=f.r;
-  renderPairs();
-}
-function setupTimer(){if(timer)clearInterval(timer);const ms=parseInt(document.getElementById('interval').value);if(ms>0)timer=setInterval(doFetch,ms);}
-document.getElementById('sort').addEventListener('change',renderPairs);
-document.getElementById('interval').addEventListener('change',setupTimer);
-document.getElementById('search').addEventListener('input',renderPairs);
-['fL','fV','fT','fA','fBz'].forEach(id=>document.getElementById(id).addEventListener('change',renderPairs));
-document.getElementById('fR').addEventListener('change',renderPairs);
+function applyPreset(name, el) {
+  // Update active state
+  el.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
 
-// ==================== GO ====================
-lg('ALPHA TRACKER v3 — starting...');
-doFetch();
-setupTimer();
+  switch (name) {
+    case 'all':
+      document.getElementById('filterAge').value = '0';
+      document.getElementById('filterVol').value = 0;
+      document.getElementById('hideRugsBtn').classList.add('on');
+      break;
+    case 'safe':
+      document.getElementById('filterAge').value = '60';
+      document.getElementById('filterVol').value = 1000;
+      document.getElementById('hideRugsBtn').classList.add('on');
+      break;
+    case 'sniper':
+      document.getElementById('filterAge').value = '5';
+      document.getElementById('filterVol').value = 0;
+      document.getElementById('hideRugsBtn').classList.add('on');
+      break;
+  }
+  render();
+}
+
+function setupRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  const ms = parseInt(document.getElementById('refreshRate').value);
+  if (ms > 0) refreshTimer = setInterval(fetchAll, ms);
+}
+
+// Event listeners
+document.getElementById('sortMode').addEventListener('change', render);
+document.getElementById('refreshRate').addEventListener('change', setupRefresh);
+document.getElementById('searchBox').addEventListener('input', render);
+document.getElementById('filterAge').addEventListener('change', render);
+document.getElementById('filterVol').addEventListener('change', render);
+
+// ============ START ============
+log('Alpha Tracker starting...');
+fetchAll();
+setupRefresh();
 </script>
 </body>
 </html>
