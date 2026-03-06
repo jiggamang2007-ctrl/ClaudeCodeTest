@@ -6,575 +6,215 @@
 <title>Alpha Tracker</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a12; color: #ddd; font-family: 'Segoe UI', system-ui, sans-serif; }
 
-body {
-  background: #09090f;
-  color: #ddd;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-}
-
-/* ── Header ── */
-.header {
+.top-bar {
   background: #101020;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  border-bottom: 1px solid #1c1c30;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.header h1 {
-  font-size: 18px;
-  background: linear-gradient(90deg, #00e5ff, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.header-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.header-controls select,
-.header-controls input[type="text"] {
-  background: #0c0c18;
-  color: #ccc;
-  border: 1px solid #2a2a40;
-  padding: 7px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-.header-controls select:focus,
-.header-controls input:focus {
-  outline: none;
-  border-color: #00e5ff;
-}
-
-.btn {
-  padding: 7px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  background: #00e5ff;
-  color: #000;
-  transition: 0.15s;
-}
-
-.btn:hover { opacity: 0.85; }
-
-/* ── Status ── */
-.status {
-  background: #0c0c18;
-  padding: 6px 20px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: #666;
-  border-bottom: 1px solid #1c1c30;
-}
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  background: #00ff88;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 5px;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-/* ── Filters ── */
-.filters {
-  background: #0c0c18;
   padding: 10px 20px;
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
   align-items: center;
-  border-bottom: 1px solid #1c1c30;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.filter-group label {
-  font-size: 11px;
-  color: #888;
-}
-
-.filter-group select,
-.filter-group input[type="number"] {
-  background: #09090f;
-  color: #ccc;
-  border: 1px solid #2a2a40;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-size: 11px;
-  width: 90px;
-}
-
-.toggle-btn {
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid #2a2a40;
-  background: #0c0c18;
-  color: #888;
-  transition: 0.15s;
-}
-
-.toggle-btn:hover { border-color: #555; }
-.toggle-btn.on { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; color: #00e5ff; }
-
-/* ── Main ── */
-.main { padding: 16px 20px; }
-
-/* ── Stats Bar ── */
-.stat-bar {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  font-size: 12px;
-  color: #666;
-}
-
-.stat-bar span { color: #fff; font-weight: 700; }
-
-/* ── Section Headers ── */
-.section-head {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #1c1c30;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-head .dot-purple {
-  width: 8px;
-  height: 8px;
-  background: #a855f7;
-  border-radius: 50%;
-}
-
-.section-head .dot-blue {
-  width: 8px;
-  height: 8px;
-  background: #00e5ff;
-  border-radius: 50%;
-}
-
-.section-head .count {
-  font-size: 11px;
-  color: #666;
-  font-weight: 400;
-}
-
-/* ── Card Grid ── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-/* ── Pair Card ── */
-.card {
-  background: #111120;
-  border: 1px solid #1c1c30;
-  border-radius: 10px;
-  padding: 14px;
-  position: relative;
-  transition: 0.2s;
-}
-
-.card:hover { border-color: #2a2a50; }
-.card.new-glow { animation: newglow 2.5s ease-out; }
-.card.rug-border { border-color: rgba(255, 50, 80, 0.3); }
-
-@keyframes newglow {
-  0% { border-color: #00e5ff; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); }
-  100% { border-color: #1c1c30; box-shadow: none; }
-}
-
-/* Card top row */
-.card-top {
-  display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.token-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.token-sub {
-  font-size: 11px;
-  color: #555;
-  margin-top: 2px;
-}
-
-.token-ca {
-  font-size: 10px;
-  color: #383850;
-  margin-top: 3px;
-  cursor: pointer;
-  word-break: break-all;
-  transition: 0.15s;
-}
-
-.token-ca:hover { color: #666; }
-
-.chain-badge {
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 5px;
-  font-weight: 600;
-}
-
-.chain-sol { background: rgba(153, 69, 255, 0.12); color: #a855f7; }
-.chain-eth { background: rgba(98, 126, 234, 0.12); color: #627eea; }
-.chain-bsc { background: rgba(243, 186, 47, 0.12); color: #f3ba2f; }
-.chain-base { background: rgba(0, 82, 255, 0.12); color: #3b82f6; }
-
-.age-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 5px;
-  font-weight: 700;
-}
-
-.age-hot { background: rgba(255, 50, 80, 0.12); color: #ff3355; }
-.age-warm { background: rgba(243, 186, 47, 0.12); color: #f3ba2f; }
-.age-fresh { background: rgba(0, 255, 136, 0.12); color: #00ff88; }
-
-/* Rug check result */
-.rug-box {
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.rug-safe { background: rgba(0, 255, 136, 0.08); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.15); }
-.rug-warn { background: rgba(243, 186, 47, 0.08); color: #f3ba2f; border: 1px solid rgba(243, 186, 47, 0.15); }
-.rug-danger { background: rgba(255, 50, 80, 0.08); color: #ff3355; border: 1px solid rgba(255, 50, 80, 0.15); }
-.rug-pending { background: rgba(100, 100, 100, 0.08); color: #555; border: 1px solid rgba(100, 100, 100, 0.15); }
-
-/* Buzz bar */
-.buzz-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.buzz-label {
-  font-size: 10px;
-  color: #555;
-  min-width: 32px;
-}
-
-.buzz-track {
-  flex: 1;
-  height: 4px;
-  background: #1c1c30;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.buzz-fill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 0.3s;
-}
-
-.buzz-score {
-  font-size: 11px;
-  font-weight: 700;
-  min-width: 28px;
-  text-align: right;
-}
-
-/* Data grid */
-.data-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.data-item label {
-  display: block;
-  font-size: 9px;
-  color: #444;
-  margin-bottom: 1px;
-}
-
-.data-item .val {
-  font-size: 12px;
-  font-weight: 600;
-  color: #bbb;
-}
-
-.val.green { color: #00ff88; }
-.val.red { color: #ff3355; }
-
-/* Action links */
-.actions {
-  display: flex;
-  gap: 6px;
   flex-wrap: wrap;
-}
-
-.action-link {
-  font-size: 10px;
-  padding: 4px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.15s;
-}
-
-.action-link:hover { opacity: 0.8; }
-.al-twitter { background: rgba(29, 161, 242, 0.1); color: #1da1f2; }
-.al-dex { background: rgba(0, 229, 255, 0.1); color: #00e5ff; }
-.al-explorer { background: rgba(0, 255, 136, 0.1); color: #00ff88; }
-.al-rug { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
-
-.star-btn {
-  font-size: 12px;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid #2a2a40;
-  background: transparent;
-  color: #555;
-  transition: 0.15s;
-  margin-left: 6px;
-}
-
-.star-btn:hover { color: #f3ba2f; border-color: #f3ba2f; }
-.star-btn.starred { color: #f3ba2f; border-color: #f3ba2f; background: rgba(243, 186, 47, 0.1); }
-
-/* Volume alert */
-.vol-alert-card {
-  background: rgba(0, 229, 255, 0.04);
-  border: 1px solid rgba(0, 229, 255, 0.12);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-bottom: 8px;
-}
-
-.vol-alert-card .vol-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #00e5ff;
-}
-
-.vol-alert-card .vol-reason {
-  font-size: 11px;
-  color: #888;
-  margin-top: 3px;
-}
-
-.vol-alert-card .vol-stats {
-  font-size: 11px;
-  color: #555;
-  margin-top: 2px;
-}
-
-.vol-alert-card .vol-links {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-/* Buzz list */
-.buzz-item {
-  background: #111120;
-  border: 1px solid #1c1c30;
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.buzz-item:hover { border-color: #2a2a50; }
-
-.buzz-item-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.buzz-item-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.buzz-item-sub {
-  font-size: 10px;
-  color: #555;
-}
-
-.buzz-item-right {
-  display: flex;
-  align-items: center;
   gap: 8px;
+  border-bottom: 1px solid #1a1a30;
+  position: sticky; top: 0; z-index: 50;
+}
+.top-bar h1 {
+  font-size: 18px;
+  background: linear-gradient(90deg, #00e5ff, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.top-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+select, input[type="text"] {
+  background: #0a0a12; color: #ccc; border: 1px solid #2a2a40;
+  padding: 6px 10px; border-radius: 5px; font-size: 12px;
+}
+select:focus, input:focus { outline: none; border-color: #00e5ff; }
+
+.btn {
+  padding: 6px 14px; border: none; border-radius: 5px; cursor: pointer;
+  font-size: 12px; font-weight: 600; background: #00e5ff; color: #000;
 }
 
-.buzz-number {
-  font-size: 22px;
-  font-weight: 800;
-  min-width: 40px;
-  text-align: center;
+.status-line {
+  background: #0c0c18; padding: 5px 20px; font-size: 11px; color: #666;
+  display: flex; justify-content: space-between; border-bottom: 1px solid #1a1a30;
 }
-
-/* Log */
-.log-box {
-  background: #09090f;
-  border: 1px solid #1c1c30;
-  border-radius: 6px;
-  padding: 6px 10px;
-  max-height: 55px;
-  overflow-y: auto;
-  font-size: 9px;
-  color: #444;
-  font-family: 'Cascadia Code', 'Fira Code', monospace;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-/* Empty */
-.empty-state {
-  text-align: center;
-  padding: 30px;
-  color: #444;
-}
-
-.empty-state h3 {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 4px;
-}
-
-/* Spinner */
-.spin {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #333;
-  border-top-color: #00e5ff;
-  border-radius: 50%;
-  animation: sp 0.7s linear infinite;
-  margin-right: 4px;
-  vertical-align: middle;
-}
-
-@keyframes sp { to { transform: rotate(360deg); } }
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #111120;
-  border: 1px solid #00e5ff;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 12px;
-  color: #00e5ff;
-  z-index: 200;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.3s;
-  pointer-events: none;
-}
-
-.toast.show { opacity: 1; transform: translateY(0); }
+.dot { width: 8px; height: 8px; background: #00ff88; border-radius: 50%;
+  display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
 
 /* Tabs */
 .tabs {
-  display: flex;
-  background: #0c0c18;
-  border-bottom: 1px solid #1c1c30;
-  padding: 0 20px;
-  position: sticky;
-  top: 42px;
-  z-index: 49;
+  display: flex; background: #0e0e1a; border-bottom: 1px solid #1a1a30;
+  position: sticky; top: 44px; z-index: 49;
 }
-
 .tab {
-  padding: 10px 18px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #666;
-  border-bottom: 2px solid transparent;
-  transition: 0.15s;
+  padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+  color: #555; border-bottom: 2px solid transparent; transition: .15s;
 }
-
-.tab:hover { color: #aaa; }
-.tab.active { color: #00e5ff; border-bottom-color: #00e5ff; }
-
-.tab .badge {
-  font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 8px;
-  margin-left: 5px;
-  font-weight: 700;
+.tab:hover { color: #999; }
+.tab.active { color: #00e5ff; border-color: #00e5ff; }
+.tab .cnt {
+  font-size: 10px; padding: 1px 6px; border-radius: 8px;
+  margin-left: 5px; font-weight: 700; background: #00e5ff; color: #000;
 }
-
-.badge-cyan { background: #00e5ff; color: #000; }
-.badge-yellow { background: #f3ba2f; color: #000; }
-.badge-red { background: #ff3355; color: #fff; }
-.badge-purple { background: #a855f7; color: #fff; }
+.tab .cnt-r { background: #ff3355; color: #fff; }
+.tab .cnt-y { background: #f3ba2f; color: #000; }
 
 .panel { display: none; padding: 16px 20px; }
 .panel.active { display: block; }
 
-.hidden-info {
-  font-size: 11px;
-  color: #555;
-  margin-bottom: 8px;
+/* Filters */
+.filter-row {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #1a1a30;
+}
+.pill {
+  padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  cursor: pointer; border: 1px solid #2a2a40; background: #0a0a12; color: #777;
+}
+.pill:hover { border-color: #555; }
+.pill.on { background: rgba(0,229,255,.1); border-color: #00e5ff; color: #00e5ff; }
+.filter-label { font-size: 11px; color: #666; }
+
+/* Stats */
+.stats-line {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px;
+  font-size: 12px; color: #555;
+}
+.stats-line b { color: #fff; }
+
+/* Log */
+.log {
+  background: #08080e; border: 1px solid #1a1a30; border-radius: 5px;
+  padding: 6px 10px; max-height: 50px; overflow-y: auto;
+  font-size: 9px; color: #444; font-family: monospace; margin-bottom: 10px;
 }
 
+/* Grid */
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  gap: 10px; margin-bottom: 20px;
+}
+
+/* Card */
+.card {
+  background: #111120; border: 1px solid #1c1c30; border-radius: 10px;
+  padding: 14px; position: relative;
+}
+.card:hover { border-color: #2a2a50; }
+.card.glow { animation: cardglow 2s ease-out; }
+@keyframes cardglow { 0% { border-color: #00e5ff; box-shadow: 0 0 15px rgba(0,229,255,.15); } }
+.card.rug-border { border-color: rgba(255,50,80,.3); }
+
+.card-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.card-symbol { font-size: 16px; font-weight: 700; color: #fff; }
+.card-info { font-size: 11px; color: #555; margin-top: 2px; }
+.card-ca { font-size: 10px; color: #333; cursor: pointer; margin-top: 3px; }
+.card-ca:hover { color: #666; }
+
+.badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 600;
+  position: absolute; top: 10px; right: 10px;
+}
+.badge-fresh { background: rgba(0,255,136,.1); color: #00ff88; }
+.badge-recent { background: rgba(243,186,47,.1); color: #f3ba2f; }
+
+.chain-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 600;
+}
+.chain-sol { background: rgba(153,69,255,.12); color: #9945ff; }
+.chain-eth { background: rgba(98,126,234,.12); color: #627eea; }
+.chain-bsc { background: rgba(243,186,47,.12); color: #f3ba2f; }
+.chain-base { background: rgba(0,82,255,.12); color: #3b82f6; }
+
+.rug-result {
+  padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+  margin-bottom: 8px;
+}
+.rug-safe { background: rgba(0,255,136,.06); color: #00ff88; border: 1px solid rgba(0,255,136,.15); }
+.rug-warn { background: rgba(243,186,47,.06); color: #f3ba2f; border: 1px solid rgba(243,186,47,.15); }
+.rug-bad { background: rgba(255,50,80,.06); color: #ff3355; border: 1px solid rgba(255,50,80,.15); }
+.rug-pending { background: rgba(80,80,80,.06); color: #555; border: 1px solid rgba(80,80,80,.15); }
+
+.buzz-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.buzz-label { font-size: 10px; color: #555; }
+.buzz-track { flex: 1; height: 4px; background: #1a1a30; border-radius: 2px; overflow: hidden; }
+.buzz-fill { height: 100%; border-radius: 2px; }
+.buzz-val { font-size: 11px; font-weight: 700; min-width: 28px; text-align: right; }
+
+.data-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
+  margin-bottom: 10px; font-size: 11px;
+}
+.data-grid .dlabel { font-size: 9px; color: #444; }
+.data-grid .dval { font-weight: 600; color: #bbb; }
+.dval.up { color: #00ff88; } .dval.dn { color: #ff3355; }
+
+.links { display: flex; gap: 5px; flex-wrap: wrap; }
+.link {
+  font-size: 10px; padding: 4px 10px; border-radius: 5px;
+  text-decoration: none; font-weight: 600;
+}
+.link:hover { opacity: .8; }
+.link-tw { background: rgba(29,161,242,.1); color: #1da1f2; }
+.link-dex { background: rgba(0,229,255,.1); color: #00e5ff; }
+.link-exp { background: rgba(0,255,136,.1); color: #00ff88; }
+.link-rug { background: rgba(168,85,247,.1); color: #a855f7; }
+
+.star {
+  font-size: 12px; cursor: pointer; margin-left: 6px;
+  color: #444; border: none; background: none;
+}
+.star:hover, .star.on { color: #f3ba2f; }
+
+/* Buzz list item */
+.buzz-item {
+  background: #111120; border: 1px solid #1c1c30; border-radius: 8px;
+  padding: 10px 14px; margin-bottom: 6px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.buzz-item:hover { border-color: #2a2a50; }
+.bi-name { font-size: 14px; font-weight: 700; color: #fff; }
+.bi-sub { font-size: 10px; color: #555; margin-top: 2px; }
+.bi-score { font-size: 22px; font-weight: 800; min-width: 40px; text-align: center; }
+
+/* Volume alert */
+.vol-card {
+  background: rgba(0,229,255,.03); border: 1px solid rgba(0,229,255,.12);
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 8px;
+}
+.vol-name { font-size: 14px; font-weight: 700; color: #00e5ff; }
+.vol-sub { font-size: 11px; color: #888; margin-top: 3px; }
+.vol-detail { font-size: 11px; color: #555; margin-top: 2px; }
+
+.section-title {
+  font-size: 14px; font-weight: 700; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid #1a1a30;
+}
+
+.empty { text-align: center; padding: 30px; color: #444; }
+.empty h3 { font-size: 14px; color: #555; margin-bottom: 4px; }
+
+.spin {
+  display: inline-block; width: 12px; height: 12px;
+  border: 2px solid #333; border-top-color: #00e5ff;
+  border-radius: 50%; animation: spin .7s linear infinite;
+  vertical-align: middle; margin-right: 4px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast {
+  position: fixed; bottom: 20px; right: 20px; background: #111120;
+  border: 1px solid #00e5ff; border-radius: 8px; padding: 10px 16px;
+  font-size: 12px; color: #00e5ff; z-index: 200;
+  opacity: 0; transform: translateY(10px); transition: .3s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
 @media (max-width: 600px) {
-  .header, .main { padding: 10px; }
   .grid { grid-template-columns: 1fr; }
   .data-grid { grid-template-columns: 1fr 1fr; }
 }
@@ -582,863 +222,540 @@ body {
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
+<div class="top-bar">
   <h1>ALPHA TRACKER</h1>
-  <div class="header-controls">
-    <input type="text" id="searchBox" placeholder="Search token or paste CA..." style="width: 200px;">
-    <select id="sortMode">
-      <option value="newest">Newest First</option>
+  <div class="top-controls">
+    <input type="text" id="search" placeholder="Search token or CA..." style="width:180px">
+    <select id="sort">
+      <option value="newest">Newest</option>
       <option value="buzz">Most Buzz</option>
-      <option value="volume">Most Volume</option>
-      <option value="gainers">Top Gainers</option>
-      <option value="safest">Safest First</option>
+      <option value="volume">Volume</option>
+      <option value="gainers">Gainers</option>
     </select>
-    <select id="refreshRate">
-      <option value="8000">Refresh: 8s</option>
-      <option value="12000" selected>Refresh: 12s</option>
-      <option value="20000">Refresh: 20s</option>
+    <select id="refresh">
+      <option value="10000" selected>10s</option>
+      <option value="15000">15s</option>
+      <option value="30000">30s</option>
     </select>
-    <button class="btn" onclick="fetchAll()">Scan Now</button>
-    <span id="soundBtn" style="cursor:pointer;font-size:14px" onclick="sound=!sound;this.textContent=sound?'🔊':'🔇'" title="Sound alerts">🔇</span>
+    <button class="btn" onclick="doFetch()">Scan</button>
+    <span id="sndBtn" style="cursor:pointer;font-size:14px" onclick="snd=!snd;this.textContent=snd?'🔊':'🔇'">🔇</span>
   </div>
 </div>
 
-<!-- STATUS -->
-<div class="status">
-  <div><span class="live-dot"></span> <span id="statusText">Starting up...</span></div>
+<div class="status-line">
+  <div><span class="dot"></span> <span id="statusMsg">Starting...</span></div>
   <div id="statusTime">--</div>
 </div>
 
-<!-- FILTERS -->
-<div class="filters">
-  <div class="filter-group">
-    <label>Chain:</label>
-    <div style="display:flex;gap:4px;">
-      <span class="toggle-btn on" onclick="setChain('all', this)">All</span>
-      <span class="toggle-btn" onclick="setChain('solana', this)">Solana</span>
-      <span class="toggle-btn" onclick="setChain('ethereum', this)">ETH</span>
-      <span class="toggle-btn" onclick="setChain('bsc', this)">BSC</span>
-      <span class="toggle-btn" onclick="setChain('base', this)">Base</span>
-    </div>
-  </div>
-
-  <div class="filter-group">
-    <label>Age:</label>
-    <select id="filterAge">
-      <option value="0" selected>Any</option>
-      <option value="5">Under 5 min</option>
-      <option value="15">Under 15 min</option>
-      <option value="30">Under 30 min</option>
-      <option value="60">Under 1 hour</option>
-    </select>
-  </div>
-
-  <div class="filter-group">
-    <label>Min Volume:</label>
-    <input type="number" id="filterVol" value="0" min="0" step="1000" style="width:80px">
-  </div>
-
-  <div class="filter-group">
-    <span class="toggle-btn on" id="hideRugsBtn" onclick="this.classList.toggle('on');render()">Hide Rugs</span>
-  </div>
-
-  <div class="filter-group">
-    <label>Quick:</label>
-    <div style="display:flex;gap:4px;">
-      <span class="toggle-btn on" onclick="applyPreset('all', this)">Show All</span>
-      <span class="toggle-btn" onclick="applyPreset('safe', this)">Safe Only</span>
-      <span class="toggle-btn" onclick="applyPreset('sniper', this)">Sniper</span>
-    </div>
-  </div>
-</div>
-
-<!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('pairs', this)">New Pairs <span class="badge badge-cyan" id="tabPairsCount">0</span></div>
-  <div class="tab" onclick="switchTab('buzz', this)">Twitter Traction <span class="badge badge-yellow" id="tabBuzzCount">0</span></div>
-  <div class="tab" onclick="switchTab('volume', this)">Volume Bot <span class="badge badge-red" id="tabVolCount">0</span></div>
-  <div class="tab" onclick="switchTab('watchlist', this)">Watchlist <span class="badge badge-purple" id="tabWLCount">0</span></div>
-</div>
-
-<!-- ═══ TAB 1: NEW PAIRS ═══ -->
-<div class="panel active" id="panelPairs">
-
-  <div class="stat-bar">
-    <div>Total: <span id="sTotal">0</span></div>
-    <div>Showing: <span id="sShowing">0</span></div>
-    <div>Rugs caught: <span id="sRugs" style="color:#ff3355">0</span></div>
-    <div>Rug checked: <span id="sChecked">0</span></div>
-    <div>Newest: <span id="sNewest">--</span></div>
+  <div class="tab active" data-tab="pairs" onclick="openTab('pairs',this)">
+    New Pairs <span class="cnt" id="cntPairs">0</span>
   </div>
-
-  <div class="log-box" id="logBox"></div>
-  <div class="hidden-info" id="hiddenInfo" style="display:none"></div>
-
-  <!-- PUMP.FUN -->
-  <div class="section-head">
-    <span class="dot-purple"></span>
-    Pump.fun New Pairs
-    <span class="count" id="pumpCount">0 pairs</span>
+  <div class="tab" data-tab="buzz" onclick="openTab('buzz',this)">
+    Twitter Traction <span class="cnt cnt-y" id="cntBuzz">0</span>
   </div>
-  <div class="grid" id="pumpGrid">
-    <div class="empty-state"><h3>Loading pump.fun pairs...</h3><p><span class="spin"></span></p></div>
+  <div class="tab" data-tab="vol" onclick="openTab('vol',this)">
+    Volume Bot <span class="cnt cnt-r" id="cntVol">0</span>
   </div>
-
-  <!-- ALL OTHER -->
-  <div class="section-head" style="margin-top: 20px;">
-    <span class="dot-blue"></span>
-    All New Pairs
-    <span class="count" id="allCount">0 pairs</span>
-  </div>
-  <div class="grid" id="allGrid">
-    <div class="empty-state"><h3>Loading...</h3><p><span class="spin"></span></p></div>
+  <div class="tab" data-tab="wl" onclick="openTab('wl',this)">
+    Watchlist <span class="cnt" id="cntWL">0</span>
   </div>
 </div>
 
-<!-- ═══ TAB 2: TWITTER TRACTION ═══ -->
-<div class="panel" id="panelBuzz">
-  <div style="margin-bottom: 12px;">
-    <h2 style="font-size: 16px; color: #1da1f2; margin-bottom: 4px;">Twitter Traction Tracker</h2>
-    <p style="font-size: 12px; color: #666; line-height: 1.5;">Tokens ranked by social buzz score — calculated from buy pressure, volume velocity, transaction count, price momentum, and how new the token is. Higher score = more likely being discussed on X/Twitter right now. Click any link to search X instantly.</p>
+<!-- ═══════ NEW PAIRS TAB ═══════ -->
+<div class="panel active" id="tab-pairs">
+  <div class="filter-row">
+    <span class="filter-label">Chain:</span>
+    <span class="pill on" onclick="pickChain('all',this)">All</span>
+    <span class="pill" onclick="pickChain('solana',this)">Solana</span>
+    <span class="pill" onclick="pickChain('ethereum',this)">ETH</span>
+    <span class="pill" onclick="pickChain('bsc',this)">BSC</span>
+    <span class="pill" onclick="pickChain('base',this)">Base</span>
+    <span style="margin-left:10px" class="filter-label">Age:</span>
+    <select id="fAge" onchange="doRender()">
+      <option value="0">Any</option>
+      <option value="5">Under 5m</option>
+      <option value="15">Under 15m</option>
+      <option value="30">Under 30m</option>
+      <option value="60">Under 1h</option>
+    </select>
+    <span class="pill on" id="hideRugBtn" onclick="this.classList.toggle('on');doRender()">Hide Rugs</span>
+    <span style="margin-left:10px" class="filter-label">Quick:</span>
+    <span class="pill on" onclick="preset('all',this)">Show All</span>
+    <span class="pill" onclick="preset('safe',this)">Safe</span>
+    <span class="pill" onclick="preset('sniper',this)">Sniper</span>
   </div>
-  <div id="buzzSection"></div>
+
+  <div class="stats-line">
+    <div>Total: <b id="stTotal">0</b></div>
+    <div>Showing: <b id="stShow">0</b></div>
+    <div>Rugs: <b id="stRugs" style="color:#ff3355">0</b></div>
+    <div>Checked: <b id="stChecked">0</b></div>
+    <div>Newest: <b id="stNewest">--</b></div>
+  </div>
+
+  <div class="log" id="logEl"></div>
+
+  <div class="section-title" style="color:#a855f7">Pump.fun Pairs <span style="color:#555;font-size:11px;font-weight:400" id="pumpCnt"></span></div>
+  <div class="grid" id="pumpGrid"><div class="empty"><h3><span class="spin"></span> Loading...</h3></div></div>
+
+  <div class="section-title" style="color:#00e5ff;margin-top:20px">All Other Pairs <span style="color:#555;font-size:11px;font-weight:400" id="otherCnt"></span></div>
+  <div class="grid" id="otherGrid"><div class="empty"><h3><span class="spin"></span> Loading...</h3></div></div>
 </div>
 
-<!-- ═══ TAB 3: VOLUME BOT ═══ -->
-<div class="panel" id="panelVolume">
-  <div style="margin-bottom: 12px;">
-    <h2 style="font-size: 16px; color: #ff3355; margin-bottom: 4px;">Volume Spike Alerts</h2>
-    <p style="font-size: 12px; color: #666; line-height: 1.5;">Monitoring for unusual volume activity — 5 minute volume exceeding 20% of liquidity, volume jumping 3x+ between scans, or 1 hour volume exceeding 5x liquidity. These signal either a breakout or an incoming rug.</p>
-  </div>
-  <div id="volSection"></div>
+<!-- ═══════ TWITTER TRACTION TAB ═══════ -->
+<div class="panel" id="tab-buzz">
+  <p style="font-size:12px;color:#666;margin-bottom:14px;line-height:1.6">
+    Tokens ranked by social buzz — buy pressure, volume velocity, price momentum, and newness.
+    Higher score = more likely being discussed on X right now. Click to search.
+  </p>
+  <div id="buzzList"><div class="empty"><h3>Loading buzz data...</h3></div></div>
 </div>
 
-<!-- ═══ TAB 4: WATCHLIST ═══ -->
-<div class="panel" id="panelWatchlist">
-  <div style="margin-bottom: 12px;">
-    <h2 style="font-size: 16px; color: #f3ba2f; margin-bottom: 4px;">Your Watchlist</h2>
-    <p style="font-size: 12px; color: #666;">Tokens you're tracking. Star any pair to add it here. Data auto-updates every scan.</p>
-  </div>
-  <div class="grid" id="watchlistGrid">
-    <div class="empty-state"><h3>No tokens watched yet</h3><p>Click the ☆ star on any pair card to track it here</p></div>
-  </div>
+<!-- ═══════ VOLUME BOT TAB ═══════ -->
+<div class="panel" id="tab-vol">
+  <p style="font-size:12px;color:#666;margin-bottom:14px;line-height:1.6">
+    Volume spike alerts — 5m volume exceeding 20% of liquidity, sudden jumps between scans,
+    or 1h volume exceeding 5x liquidity. These signal breakouts or rugs.
+  </p>
+  <div id="volList"><div class="empty"><h3>Monitoring for volume spikes...</h3></div></div>
+</div>
+
+<!-- ═══════ WATCHLIST TAB ═══════ -->
+<div class="panel" id="tab-wl">
+  <p style="font-size:12px;color:#666;margin-bottom:14px">Star any pair to track it here. Auto-updates every scan.</p>
+  <div class="grid" id="wlGrid"><div class="empty"><h3>No tokens watched</h3><p>Click ☆ on any pair to add</p></div></div>
 </div>
 
 <div class="toast" id="toastEl"></div>
 
 <script>
-// ============ STATE ============
-const pairs = new Map();
-const rugCache = new Map();
-const seenIds = new Set();
-const watchlist = new Set(JSON.parse(localStorage.getItem('alpha_wl') || '[]'));
-const prevVols = new Map();
+// ===== STATE =====
+const DB = new Map();
+const RUG = new Map();
+const SEEN = new Set();
+const PREV_VOL = new Map();
+const WL = new Set(JSON.parse(localStorage.getItem('alpha_wl') || '[]'));
 
-let activeChain = 'all';
-let sound = false;
-let refreshTimer = null;
-let isFetching = false;
-let rugQueue = [];
-let isRugChecking = false;
-let rugCheckedCount = 0;
-let rugsCaught = 0;
-let volAlerts = [];
-let scanNumber = 0;
+let chainF = 'all', snd = false, timer = null, fetching = false;
+let rugQ = [], rugging = false, rugN = 0, rugsB = 0;
+let volAlerts = [], scanN = 0;
 
-// ============ LOGGING ============
-function log(msg) {
-  const box = document.getElementById('logBox');
-  const time = new Date().toLocaleTimeString();
-  box.innerHTML = `[${time}] ${msg}\n` + box.innerHTML;
-  if (box.innerHTML.length > 5000) box.innerHTML = box.innerHTML.slice(0, 3000);
+// ===== UTILS =====
+function $(id) { return document.getElementById(id); }
+function usd(n) { return n == null ? '--' : n >= 1e6 ? '$'+(n/1e6).toFixed(2)+'M' : n >= 1e3 ? '$'+(n/1e3).toFixed(1)+'K' : '$'+(n||0).toFixed(0); }
+function ago(t) { if (!t) return '?'; const s = (Date.now()-t)/1000|0; return s < 60 ? s+'s' : s < 3600 ? (s/60|0)+'m' : s < 86400 ? (s/3600|0)+'h' : (s/86400|0)+'d'; }
+function chain(id) { id = (id||'').toLowerCase(); return id.includes('solana') ? 'solana' : id.includes('ethereum')||id==='eth' ? 'ethereum' : id.includes('bsc')||id.includes('bnb') ? 'bsc' : id.includes('base') ? 'base' : id; }
+function cclass(id) { const c = chain(id); return c==='solana'?'chain-sol':c==='ethereum'?'chain-eth':c==='bsc'?'chain-bsc':c==='base'?'chain-base':''; }
+
+function log(msg) { const el = $('logEl'); el.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}\n` + el.innerHTML.slice(0, 3000); }
+function toast(msg) { const el = $('toastEl'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2000); }
+function beep() { try { const c = new AudioContext(), o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value=880; g.gain.value=.1; o.start(); g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2); o.stop(c.currentTime+.2); } catch{} }
+
+// ===== BUZZ SCORE =====
+function buzz(p) {
+  let s = 0;
+  const b = p.txns?.h24?.buys||0, sl = p.txns?.h24?.sells||0, b5 = p.txns?.m5?.buys||0;
+  const v1 = p.volume?.h1||0, liq = p.liquidity?.usd||0;
+  const pc5 = p.priceChange?.m5||0, pc1 = p.priceChange?.h1||0;
+  const age = p.pairCreatedAt ? (Date.now()-p.pairCreatedAt)/60000 : 9999;
+  if (b > 0) s += Math.min(b/Math.max(sl,1)*8, 25);
+  s += Math.min(b5*3, 20);
+  if (liq > 0) s += Math.min(v1/liq*5, 20);
+  if (pc5 > 0) s += Math.min(pc5*.3, 15);
+  if (pc1 > 0) s += Math.min(pc1*.1, 10);
+  if (age < 10) s += 15; else if (age < 30) s += 10; else if (age < 60) s += 5;
+  s += Math.min((b+sl)*.1, 10);
+  return Math.min(Math.round(s), 100);
 }
 
-function toast(msg) {
-  const el = document.getElementById('toastEl');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
-}
-
-// ============ MAIN FETCH ============
-async function fetchAll() {
-  if (isFetching) return;
-  isFetching = true;
-  scanNumber++;
-  document.getElementById('statusText').innerHTML = '<span class="spin"></span> Scanning...';
-  let newCount = 0;
+// ===== FETCH =====
+async function doFetch() {
+  if (fetching) return;
+  fetching = true;
+  scanN++;
+  $('statusMsg').innerHTML = '<span class="spin"></span> Scanning...';
+  let added = 0;
 
   try {
-    // Save previous volumes for spike detection
-    for (const [k, p] of pairs) {
-      prevVols.set(k, { v5: p.volume?.m5 || 0, v1h: p.volume?.h1 || 0, liq: p.liquidity?.usd || 0 });
-    }
+    // Save prev volumes
+    for (const [k, p] of DB) PREV_VOL.set(k, { v5: p.volume?.m5||0, v1h: p.volume?.h1||0, liq: p.liquidity?.usd||0 });
 
-    // ── Source 1: Pump.fun search (freshest pairs, 0-30 min old) ──
-    const pumpRes = fetch('https://api.dexscreener.com/latest/dex/search?q=pumpfun')
-      .then(r => r.ok ? r.json() : {}).then(d => d.pairs || []).catch(() => []);
+    // Fetch all sources in parallel
+    const terms = ['pump','pepe','doge','moon','cat','ai','trump','shib','bonk','wojak','frog','elon','inu','floki','meme','based','baby','ape'];
+    const pick = [terms[(scanN*3)%terms.length], terms[(scanN*3+1)%terms.length], terms[(scanN*3+2)%terms.length]];
 
-    // ── Source 2: DEXScreener profiles + boosts (promoted tokens) ──
-    const profRes = fetch('https://api.dexscreener.com/token-profiles/latest/v1')
-      .then(r => r.ok ? r.json() : []).catch(() => []);
-    const boostRes = fetch('https://api.dexscreener.com/token-boosts/latest/v1')
-      .then(r => r.ok ? r.json() : []).catch(() => []);
+    const promises = [
+      // Pump.fun pairs (freshest)
+      fetch('https://api.dexscreener.com/latest/dex/search?q=pumpfun').then(r=>r.json()).then(d=>d.pairs||[]).catch(()=>[]),
+      // Profiles
+      fetch('https://api.dexscreener.com/token-profiles/latest/v1').then(r=>r.json()).catch(()=>[]),
+      // Boosts
+      fetch('https://api.dexscreener.com/token-boosts/latest/v1').then(r=>r.json()).catch(()=>[]),
+      // Search terms
+      ...pick.map(t => fetch(`https://api.dexscreener.com/latest/dex/search?q=${t}`).then(r=>r.json()).then(d=>d.pairs||[]).catch(()=>[]))
+    ];
 
-    // ── Source 3: Meme term search (rotate 3 terms per scan) ──
-    const terms = ['pump', 'pepe', 'doge', 'moon', 'cat', 'ai', 'trump', 'shib',
-                   'bonk', 'wojak', 'frog', 'elon', 'inu', 'floki', 'meme', 'sol',
-                   'chad', 'king', 'based', 'baby', 'fun', 'ape', 'bob'];
-    const picked = [];
-    for (let i = 0; i < 3; i++) picked.push(terms[(scanNumber * 3 + i) % terms.length]);
+    const [pumpPairs, profiles, boosts, ...searchResults] = await Promise.all(promises);
 
-    const searchFetches = picked.map(t =>
-      fetch(`https://api.dexscreener.com/latest/dex/search?q=${t}`)
-        .then(r => r.ok ? r.json() : {}).then(d => d.pairs || []).catch(() => [])
-    );
-
-    // ── Source 4: GeckoTerminal new pools (rotate 2 chains per scan) ──
-    const gtChains = ['solana', 'eth', 'bsc', 'base'];
-    const gtPick = [gtChains[(scanNumber * 2) % 4], gtChains[(scanNumber * 2 + 1) % 4]];
-    const geckoFetches = gtPick.map(c =>
-      fetch(`https://api.geckoterminal.com/api/v2/networks/${c}/new_pools?page=1`, { headers: { 'Accept': 'application/json' } })
-        .then(r => r.ok ? r.json() : null).then(d => ({ chain: c, pools: d?.data || [] })).catch(() => ({ chain: c, pools: [] }))
-    );
-
-    // Wait for all
-    const [pumpPairs, profiles, boosts, ...rest] = await Promise.all([pumpRes, profRes, boostRes, ...searchFetches, ...geckoFetches]);
-
-    const searchResults = rest.slice(0, picked.length);
-    const geckoResults = rest.slice(picked.length);
-
-    // Process pump.fun pairs
+    // Add pump.fun pairs directly
     for (const p of pumpPairs) {
       if (!p.pairAddress) continue;
-      if (!pairs.has(p.pairAddress)) { newCount++; queueRug(p); }
-      p._source = 'pumpfun';
-      pairs.set(p.pairAddress, p);
+      if (!DB.has(p.pairAddress)) { added++; queueRug(p); }
+      p._isPump = true;
+      DB.set(p.pairAddress, p);
     }
 
-    // Process search results
-    let searchTotal = 0;
+    // Add search results directly
     for (const batch of searchResults) {
-      searchTotal += batch.length;
       for (const p of batch) {
         if (!p.pairAddress) continue;
-        if (!pairs.has(p.pairAddress)) { newCount++; queueRug(p); }
-        if (!p._source) p._source = 'search';
-        pairs.set(p.pairAddress, p);
+        if (!DB.has(p.pairAddress)) { added++; queueRug(p); }
+        DB.set(p.pairAddress, p);
       }
     }
 
-    // Process profiles/boosts → need to fetch pair data
-    const tokensByChain = {};
-    const addToken = (chain, addr) => {
-      if (!chain || !addr) return;
-      if (!tokensByChain[chain]) tokensByChain[chain] = new Set();
-      tokensByChain[chain].add(addr);
-    };
-    for (const p of profiles) addToken(p.chainId, p.tokenAddress);
-    for (const b of boosts) addToken(b.chainId, b.tokenAddress);
-
     // Fetch pair data for profile/boost tokens
-    const enrichFetches = [];
-    for (const [ch, addrs] of Object.entries(tokensByChain)) {
+    const byChain = {};
+    for (const item of [...profiles, ...boosts]) {
+      const c = item.chainId, a = item.tokenAddress;
+      if (!c || !a) continue;
+      if (!byChain[c]) byChain[c] = new Set();
+      byChain[c].add(a);
+    }
+
+    const enrichPromises = [];
+    for (const [c, addrs] of Object.entries(byChain)) {
       const arr = [...addrs];
       for (let i = 0; i < arr.length; i += 30) {
-        enrichFetches.push(
-          fetch(`https://api.dexscreener.com/tokens/v1/${ch}/${arr.slice(i, i + 30).join(',')}`)
-            .then(r => r.ok ? r.json() : []).catch(() => [])
+        enrichPromises.push(
+          fetch(`https://api.dexscreener.com/tokens/v1/${c}/${arr.slice(i,i+30).join(',')}`)
+            .then(r=>r.json()).catch(()=>[])
         );
       }
     }
 
-    if (enrichFetches.length) {
-      const enriched = await Promise.all(enrichFetches);
+    if (enrichPromises.length) {
+      const enriched = await Promise.all(enrichPromises);
       for (const batch of enriched) {
         if (!Array.isArray(batch)) continue;
         for (const p of batch) {
           if (!p.pairAddress) continue;
-          if (!pairs.has(p.pairAddress)) { newCount++; queueRug(p); }
-          if (!p._source) p._source = 'profile';
-          pairs.set(p.pairAddress, p);
+          if (!DB.has(p.pairAddress)) { added++; queueRug(p); }
+          DB.set(p.pairAddress, p);
         }
       }
     }
 
-    // Process GeckoTerminal pools
-    let geckoTotal = 0;
-    for (const { chain, pools } of geckoResults) {
-      geckoTotal += pools.length;
-      for (const pool of pools) {
-        const a = pool.attributes || {};
-        if (!a.address) continue;
-        const gid = 'gt_' + chain + '_' + a.address;
-        if (!pairs.has(gid) && !hasPairByAddr(a.address)) {
-          const nameParts = (a.name || '').split(' / ');
-          pairs.set(gid, {
-            pairAddress: a.address,
-            chainId: chain === 'eth' ? 'ethereum' : chain,
-            dexId: a.dex_id || '',
-            baseToken: { address: a.base_token_address || '', name: a.base_token_name || nameParts[0] || '', symbol: nameParts[0] || '???' },
-            quoteToken: { symbol: nameParts[1] || 'SOL' },
-            priceUsd: a.base_token_price_usd || '0',
-            txns: {
-              m5: { buys: a.transactions?.m5?.buys || 0, sells: a.transactions?.m5?.sells || 0 },
-              h1: { buys: a.transactions?.h1?.buys || 0, sells: a.transactions?.h1?.sells || 0 },
-              h24: { buys: a.transactions?.h24?.buys || 0, sells: a.transactions?.h24?.sells || 0 },
-            },
-            volume: { m5: parseFloat(a.volume_usd?.m5) || 0, h1: parseFloat(a.volume_usd?.h1) || 0, h24: parseFloat(a.volume_usd?.h24) || 0 },
-            priceChange: { m5: parseFloat(a.price_change_percentage?.m5) || 0, h1: parseFloat(a.price_change_percentage?.h1) || 0, h24: parseFloat(a.price_change_percentage?.h24) || 0 },
-            liquidity: { usd: parseFloat(a.reserve_in_usd) || 0 },
-            fdv: parseFloat(a.fdv_usd) || 0,
-            pairCreatedAt: a.pool_created_at ? new Date(a.pool_created_at).getTime() : Date.now(),
-            _source: 'gecko'
-          });
-          newCount++;
+    // Try GeckoTerminal (may fail with rate limit, that's OK)
+    try {
+      const gtChain = ['solana','eth','bsc','base'][(scanN-1)%4];
+      const gtRes = await fetch(`https://api.geckoterminal.com/api/v2/networks/${gtChain}/new_pools?page=1`, {headers:{'Accept':'application/json'}});
+      if (gtRes.ok) {
+        const gtData = await gtRes.json();
+        for (const pool of (gtData.data || [])) {
+          const a = pool.attributes || {};
+          if (!a.address) continue;
+          const gid = 'gt_' + gtChain + '_' + a.address;
+          if (!DB.has(gid)) {
+            const nm = (a.name||'').split(' / ');
+            DB.set(gid, {
+              pairAddress: a.address,
+              chainId: gtChain==='eth'?'ethereum':gtChain,
+              dexId: a.dex_id||'',
+              baseToken: { address: a.base_token_address||'', name: a.base_token_name||nm[0]||'', symbol: nm[0]||'???' },
+              quoteToken: { symbol: nm[1]||'SOL' },
+              priceUsd: a.base_token_price_usd||'0',
+              txns: { m5:{buys:a.transactions?.m5?.buys||0,sells:a.transactions?.m5?.sells||0}, h1:{buys:a.transactions?.h1?.buys||0,sells:a.transactions?.h1?.sells||0}, h24:{buys:a.transactions?.h24?.buys||0,sells:a.transactions?.h24?.sells||0} },
+              volume: { m5:parseFloat(a.volume_usd?.m5)||0, h1:parseFloat(a.volume_usd?.h1)||0, h24:parseFloat(a.volume_usd?.h24)||0 },
+              priceChange: { m5:parseFloat(a.price_change_percentage?.m5)||0, h1:parseFloat(a.price_change_percentage?.h1)||0, h24:parseFloat(a.price_change_percentage?.h24)||0 },
+              liquidity: { usd: parseFloat(a.reserve_in_usd)||0 },
+              fdv: parseFloat(a.fdv_usd)||0,
+              pairCreatedAt: a.pool_created_at ? new Date(a.pool_created_at).getTime() : Date.now(),
+              _src: 'gecko'
+            });
+            added++;
+          }
         }
+        log(`Gecko (${gtChain}): ${gtData.data?.length||0} pools`);
       }
+    } catch {}
+
+    // Volume spikes
+    volAlerts = [];
+    for (const [k, p] of DB) {
+      const v5=p.volume?.m5||0, v1h=p.volume?.h1||0, liq=p.liquidity?.usd||0;
+      const prev = PREV_VOL.get(k);
+      if (liq>200 && v5>liq*.2) volAlerts.push({p, reason:`5m vol (${usd(v5)}) = ${(v5/liq*100).toFixed(0)}% of liq`, sc:v5/liq});
+      if (prev && prev.v5>100 && v5>prev.v5*3) volAlerts.push({p, reason:`5m vol jumped ${(v5/prev.v5).toFixed(1)}x`, sc:v5/prev.v5});
+      if (liq>500 && v1h>liq*5) volAlerts.push({p, reason:`1h vol (${usd(v1h)}) = ${(v1h/liq).toFixed(0)}x liq`, sc:v1h/liq});
+    }
+    const best = new Map();
+    for (const a of volAlerts) { const k=a.p.pairAddress; if (!best.has(k)||a.sc>best.get(k).sc) best.set(k,a); }
+    volAlerts = [...best.values()].sort((a,b)=>b.sc-a.sc).slice(0,20);
+
+    // Cap
+    if (DB.size > 2000) {
+      const sorted = [...DB.entries()].sort((a,b)=>(b[1].pairCreatedAt||0)-(a[1].pairCreatedAt||0));
+      DB.clear();
+      for (const [k,v] of sorted.slice(0,1500)) DB.set(k,v);
     }
 
-    // Volume spike detection
-    detectVolSpikes();
+    if (added > 0 && snd) beep();
+    log(`<b style="color:#0f0">+${added} new</b> | pump:${pumpPairs.length} search:${searchResults.reduce((s,b)=>s+b.length,0)} profiles:${profiles.length} | total:${DB.size} | ${pick.join(',')}`);
 
-    // Cap at 2000 pairs
-    if (pairs.size > 2000) {
-      const sorted = [...pairs.entries()].sort((a, b) => (b[1].pairCreatedAt || 0) - (a[1].pairCreatedAt || 0));
-      pairs.clear();
-      for (const [k, v] of sorted.slice(0, 1500)) pairs.set(k, v);
-    }
-
-    if (newCount > 0 && sound) playAlert();
-
-    log(`+${newCount} new | pump:${pumpPairs.length} search:${searchTotal} profiles:${profiles.length} gecko:${geckoTotal} | total:${pairs.size} | terms: ${picked.join(',')}`);
-
-    render();
-    document.getElementById('statusText').innerHTML = `<span class="live-dot"></span> Live — ${pairs.size} pairs tracked, +${newCount} new`;
-    document.getElementById('statusTime').textContent = new Date().toLocaleTimeString();
+    doRender();
+    $('statusMsg').innerHTML = `<span class="dot"></span> Live — ${DB.size} pairs, +${added} new`;
+    $('statusTime').textContent = new Date().toLocaleTimeString();
 
   } catch (err) {
-    log(`ERROR: ${err.message}`);
-    document.getElementById('statusText').textContent = 'Error: ' + err.message;
+    log(`<b style="color:red">ERROR: ${err.message}</b>`);
+    console.error(err);
+    $('statusMsg').textContent = 'Error: ' + err.message;
   }
 
-  isFetching = false;
-  processRugQueue();
+  fetching = false;
+  doRugQueue();
 }
 
-function hasPairByAddr(addr) {
-  for (const [, p] of pairs) if (p.pairAddress === addr) return true;
-  return false;
-}
-
-// ============ RUGCHECK ============
-function queueRug(pair) {
-  const addr = pair.baseToken?.address;
-  const ch = chainId(pair.chainId);
-  if (ch === 'solana' && addr && !rugCache.has(addr)) {
-    rugCache.set(addr, { status: 'pending' });
-    rugQueue.push(addr);
+// ===== RUGCHECK =====
+function queueRug(p) {
+  const addr = p.baseToken?.address;
+  if (chain(p.chainId)==='solana' && addr && !RUG.has(addr)) {
+    RUG.set(addr, {status:'pending'});
+    rugQ.push(addr);
   }
 }
 
-async function processRugQueue() {
-  if (isRugChecking || rugQueue.length === 0) return;
-  isRugChecking = true;
-
-  while (rugQueue.length > 0) {
-    const addr = rugQueue.shift();
-    const cached = rugCache.get(addr);
-    if (cached && cached.status !== 'pending') continue;
-
+async function doRugQueue() {
+  if (rugging || !rugQ.length) return;
+  rugging = true;
+  while (rugQ.length) {
+    const addr = rugQ.shift();
+    if (RUG.get(addr)?.status !== 'pending') continue;
     try {
       const res = await fetch(`https://api.rugcheck.xyz/v1/tokens/${addr}/report/summary`);
       if (res.ok) {
-        const data = await res.json();
-        const risks = data.risks || [];
-        const score = data.score ?? data.score_normalised ?? null;
-        const lpLocked = data.lpLockedPct ?? null;
-
-        const riskNames = risks.map(r => (r.name || '').toLowerCase());
-        const hasMint = riskNames.some(n => n.includes('mint'));
-        const hasFreeze = riskNames.some(n => n.includes('freeze'));
-        const hasHoneypot = riskNames.some(n => n.includes('honeypot'));
-        const dangerCount = risks.filter(r => r.level === 'danger' || r.level === 'critical').length;
-
-        let status = 'good';
-        if (hasHoneypot || (hasMint && hasFreeze) || dangerCount >= 3) { status = 'bad'; rugsCaught++; }
-        else if (hasMint || hasFreeze || dangerCount >= 1) { status = 'warn'; }
-
-        rugCache.set(addr, { status, risks, score, lpLocked });
-        rugCheckedCount++;
-      } else {
-        rugCache.set(addr, { status: 'unknown', risks: [], score: null });
-        rugCheckedCount++;
-      }
-    } catch {
-      rugCache.set(addr, { status: 'unknown', risks: [], score: null });
-      rugCheckedCount++;
-    }
-
-    await new Promise(r => setTimeout(r, 350));
-    if (rugQueue.length % 5 === 0) render();
+        const d = await res.json();
+        const risks = d.risks||[];
+        const names = risks.map(r=>(r.name||'').toLowerCase());
+        const danger = risks.filter(r=>r.level==='danger'||r.level==='critical').length;
+        let st = 'good';
+        if (names.some(n=>n.includes('honeypot')) || (names.some(n=>n.includes('mint'))&&names.some(n=>n.includes('freeze'))) || danger>=3) { st='bad'; rugsB++; }
+        else if (names.some(n=>n.includes('mint'))||names.some(n=>n.includes('freeze'))||danger>=1) st='warn';
+        RUG.set(addr, {status:st, risks, score:d.score??d.score_normalised??null, lp:d.lpLockedPct??null});
+        rugN++;
+      } else { RUG.set(addr,{status:'unknown',risks:[]}); rugN++; }
+    } catch { RUG.set(addr,{status:'unknown',risks:[]}); rugN++; }
+    await new Promise(r=>setTimeout(r,350));
+    if (rugQ.length%5===0) doRender();
   }
-
-  isRugChecking = false;
-  render();
+  rugging = false;
+  doRender();
 }
 
-// ============ VOLUME SPIKES ============
-function detectVolSpikes() {
-  volAlerts = [];
-  for (const [k, p] of pairs) {
-    const v5 = p.volume?.m5 || 0;
-    const v1h = p.volume?.h1 || 0;
-    const liq = p.liquidity?.usd || 0;
-    const prev = prevVols.get(k);
-
-    if (liq > 200 && v5 > liq * 0.2)
-      volAlerts.push({ pair: p, reason: `5m volume (${fmtUsd(v5)}) = ${((v5 / liq) * 100).toFixed(0)}% of liquidity`, score: v5 / liq });
-
-    if (prev && prev.v5 > 100 && v5 > prev.v5 * 3)
-      volAlerts.push({ pair: p, reason: `5m volume jumped ${(v5 / prev.v5).toFixed(1)}x since last scan`, score: v5 / prev.v5 });
-
-    if (liq > 500 && v1h > liq * 5)
-      volAlerts.push({ pair: p, reason: `1h volume (${fmtUsd(v1h)}) = ${(v1h / liq).toFixed(0)}x liquidity`, score: v1h / liq });
-  }
-
-  // Dedupe
-  const best = new Map();
-  for (const a of volAlerts) {
-    const k = a.pair.pairAddress;
-    if (!best.has(k) || a.score > best.get(k).score) best.set(k, a);
-  }
-  volAlerts = [...best.values()].sort((a, b) => b.score - a.score).slice(0, 20);
-}
-
-// ============ BUZZ SCORE ============
-function buzzScore(p) {
-  let score = 0;
-  const buys = p.txns?.h24?.buys || 0;
-  const sells = p.txns?.h24?.sells || 0;
-  const buys5m = p.txns?.m5?.buys || 0;
-  const vol1h = p.volume?.h1 || 0;
-  const liq = p.liquidity?.usd || 0;
-  const pc5 = p.priceChange?.m5 || 0;
-  const pc1h = p.priceChange?.h1 || 0;
-  const age = p.pairCreatedAt ? (Date.now() - p.pairCreatedAt) / 60000 : 9999;
-
-  if (buys > 0) score += Math.min((buys / Math.max(sells, 1)) * 8, 25);
-  score += Math.min(buys5m * 3, 20);
-  if (liq > 0) score += Math.min((vol1h / liq) * 5, 20);
-  if (pc5 > 0) score += Math.min(pc5 * 0.3, 15);
-  if (pc1h > 0) score += Math.min(pc1h * 0.1, 10);
-  if (age < 10) score += 15; else if (age < 30) score += 10; else if (age < 60) score += 5;
-  score += Math.min((buys + sells) * 0.1, 10);
-
-  return Math.min(Math.round(score), 100);
-}
-
-// ============ HELPERS ============
-function fmtUsd(n) {
-  if (n == null) return '--';
-  if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
-  if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
-  return '$' + (n || 0).toFixed(0);
-}
-
-function timeAgo(ts) {
-  if (!ts) return '?';
-  const sec = Math.floor((Date.now() - ts) / 1000);
-  if (sec < 60) return sec + 's';
-  const min = Math.floor(sec / 60);
-  if (min < 60) return min + 'm';
-  const hr = Math.floor(min / 60);
-  return hr < 24 ? hr + 'h' : Math.floor(hr / 24) + 'd';
-}
-
-function chainId(id) {
-  id = (id || '').toLowerCase();
-  if (id.includes('solana')) return 'solana';
-  if (id.includes('ethereum') || id === 'eth') return 'ethereum';
-  if (id.includes('bsc') || id.includes('bnb')) return 'bsc';
-  if (id.includes('base')) return 'base';
-  return id;
-}
-
-function chainBadgeClass(id) {
-  const c = chainId(id);
-  if (c === 'solana') return 'chain-sol';
-  if (c === 'ethereum') return 'chain-eth';
-  if (c === 'bsc') return 'chain-bsc';
-  if (c === 'base') return 'chain-base';
-  return '';
-}
-
-function playAlert() {
-  try {
-    const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.frequency.value = 880; osc.type = 'sine'; gain.gain.value = 0.1;
-    osc.start();
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-    osc.stop(ctx.currentTime + 0.2);
-  } catch {}
-}
-
-function toggleWatch(addr) {
-  if (watchlist.has(addr)) { watchlist.delete(addr); toast('Removed'); }
-  else { watchlist.add(addr); toast('Watching!'); }
-  localStorage.setItem('alpha_wl', JSON.stringify([...watchlist]));
-  render();
-}
-
-function copyCA(addr) {
-  navigator.clipboard.writeText(addr).catch(() => {});
-  toast('CA copied!');
-}
-
-// ============ CARD HTML ============
-function buildCard(p) {
-  const bt = p.baseToken || {};
-  const qt = p.quoteToken || {};
-  const isNew = !seenIds.has(p.pairAddress);
-  const rug = rugCache.get(bt.address);
-  const buys = p.txns?.h24?.buys || 0;
-  const sells = p.txns?.h24?.sells || 0;
-  const vol = p.volume?.h24 || 0;
-  const liq = p.liquidity?.usd || 0;
-  const pc5 = p.priceChange?.m5;
-  const pc1h = p.priceChange?.h1;
-  const buzz = buzzScore(p);
-  const isSol = chainId(p.chainId) === 'solana';
-  const inWL = watchlist.has(p.pairAddress);
-  const ageMin = p.pairCreatedAt ? (Date.now() - p.pairCreatedAt) / 60000 : 999;
+// ===== BUILD CARD =====
+function card(p) {
+  const bt=p.baseToken||{}, qt=p.quoteToken||{};
+  const isNew = !SEEN.has(p.pairAddress);
+  const rug = RUG.get(bt.address);
+  const b=p.txns?.h24?.buys||0, s=p.txns?.h24?.sells||0;
+  const liq=p.liquidity?.usd||0, vol=p.volume?.h24||0;
+  const pc5=p.priceChange?.m5, pc1=p.priceChange?.h1;
+  const bz = buzz(p);
+  const isSol = chain(p.chainId)==='solana';
+  const inWL = WL.has(p.pairAddress);
+  const ageM = p.pairCreatedAt ? (Date.now()-p.pairCreatedAt)/60000 : 999;
 
   // Age badge
-  let ageClass = 'age-warm', ageText = timeAgo(p.pairCreatedAt);
-  if (ageMin < 5) { ageClass = 'age-fresh'; ageText = timeAgo(p.pairCreatedAt) + ' FRESH'; }
-  else if (ageMin > 60) { ageClass = 'age-hot'; }
+  let ageBadge = `<span class="badge badge-recent">${ago(p.pairCreatedAt)}</span>`;
+  if (ageM < 5) ageBadge = `<span class="badge badge-fresh">${ago(p.pairCreatedAt)} FRESH</span>`;
 
-  // Rug display
-  let rugHTML = '';
+  // Rug
+  let rugH = '';
   if (isSol && rug) {
-    if (rug.status === 'pending') rugHTML = '<div class="rug-box rug-pending"><span class="spin"></span> Checking RugCheck...</div>';
-    else if (rug.status === 'bad') {
-      const names = (rug.risks || []).slice(0, 3).map(r => r.name || 'Risk').join(' · ');
-      rugHTML = `<div class="rug-box rug-danger">⚠ RUG — ${names}</div>`;
-    } else if (rug.status === 'warn') {
-      const names = (rug.risks || []).filter(r => r.level !== 'info').slice(0, 2).map(r => r.name).join(' · ');
-      rugHTML = `<div class="rug-box rug-warn">⚠ Caution — ${names || 'Risks found'}</div>`;
-    } else if (rug.status === 'good') {
-      rugHTML = `<div class="rug-box rug-safe">✓ Safe — Score: ${rug.score ?? '?'}${rug.lpLocked != null ? ' · LP Locked: ' + rug.lpLocked + '%' : ''}</div>`;
-    }
-  } else if (!isSol) {
-    const warnings = [];
-    if (buys > 10 && sells === 0) warnings.push('⚠ Honeypot: 0 sells');
-    if (liq > 0 && liq < 500) warnings.push('Low liquidity');
-    if (warnings.length) {
-      rugHTML = `<div class="rug-box ${warnings[0].includes('Honeypot') ? 'rug-danger' : 'rug-warn'}">${warnings.join(' · ')}</div>`;
-    }
+    if (rug.status==='pending') rugH = `<div class="rug-result rug-pending"><span class="spin"></span> Checking RugCheck...</div>`;
+    else if (rug.status==='bad') rugH = `<div class="rug-result rug-bad">RUG — ${(rug.risks||[]).slice(0,3).map(r=>r.name).join(' · ')}</div>`;
+    else if (rug.status==='warn') rugH = `<div class="rug-result rug-warn">Caution — ${(rug.risks||[]).filter(r=>r.level!=='info').slice(0,2).map(r=>r.name).join(' · ')||'Risks found'}</div>`;
+    else if (rug.status==='good') rugH = `<div class="rug-result rug-safe">Safe — Score: ${rug.score??'?'}${rug.lp!=null?' · LP: '+rug.lp+'%':''}</div>`;
+  } else if (!isSol && b>10 && s===0) {
+    rugH = `<div class="rug-result rug-bad">Honeypot: 0 sells</div>`;
   }
 
-  // Buzz bar
-  const buzzColor = buzz >= 60 ? '#ff3355' : buzz >= 30 ? '#f3ba2f' : '#00e5ff';
-  const buzzHTML = `<div class="buzz-row">
-    <span class="buzz-label">Buzz</span>
-    <div class="buzz-track"><div class="buzz-fill" style="width:${buzz}%;background:${buzzColor}"></div></div>
-    <span class="buzz-score" style="color:${buzzColor}">${buzz}</span>
-  </div>`;
+  // Buzz
+  const bc = bz>=60?'#ff3355':bz>=30?'#f3ba2f':'#00e5ff';
+  const buzzH = `<div class="buzz-bar"><span class="buzz-label">Buzz</span><div class="buzz-track"><div class="buzz-fill" style="width:${bz}%;background:${bc}"></div></div><span class="buzz-val" style="color:${bc}">${bz}</span></div>`;
 
   // Links
-  const twSearch = `https://x.com/search?q=${encodeURIComponent((bt.symbol || '') + ' OR ' + (bt.name || ''))}&f=live`;
-  const twCash = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol || '')}&f=live`;
-  const dexUrl = `https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
-  const explorer = (chainId(p.chainId) === 'solana' ? 'https://solscan.io/token/' :
-    chainId(p.chainId) === 'ethereum' ? 'https://etherscan.io/token/' :
-    chainId(p.chainId) === 'bsc' ? 'https://bscscan.com/token/' : 'https://basescan.org/token/') + (bt.address || '');
-  const rugUrl = isSol ? `https://rugcheck.xyz/tokens/${bt.address}` :
-    `https://tokensniffer.com/token/${chainId(p.chainId) === 'ethereum' ? 'eth' : chainId(p.chainId)}/${bt.address}`;
+  const tw = `https://x.com/search?q=${encodeURIComponent((bt.symbol||'')+' OR '+(bt.name||''))}&f=live`;
+  const tw$ = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol||'')}&f=live`;
+  const dex = `https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
+  const exp = (chain(p.chainId)==='solana'?'https://solscan.io/token/':chain(p.chainId)==='ethereum'?'https://etherscan.io/token/':chain(p.chainId)==='bsc'?'https://bscscan.com/token/':'https://basescan.org/token/')+(bt.address||'');
+  const rgU = isSol?`https://rugcheck.xyz/tokens/${bt.address}`:`https://tokensniffer.com/token/${chain(p.chainId)==='ethereum'?'eth':chain(p.chainId)}/${bt.address}`;
 
-  return `<div class="card ${isNew ? 'new-glow' : ''} ${rug && rug.status === 'bad' ? 'rug-border' : ''}">
-    <span class="age-badge ${ageClass}">${ageText}</span>
-    <div class="card-top">
-      <div>
-        <div class="token-name">
-          ${bt.symbol || '???'} / ${qt.symbol || '???'}
-          <span class="star-btn ${inWL ? 'starred' : ''}" onclick="toggleWatch('${p.pairAddress}')">${inWL ? '★' : '☆'}</span>
-        </div>
-        <div class="token-sub">${bt.name || ''} · ${p.dexId || chainId(p.chainId)}</div>
-        <div class="token-ca" onclick="copyCA('${bt.address || ''}')">${bt.address ? bt.address.slice(0, 8) + '...' + bt.address.slice(-6) + '  [click to copy]' : ''}</div>
-      </div>
-      <span class="chain-badge ${chainBadgeClass(p.chainId)}">${chainId(p.chainId)}</span>
-    </div>
-
-    ${rugHTML}
-    ${buzzHTML}
-
+  return `<div class="card ${isNew?'glow':''} ${rug?.status==='bad'?'rug-border':''}">
+    ${ageBadge}
+    <div class="card-header"><div>
+      <div class="card-symbol">${bt.symbol||'???'} / ${qt.symbol||'???'} <button class="star ${inWL?'on':''}" onclick="toggleWL('${p.pairAddress}')">${inWL?'★':'☆'}</button></div>
+      <div class="card-info">${bt.name||''} · ${p.dexId||chain(p.chainId)} · ${ago(p.pairCreatedAt)} ago</div>
+      <div class="card-ca" onclick="navigator.clipboard.writeText('${bt.address||''}');document.getElementById('toastEl').textContent='CA copied!';document.getElementById('toastEl').classList.add('show');setTimeout(()=>document.getElementById('toastEl').classList.remove('show'),1500)">${bt.address?bt.address.slice(0,8)+'...'+bt.address.slice(-6)+' [copy]':''}</div>
+    </div><span class="chain-tag ${cclass(p.chainId)}">${chain(p.chainId)}</span></div>
+    ${rugH}${buzzH}
     <div class="data-grid">
-      <div class="data-item"><label>Price</label><div class="val">${p.priceUsd ? '$' + parseFloat(p.priceUsd).toFixed(8) : '--'}</div></div>
-      <div class="data-item"><label>5 min</label><div class="val ${pc5 > 0 ? 'green' : pc5 < 0 ? 'red' : ''}">${pc5 != null ? (pc5 > 0 ? '+' : '') + pc5.toFixed(1) + '%' : '--'}</div></div>
-      <div class="data-item"><label>1 hour</label><div class="val ${pc1h > 0 ? 'green' : pc1h < 0 ? 'red' : ''}">${pc1h != null ? (pc1h > 0 ? '+' : '') + pc1h.toFixed(1) + '%' : '--'}</div></div>
-      <div class="data-item"><label>Liquidity</label><div class="val">${fmtUsd(liq)}</div></div>
-      <div class="data-item"><label>Volume 24h</label><div class="val">${fmtUsd(vol)}</div></div>
-      <div class="data-item"><label>Volume 5m</label><div class="val">${fmtUsd(p.volume?.m5)}</div></div>
-      <div class="data-item"><label>Market Cap</label><div class="val">${fmtUsd(p.fdv || p.marketCap)}</div></div>
-      <div class="data-item"><label>Buys (24h)</label><div class="val green">${buys}</div></div>
-      <div class="data-item"><label>Sells (24h)</label><div class="val red">${sells}</div></div>
+      <div><div class="dlabel">Price</div><div class="dval">${p.priceUsd?'$'+parseFloat(p.priceUsd).toFixed(8):'--'}</div></div>
+      <div><div class="dlabel">5m</div><div class="dval ${pc5>0?'up':pc5<0?'dn':''}">${pc5!=null?(pc5>0?'+':'')+pc5.toFixed(1)+'%':'--'}</div></div>
+      <div><div class="dlabel">1h</div><div class="dval ${pc1>0?'up':pc1<0?'dn':''}">${pc1!=null?(pc1>0?'+':'')+pc1.toFixed(1)+'%':'--'}</div></div>
+      <div><div class="dlabel">Liquidity</div><div class="dval">${usd(liq)}</div></div>
+      <div><div class="dlabel">Vol 24h</div><div class="dval">${usd(vol)}</div></div>
+      <div><div class="dlabel">Vol 5m</div><div class="dval">${usd(p.volume?.m5)}</div></div>
+      <div><div class="dlabel">MCap</div><div class="dval">${usd(p.fdv||p.marketCap)}</div></div>
+      <div><div class="dlabel">Buys</div><div class="dval up">${b}</div></div>
+      <div><div class="dlabel">Sells</div><div class="dval dn">${s}</div></div>
     </div>
-
-    <div class="actions">
-      <a href="${twSearch}" target="_blank" class="action-link al-twitter">Search X</a>
-      <a href="${twCash}" target="_blank" class="action-link al-twitter">$${bt.symbol || ''}</a>
-      <a href="${dexUrl}" target="_blank" class="action-link al-dex">DEXScreener</a>
-      <a href="${explorer}" target="_blank" class="action-link al-explorer">Explorer</a>
-      <a href="${rugUrl}" target="_blank" class="action-link al-rug">RugCheck</a>
+    <div class="links">
+      <a href="${tw}" target="_blank" class="link link-tw">Search X</a>
+      <a href="${tw$}" target="_blank" class="link link-tw">$${bt.symbol||''}</a>
+      <a href="${dex}" target="_blank" class="link link-dex">DEXScreener</a>
+      <a href="${exp}" target="_blank" class="link link-exp">Explorer</a>
+      <a href="${rgU}" target="_blank" class="link link-rug">RugCheck</a>
     </div>
   </div>`;
 }
 
-// ============ FILTERS ============
-function getFiltered(pairList) {
-  const filterAge = parseInt(document.getElementById('filterAge').value) || 0;
-  const filterVol = parseFloat(document.getElementById('filterVol').value) || 0;
-  const hideRugs = document.getElementById('hideRugsBtn').classList.contains('on');
-  const query = document.getElementById('searchBox').value.toLowerCase().trim();
-  const now = Date.now();
-  let rugHidden = 0;
+// ===== RENDER =====
+function doRender() {
+  try {
+    const all = [...DB.values()];
+    const query = $('search').value.toLowerCase().trim();
+    const maxAge = parseInt($('fAge').value)||0;
+    const hideRugs = $('hideRugBtn').classList.contains('on');
+    const now = Date.now();
 
-  const filtered = pairList.filter(p => {
-    if (activeChain !== 'all' && chainId(p.chainId) !== activeChain) return false;
-
-    if (query) {
-      const hay = ((p.baseToken?.symbol || '') + ' ' + (p.baseToken?.name || '') + ' ' + (p.baseToken?.address || '')).toLowerCase();
-      if (!hay.includes(query)) return false;
+    // Filter
+    function passes(p) {
+      if (chainF!=='all' && chain(p.chainId)!==chainF) return false;
+      if (query) {
+        const hay = ((p.baseToken?.symbol||'')+' '+(p.baseToken?.name||'')+' '+(p.baseToken?.address||'')).toLowerCase();
+        if (!hay.includes(query)) return false;
+      }
+      if (maxAge>0 && p.pairCreatedAt && (now-p.pairCreatedAt)/60000>maxAge) return false;
+      if (hideRugs) {
+        if (RUG.get(p.baseToken?.address)?.status==='bad') return false;
+        if ((p.txns?.h24?.buys||0)>10 && (p.txns?.h24?.sells||0)===0) return false;
+      }
+      return true;
     }
 
-    if ((p.volume?.h24 || 0) < filterVol) return false;
-
-    if (filterAge > 0 && p.pairCreatedAt && (now - p.pairCreatedAt) / 60000 > filterAge) return false;
-
-    if (hideRugs) {
-      const rug = rugCache.get(p.baseToken?.address);
-      if (rug && rug.status === 'bad') { rugHidden++; return false; }
-      if ((p.txns?.h24?.buys || 0) > 10 && (p.txns?.h24?.sells || 0) === 0) { rugHidden++; return false; }
+    // Sort
+    const sortMode = $('sort').value;
+    function doSort(list) {
+      const s = [...list];
+      if (sortMode==='newest') s.sort((a,b)=>(b.pairCreatedAt||0)-(a.pairCreatedAt||0));
+      else if (sortMode==='buzz') s.sort((a,b)=>buzz(b)-buzz(a));
+      else if (sortMode==='volume') s.sort((a,b)=>(b.volume?.h24||0)-(a.volume?.h24||0));
+      else if (sortMode==='gainers') s.sort((a,b)=>(b.priceChange?.h24||-999)-(a.priceChange?.h24||-999));
+      return s;
     }
 
-    return true;
-  });
+    // Split pump vs other
+    const pump = doSort(all.filter(p => (p.dexId||'')==='pumpfun' || p._isPump).filter(passes));
+    const other = doSort(all.filter(p => !((p.dexId||'')==='pumpfun' || p._isPump)).filter(passes));
 
-  return { filtered, rugHidden };
+    // Stats
+    $('stTotal').textContent = DB.size;
+    $('stShow').textContent = pump.length + other.length;
+    $('stRugs').textContent = rugsB;
+    $('stChecked').textContent = rugN;
+    const newest = all.reduce((b,p)=>(p.pairCreatedAt||0)>(b.pairCreatedAt||0)?p:b, all[0]||{});
+    $('stNewest').textContent = newest.pairCreatedAt ? ago(newest.pairCreatedAt)+' ago' : '--';
+
+    // Tab counts
+    $('cntPairs').textContent = pump.length + other.length;
+    $('cntVol').textContent = volAlerts.length;
+    const buzzItems = all.map(p=>({p,b:buzz(p)})).filter(x=>x.b>5).sort((a,b)=>b.b-a.b).slice(0,30);
+    $('cntBuzz').textContent = buzzItems.filter(x=>x.b>=40).length;
+    $('cntWL').textContent = WL.size;
+
+    // Pump grid
+    $('pumpCnt').textContent = `(${pump.length})`;
+    $('pumpGrid').innerHTML = pump.length ? pump.slice(0,60).map(card).join('') : '<div class="empty"><h3>No pump.fun pairs match</h3></div>';
+
+    // Other grid
+    $('otherCnt').textContent = `(${other.length})`;
+    $('otherGrid').innerHTML = other.length ? other.slice(0,60).map(card).join('') : '<div class="empty"><h3>No other pairs match</h3></div>';
+
+    // Buzz list
+    $('buzzList').innerHTML = buzzItems.length ? buzzItems.map(({p,b})=>{
+      const bt=p.baseToken||{};
+      const c = b>=60?'#ff3355':b>=30?'#f3ba2f':'#00e5ff';
+      const tw=`https://x.com/search?q=${encodeURIComponent((bt.symbol||'')+' '+(bt.name||''))}&f=live`;
+      const tw$=`https://x.com/search?q=%24${encodeURIComponent(bt.symbol||'')}&f=live`;
+      return `<div class="buzz-item"><div><div class="bi-name">${bt.symbol||'???'} <span style="color:#555;font-size:10px">${bt.name||''}</span></div><div class="bi-sub">${chain(p.chainId)} · ${ago(p.pairCreatedAt)} old · Liq: ${usd(p.liquidity?.usd)} · Vol: ${usd(p.volume?.h24)} · B: <span style="color:#0f8">${p.txns?.h24?.buys||0}</span> S: <span style="color:#f35">${p.txns?.h24?.sells||0}</span></div></div><div style="display:flex;gap:6px;align-items:center"><a href="${tw}" target="_blank" class="link link-tw">X</a><a href="${tw$}" target="_blank" class="link link-tw">$${bt.symbol||''}</a><div class="bi-score" style="color:${c}">${b}</div></div></div>`;
+    }).join('') : '<div class="empty"><h3>No buzz data yet</h3></div>';
+
+    // Volume list
+    $('volList').innerHTML = volAlerts.length ? volAlerts.map(a=>{
+      const p=a.p, bt=p.baseToken||{};
+      const tw=`https://x.com/search?q=${encodeURIComponent((bt.symbol||'')+' '+(bt.name||''))}&f=live`;
+      const dex=`https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
+      return `<div class="vol-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="vol-name">${bt.symbol||'???'} / ${p.quoteToken?.symbol||'???'}</div><div class="vol-sub">${a.reason}</div><div class="vol-detail">${chain(p.chainId)} · Liq: ${usd(p.liquidity?.usd)} · Vol 5m: ${usd(p.volume?.m5)} · Vol 1h: ${usd(p.volume?.h1)}</div></div><div style="display:flex;gap:5px"><a href="${tw}" target="_blank" class="link link-tw">X</a><a href="${dex}" target="_blank" class="link link-dex">Chart</a></div></div></div>`;
+    }).join('') : '<div class="empty"><h3>No volume spikes yet</h3><p>Monitoring...</p></div>';
+
+    // Watchlist
+    const wlPairs = [...WL].map(a=>DB.get(a)).filter(Boolean);
+    $('wlGrid').innerHTML = wlPairs.length ? wlPairs.map(card).join('') : WL.size ? '<div class="empty"><h3>Loading watched tokens...</h3></div>' : '<div class="empty"><h3>No tokens watched</h3><p>Click ☆ on any pair</p></div>';
+
+    // Mark seen
+    DB.forEach(p => SEEN.add(p.pairAddress));
+  } catch (err) {
+    console.error('Render error:', err);
+    log(`<b style="color:red">Render error: ${err.message}</b>`);
+  }
 }
 
-function sortPairs(list) {
-  const mode = document.getElementById('sortMode').value;
-  const sorted = [...list];
-  switch (mode) {
-    case 'newest': sorted.sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0)); break;
-    case 'buzz': sorted.sort((a, b) => buzzScore(b) - buzzScore(a)); break;
-    case 'volume': sorted.sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0)); break;
-    case 'gainers': sorted.sort((a, b) => (b.priceChange?.h24 || -999) - (a.priceChange?.h24 || -999)); break;
-    case 'safest': sorted.sort((a, b) => {
-      const ra = rugCache.get(a.baseToken?.address);
-      const rb = rugCache.get(b.baseToken?.address);
-      return (rb ? rb.status === 'good' ? 2 : rb.status === 'warn' ? 1 : 0 : -1) -
-             (ra ? ra.status === 'good' ? 2 : ra.status === 'warn' ? 1 : 0 : -1);
-    }); break;
-  }
-  return sorted;
-}
-
-// ============ RENDER ============
-function render() {
-  const allPairs = [...pairs.values()];
-
-  // Split pump.fun pairs from others
-  const pumpPairs = allPairs.filter(p => (p.dexId || '').toLowerCase() === 'pumpfun' || p._source === 'pumpfun');
-  const otherPairs = allPairs.filter(p => !((p.dexId || '').toLowerCase() === 'pumpfun' || p._source === 'pumpfun'));
-
-  // Apply filters
-  const { filtered: filteredPump, rugHidden: rh1 } = getFiltered(pumpPairs);
-  const { filtered: filteredOther, rugHidden: rh2 } = getFiltered(otherPairs);
-  const totalRugHidden = rh1 + rh2;
-
-  const sortedPump = sortPairs(filteredPump);
-  const sortedOther = sortPairs(filteredOther);
-
-  // Stats
-  document.getElementById('sTotal').textContent = pairs.size;
-  document.getElementById('sShowing').textContent = sortedPump.length + sortedOther.length;
-  document.getElementById('sRugs').textContent = rugsCaught;
-  document.getElementById('sChecked').textContent = rugCheckedCount;
-
-  const newest = allPairs.reduce((best, p) => (p.pairCreatedAt || 0) > (best.pairCreatedAt || 0) ? p : best, allPairs[0] || {});
-  document.getElementById('sNewest').textContent = newest.pairCreatedAt ? timeAgo(newest.pairCreatedAt) + ' ago' : '--';
-
-  // Hidden info
-  const totalHidden = allPairs.length - sortedPump.length - sortedOther.length;
-  const hiddenEl = document.getElementById('hiddenInfo');
-  if (totalHidden > 0) {
-    hiddenEl.style.display = 'block';
-    hiddenEl.textContent = `${totalHidden} pairs hidden by filters (${totalRugHidden} rugs)`;
-  } else {
-    hiddenEl.style.display = 'none';
-  }
-
-  // Pump.fun grid
-  document.getElementById('pumpCount').textContent = sortedPump.length + ' pairs';
-  const pumpGrid = document.getElementById('pumpGrid');
-  if (sortedPump.length === 0) {
-    pumpGrid.innerHTML = '<div class="empty-state"><h3>No pump.fun pairs match filters</h3></div>';
-  } else {
-    pumpGrid.innerHTML = sortedPump.slice(0, 60).map(buildCard).join('');
-  }
-
-  // Other pairs grid
-  document.getElementById('allCount').textContent = sortedOther.length + ' pairs';
-  const allGrid = document.getElementById('allGrid');
-  if (sortedOther.length === 0) {
-    allGrid.innerHTML = '<div class="empty-state"><h3>No other pairs match filters</h3></div>';
-  } else {
-    allGrid.innerHTML = sortedOther.slice(0, 60).map(buildCard).join('');
-  }
-
-  // Volume alerts
-  const volSection = document.getElementById('volSection');
-  if (volAlerts.length === 0) {
-    volSection.innerHTML = '<div class="empty-state"><h3>No volume spikes detected yet</h3><p>Monitoring for unusual activity...</p></div>';
-  } else {
-    volSection.innerHTML = volAlerts.slice(0, 15).map(a => {
-      const p = a.pair, bt = p.baseToken || {};
-      const tw = `https://x.com/search?q=${encodeURIComponent((bt.symbol || '') + ' ' + (bt.name || ''))}&f=live`;
-      const dex = `https://dexscreener.com/${p.chainId}/${p.pairAddress}`;
-      return `<div class="vol-alert-card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="vol-name">${bt.symbol || '???'} / ${p.quoteToken?.symbol || '???'}</div>
-            <div class="vol-reason">${a.reason}</div>
-            <div class="vol-stats">${chainId(p.chainId)} · Liq: ${fmtUsd(p.liquidity?.usd)} · Vol 5m: ${fmtUsd(p.volume?.m5)} · Vol 1h: ${fmtUsd(p.volume?.h1)}</div>
-          </div>
-          <div class="vol-links">
-            <a href="${tw}" target="_blank" class="action-link al-twitter">X</a>
-            <a href="${dex}" target="_blank" class="action-link al-dex">Chart</a>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  // Tab badges
-  document.getElementById('tabPairsCount').textContent = sortedPump.length + sortedOther.length;
-  document.getElementById('tabVolCount').textContent = volAlerts.length;
-
-  // Buzz rankings
-  const buzzItems = allPairs.map(p => ({ p, b: buzzScore(p) })).filter(x => x.b > 5).sort((a, b) => b.b - a.b).slice(0, 25);
-  document.getElementById('tabBuzzCount').textContent = buzzItems.filter(x => x.b >= 40).length;
-  const buzzSection = document.getElementById('buzzSection');
-  if (buzzItems.length === 0) {
-    buzzSection.innerHTML = '<div class="empty-state"><h3>No buzz data yet</h3></div>';
-  } else {
-    buzzSection.innerHTML = buzzItems.map(({ p, b }) => {
-      const bt = p.baseToken || {};
-      const color = b >= 60 ? '#ff3355' : b >= 30 ? '#f3ba2f' : '#00e5ff';
-      const tw = `https://x.com/search?q=${encodeURIComponent((bt.symbol || '') + ' ' + (bt.name || ''))}&f=live`;
-      const twCash = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol || '')}&f=live`;
-      return `<div class="buzz-item">
-        <div class="buzz-item-left">
-          <div class="buzz-item-name">${bt.symbol || '???'} <span style="color:#555;font-size:10px">${bt.name || ''}</span></div>
-          <div class="buzz-item-sub">${chainId(p.chainId)} · ${timeAgo(p.pairCreatedAt)} old · Liq: ${fmtUsd(p.liquidity?.usd)} · Vol: ${fmtUsd(p.volume?.h24)} · Buys: <span style="color:#00ff88">${p.txns?.h24?.buys || 0}</span> Sells: <span style="color:#ff3355">${p.txns?.h24?.sells || 0}</span></div>
-        </div>
-        <div class="buzz-item-right">
-          <a href="${tw}" target="_blank" class="action-link al-twitter">X</a>
-          <a href="${twCash}" target="_blank" class="action-link al-twitter">$${bt.symbol || ''}</a>
-          <div class="buzz-number" style="color:${color}">${b}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  // Watchlist
-  document.getElementById('tabWLCount').textContent = watchlist.size;
-  const wlGrid = document.getElementById('watchlistGrid');
-  if (watchlist.size === 0) {
-    wlGrid.innerHTML = '<div class="empty-state"><h3>No tokens watched yet</h3><p>Click the ☆ star on any pair card to track it here</p></div>';
-  } else {
-    const wlPairs = [...watchlist].map(addr => pairs.get(addr)).filter(Boolean);
-    if (wlPairs.length === 0) {
-      wlGrid.innerHTML = '<div class="empty-state"><h3>Watched tokens loading...</h3><p>Will appear after next scan</p></div>';
-    } else {
-      wlGrid.innerHTML = wlPairs.map(p => buildCard(p)).join('');
-    }
-  }
-
-  // Mark seen
-  pairs.forEach(p => seenIds.add(p.pairAddress));
-}
-
-// ============ TABS ============
-function switchTab(name, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+// ===== CONTROLS =====
+function openTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
-  const panelMap = { pairs: 'panelPairs', buzz: 'panelBuzz', volume: 'panelVolume', watchlist: 'panelWatchlist' };
-  document.getElementById(panelMap[name]).classList.add('active');
+  $('tab-'+name).classList.add('active');
 }
 
-// ============ CONTROLS ============
-function setChain(c, el) {
-  activeChain = c;
-  document.querySelectorAll('.filters .toggle-btn').forEach(b => {
-    if (b.parentElement.previousElementSibling?.textContent.trim() === 'Chain:') b.classList.remove('on');
-  });
+function pickChain(c, el) {
+  chainF = c;
+  el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
   el.classList.add('on');
-  render();
+  doRender();
 }
 
-function applyPreset(name, el) {
-  // Update active state
-  el.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('on'));
+function preset(name, el) {
+  el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
   el.classList.add('on');
-
-  switch (name) {
-    case 'all':
-      document.getElementById('filterAge').value = '0';
-      document.getElementById('filterVol').value = 0;
-      document.getElementById('hideRugsBtn').classList.add('on');
-      break;
-    case 'safe':
-      document.getElementById('filterAge').value = '60';
-      document.getElementById('filterVol').value = 1000;
-      document.getElementById('hideRugsBtn').classList.add('on');
-      break;
-    case 'sniper':
-      document.getElementById('filterAge').value = '5';
-      document.getElementById('filterVol').value = 0;
-      document.getElementById('hideRugsBtn').classList.add('on');
-      break;
-  }
-  render();
+  if (name==='all') { $('fAge').value='0'; $('hideRugBtn').classList.add('on'); }
+  else if (name==='safe') { $('fAge').value='60'; $('hideRugBtn').classList.add('on'); }
+  else if (name==='sniper') { $('fAge').value='5'; $('hideRugBtn').classList.add('on'); }
+  doRender();
 }
 
-function setupRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  const ms = parseInt(document.getElementById('refreshRate').value);
-  if (ms > 0) refreshTimer = setInterval(fetchAll, ms);
+function toggleWL(addr) {
+  if (WL.has(addr)) { WL.delete(addr); toast('Removed'); } else { WL.add(addr); toast('Watching!'); }
+  localStorage.setItem('alpha_wl', JSON.stringify([...WL]));
+  doRender();
 }
 
-// Event listeners
-document.getElementById('sortMode').addEventListener('change', render);
-document.getElementById('refreshRate').addEventListener('change', setupRefresh);
-document.getElementById('searchBox').addEventListener('input', render);
-document.getElementById('filterAge').addEventListener('change', render);
-document.getElementById('filterVol').addEventListener('change', render);
+function setupTimer() {
+  if (timer) clearInterval(timer);
+  timer = setInterval(doFetch, parseInt($('refresh').value)||10000);
+}
 
-// ============ START ============
+$('sort').addEventListener('change', doRender);
+$('refresh').addEventListener('change', setupTimer);
+$('search').addEventListener('input', doRender);
+
+// ===== GO =====
 log('Alpha Tracker starting...');
-fetchAll();
-setupRefresh();
+doFetch();
+setupTimer();
 </script>
 </body>
 </html>
