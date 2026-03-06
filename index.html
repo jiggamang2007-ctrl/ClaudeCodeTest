@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barrel Shootout</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #2b1d0e;
+    color: #f5e6c8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+  }
+
+  #game {
+    text-align: center;
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    color: #d4a44a;
+    text-shadow: 2px 2px 4px #000;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    color: #c49a3a;
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: #a08060;
+    margin-bottom: 30px;
+  }
+
+  /* Menu buttons */
+  .menu-btn {
+    display: block;
+    width: 260px;
+    margin: 12px auto;
+    padding: 16px 24px;
+    font-size: 1.2rem;
+    font-family: 'Georgia', serif;
+    background: linear-gradient(180deg, #6b4c2a, #4a3018);
+    color: #f5e6c8;
+    border: 2px solid #8b6914;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .menu-btn:hover {
+    background: linear-gradient(180deg, #8b6c3a, #5a4028);
+    border-color: #d4a44a;
+    transform: scale(1.05);
+  }
+
+  /* HP display */
+  .hp-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+  }
+
+  .hp-player {
+    font-size: 1.1rem;
+  }
+
+  .hp-player span {
+    color: #d4a44a;
+    font-weight: bold;
+  }
+
+  .hearts {
+    color: #c0392b;
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+  }
+
+  /* Instruction text */
+  .instruction {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    color: #e8d5a8;
+    min-height: 2em;
+  }
+
+  /* Barrels container */
+  .barrels {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+  }
+
+  /* Barrel styling */
+  .barrel {
+    width: 120px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    position: relative;
+  }
+
+  .barrel:hover {
+    transform: scale(1.08);
+  }
+
+  .barrel.selected {
+    transform: scale(1.12);
+  }
+
+  .barrel.selected .barrel-body {
+    box-shadow: 0 0 20px 5px #d4a44a;
+  }
+
+  .barrel-body {
+    width: 100px;
+    height: 130px;
+    margin: 0 auto;
+    background: linear-gradient(90deg, #5a3a1a 0%, #8b6533 20%, #a07840 40%, #8b6533 60%, #6b4c25 80%, #5a3a1a 100%);
+    border-radius: 10px 10px 14px 14px;
+    position: relative;
+    border: 2px solid #3a2510;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 5px 15px rgba(0,0,0,0.5);
+  }
+
+  .barrel-band {
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    height: 14px;
+    background: linear-gradient(180deg, #777, #555, #777);
+    border: 1px solid #444;
+    border-radius: 2px;
+  }
+
+  .barrel-band.top { top: 15px; }
+  .barrel-band.mid { top: 55px; }
+  .barrel-band.bot { bottom: 15px; }
+
+  .barrel-top {
+    width: 90px;
+    height: 20px;
+    margin: 0 auto 5px;
+    background: radial-gradient(ellipse, #7a5a30, #5a3a1a);
+    border-radius: 50%;
+    border: 2px solid #3a2510;
+  }
+
+  .barrel-label {
+    margin-top: 8px;
+    font-size: 1.1rem;
+    color: #c49a3a;
+    font-weight: bold;
+  }
+
+  .barrel.disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .barrel.disabled:hover {
+    transform: none;
+  }
+
+  /* Handoff screen */
+  .handoff {
+    padding: 60px 20px;
+  }
+
+  .handoff p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    color: #d4a44a;
+  }
+
+  /* Results */
+  .results {
+    padding: 20px;
+  }
+
+  .result-line {
+    font-size: 1.15rem;
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .result-hit {
+    background: rgba(192, 57, 43, 0.3);
+    color: #e74c3c;
+  }
+
+  .result-miss {
+    background: rgba(39, 174, 96, 0.2);
+    color: #2ecc71;
+  }
+
+  .result-summary {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #a08060;
+  }
+
+  /* Game over */
+  .game-over h2 {
+    font-size: 2rem;
+    color: #d4a44a;
+    margin-bottom: 15px;
+  }
+
+  .game-over p {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+  }
+
+  /* Shoot animation */
+  .barrel.shot {
+    animation: shake 0.4s ease-in-out;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px) rotate(-3deg); }
+    40% { transform: translateX(8px) rotate(3deg); }
+    60% { transform: translateX(-5px) rotate(-2deg); }
+    80% { transform: translateX(5px) rotate(2deg); }
+  }
+
+  .barrel.hit-marker {
+    animation: hitFlash 0.6s ease-in-out;
+  }
+
+  @keyframes hitFlash {
+    0%, 100% { filter: none; }
+    50% { filter: brightness(2) sepia(1) hue-rotate(-20deg); }
+  }
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const game = $('game');
+
+const state = {
+  mode: null,       // 'local' or 'ai'
+  phase: null,
+  p1: { hp: 3, hide: null, shoot: null },
+  p2: { hp: 3, hide: null, shoot: null },
+  round: 0
+};
+
+function resetState() {
+  state.p1 = { hp: 3, hide: null, shoot: null };
+  state.p2 = { hp: 3, hide: null, shoot: null };
+  state.round = 0;
+}
+
+function heartsStr(hp) {
+  return '<span class="hearts">' + '&#9829;'.repeat(hp) + '&#9825;'.repeat(3 - hp) + '</span>';
+}
+
+function hpBar() {
+  const p2Label = state.mode === 'ai' ? 'Computer' : 'Player 2';
+  return `<div class="hp-bar">
+    <div class="hp-player"><span>Player 1</span><br>${heartsStr(state.p1.hp)}</div>
+    <div style="color:#8b6914;font-size:1.2rem;">Round ${state.round}</div>
+    <div class="hp-player"><span>${p2Label}</span><br>${heartsStr(state.p2.hp)}</div>
+  </div>`;
+}
+
+function barrelHTML(num, enabled, selectedNum) {
+  const sel = num === selectedNum ? ' selected' : '';
+  const dis = !enabled ? ' disabled' : '';
+  return `<div class="barrel${sel}${dis}" data-barrel="${num}" ${enabled ? `onclick="selectBarrel(${num})"` : ''}>
+    <div class="barrel-top"></div>
+    <div class="barrel-body">
+      <div class="barrel-band top"></div>
+      <div class="barrel-band mid"></div>
+      <div class="barrel-band bot"></div>
+    </div>
+    <div class="barrel-label">${num}</div>
+  </div>`;
+}
+
+function barrelsRow(enabled, selectedNum) {
+  return `<div class="barrels">${[1,2,3].map(n => barrelHTML(n, enabled, selectedNum)).join('')}</div>`;
+}
+
+function confirmBtn(text, fn) {
+  return `<button class="menu-btn" onclick="${fn}">${text}</button>`;
+}
+
+// --- SCREENS ---
+
+function showMenu() {
+  state.mode = null;
+  game.innerHTML = `
+    <h1>BARREL SHOOTOUT</h1>
+    <p class="subtitle">Hide. Shoot. Survive.</p>
+    <button class="menu-btn" onclick="startGame('ai')">vs Computer</button>
+    <button class="menu-btn" onclick="startGame('local')">Local 2-Player</button>
+  `;
+}
+
+function startGame(mode) {
+  state.mode = mode;
+  resetState();
+  nextRound();
+}
+
+function nextRound() {
+  state.round++;
+  state.p1.hide = null; state.p1.shoot = null;
+  state.p2.hide = null; state.p2.shoot = null;
+  setPhase('P1_HIDE');
+}
+
+let tempSelection = null;
+
+function setPhase(phase) {
+  state.phase = phase;
+  tempSelection = null;
+
+  switch (phase) {
+    case 'P1_HIDE':
+      render('Player 1: Choose a barrel to HIDE behind', true, null, () => confirmHide(1));
+      break;
+    case 'HANDOFF_1':
+      showHandoff('Pass the device to Player 2', 'P2_HIDE');
+      break;
+    case 'P2_HIDE':
+      if (state.mode === 'ai') {
+        state.p2.hide = randBarrel();
+        setPhase('P1_SHOOT');
+      } else {
+        render('Player 2: Choose a barrel to HIDE behind', true, null, () => confirmHide(2));
+      }
+      break;
+    case 'HANDOFF_2':
+      showHandoff('Pass the device to Player 1', 'P1_SHOOT');
+      break;
+    case 'P1_SHOOT':
+      render('Player 1: Choose a barrel to SHOOT at', true, null, () => confirmShoot(1));
+      break;
+    case 'HANDOFF_3':
+      showHandoff('Pass the device to Player 2', 'P2_SHOOT');
+      break;
+    case 'P2_SHOOT':
+      if (state.mode === 'ai') {
+        state.p2.shoot = randBarrel();
+        showResults();
+      } else {
+        render('Player 2: Choose a barrel to SHOOT at', true, null, () => confirmShoot(2));
+      }
+      break;
+  }
+}
+
+function render(instruction, enabled, selected, onConfirm) {
+  game.innerHTML = `
+    ${hpBar()}
+    <p class="instruction">${instruction}</p>
+    ${barrelsRow(enabled, selected)}
+    <div id="confirmArea"></div>
+  `;
+}
+
+window.selectBarrel = function(num) {
+  tempSelection = num;
+  // Re-render with selection
+  const phase = state.phase;
+  let instruction = '';
+  let onConfirmFn = '';
+
+  if (phase === 'P1_HIDE') {
+    instruction = 'Player 1: Choose a barrel to HIDE behind';
+    onConfirmFn = 'confirmHide(1)';
+  } else if (phase === 'P2_HIDE') {
+    instruction = 'Player 2: Choose a barrel to HIDE behind';
+    onConfirmFn = 'confirmHide(2)';
+  } else if (phase === 'P1_SHOOT') {
+    instruction = 'Player 1: Choose a barrel to SHOOT at';
+    onConfirmFn = 'confirmShoot(1)';
+  } else if (phase === 'P2_SHOOT') {
+    instruction = 'Player 2: Choose a barrel to SHOOT at';
+    onConfirmFn = 'confirmShoot(2)';
+  }
+
+  game.innerHTML = `
+    ${hpBar()}
+    <p class="instruction">${instruction}</p>
+    ${barrelsRow(true, tempSelection)}
+    <div id="confirmArea">
+      ${confirmBtn('Confirm', onConfirmFn)}
+    </div>
+  `;
+};
+
+window.confirmHide = function(player) {
+  if (tempSelection === null) return;
+  if (player === 1) {
+    state.p1.hide = tempSelection;
+    setPhase(state.mode === 'local' ? 'HANDOFF_1' : 'P2_HIDE');
+  } else {
+    state.p2.hide = tempSelection;
+    setPhase(state.mode === 'local' ? 'HANDOFF_2' : 'P1_SHOOT');
+  }
+};
+
+window.confirmShoot = function(player) {
+  if (tempSelection === null) return;
+  if (player === 1) {
+    state.p1.shoot = tempSelection;
+    setPhase(state.mode === 'local' ? 'HANDOFF_3' : 'P2_SHOOT');
+  } else {
+    state.p2.shoot = tempSelection;
+    showResults();
+  }
+};
+
+function showHandoff(message, nextPhase) {
+  game.innerHTML = `
+    ${hpBar()}
+    <div class="handoff">
+      <p>${message}</p>
+      ${confirmBtn('Ready', `setPhase('${nextPhase}')`)}
+    </div>
+  `;
+}
+
+window.setPhase = setPhase;
+
+function randBarrel() {
+  return Math.floor(Math.random() * 3) + 1;
+}
+
+function showResults() {
+  const p1Hit = state.p2.shoot === state.p1.hide;
+  const p2Hit = state.p1.shoot === state.p2.hide;
+
+  if (p1Hit) state.p1.hp = Math.max(0, state.p1.hp - 1);
+  if (p2Hit) state.p2.hp = Math.max(0, state.p2.hp - 1);
+
+  const p2Label = state.mode === 'ai' ? 'Computer' : 'Player 2';
+
+  let lines = '';
+
+  lines += `<div class="result-line" style="color:#a08060;">Player 1 hid behind Barrel ${state.p1.hide} &mdash; ${p2Label} hid behind Barrel ${state.p2.hide}</div>`;
+  lines += `<div class="result-line ${p2Hit ? 'result-hit' : 'result-miss'}">Player 1 shot Barrel ${state.p1.shoot} &mdash; ${p2Hit ? 'HIT!' : 'Miss!'}</div>`;
+  lines += `<div class="result-line ${p1Hit ? 'result-hit' : 'result-miss'}">${p2Label} shot Barrel ${state.p2.shoot} &mdash; ${p1Hit ? 'HIT!' : 'Miss!'}</div>`;
+
+  const gameOver = state.p1.hp <= 0 || state.p2.hp <= 0;
+  let footer = '';
+
+  if (gameOver) {
+    let winner = '';
+    if (state.p1.hp <= 0 && state.p2.hp <= 0) {
+      winner = "It's a draw!";
+    } else if (state.p1.hp <= 0) {
+      winner = `${p2Label} wins!`;
+    } else {
+      winner = 'Player 1 wins!';
+    }
+    footer = `
+      <div class="game-over">
+        <h2>GAME OVER</h2>
+        <p>${winner}</p>
+        ${confirmBtn('Play Again', 'showMenu()')}
+      </div>
+    `;
+  } else {
+    footer = confirmBtn('Next Round', 'nextRound()');
+  }
+
+  game.innerHTML = `
+    ${hpBar()}
+    <div class="results">
+      <h2>Round ${state.round} Results</h2>
+      ${lines}
+    </div>
+    ${footer}
+  `;
+}
+
+window.showMenu = showMenu;
+window.startGame = startGame;
+window.nextRound = nextRound;
+
+// Start
+showMenu();
+</script>
+</body>
+</html>
