@@ -527,6 +527,46 @@ body {
 
 .toast.show { opacity: 1; transform: translateY(0); }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  background: #0c0c18;
+  border-bottom: 1px solid #1c1c30;
+  padding: 0 20px;
+  position: sticky;
+  top: 42px;
+  z-index: 49;
+}
+
+.tab {
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: 0.15s;
+}
+
+.tab:hover { color: #aaa; }
+.tab.active { color: #00e5ff; border-bottom-color: #00e5ff; }
+
+.tab .badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 5px;
+  font-weight: 700;
+}
+
+.badge-cyan { background: #00e5ff; color: #000; }
+.badge-yellow { background: #f3ba2f; color: #000; }
+.badge-red { background: #ff3355; color: #fff; }
+.badge-purple { background: #a855f7; color: #fff; }
+
+.panel { display: none; padding: 16px 20px; }
+.panel.active { display: block; }
+
 .hidden-info {
   font-size: 11px;
   color: #555;
@@ -613,10 +653,17 @@ body {
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('pairs', this)">New Pairs <span class="badge badge-cyan" id="tabPairsCount">0</span></div>
+  <div class="tab" onclick="switchTab('buzz', this)">Twitter Traction <span class="badge badge-yellow" id="tabBuzzCount">0</span></div>
+  <div class="tab" onclick="switchTab('volume', this)">Volume Bot <span class="badge badge-red" id="tabVolCount">0</span></div>
+  <div class="tab" onclick="switchTab('watchlist', this)">Watchlist <span class="badge badge-purple" id="tabWLCount">0</span></div>
+</div>
 
-  <!-- Stats -->
+<!-- ═══ TAB 1: NEW PAIRS ═══ -->
+<div class="panel active" id="panelPairs">
+
   <div class="stat-bar">
     <div>Total: <span id="sTotal">0</span></div>
     <div>Showing: <span id="sShowing">0</span></div>
@@ -625,13 +672,10 @@ body {
     <div>Newest: <span id="sNewest">--</span></div>
   </div>
 
-  <!-- Log -->
   <div class="log-box" id="logBox"></div>
-
-  <!-- Hidden info -->
   <div class="hidden-info" id="hiddenInfo" style="display:none"></div>
 
-  <!-- PUMP.FUN NEW PAIRS -->
+  <!-- PUMP.FUN -->
   <div class="section-head">
     <span class="dot-purple"></span>
     Pump.fun New Pairs
@@ -641,7 +685,7 @@ body {
     <div class="empty-state"><h3>Loading pump.fun pairs...</h3><p><span class="spin"></span></p></div>
   </div>
 
-  <!-- ALL OTHER PAIRS -->
+  <!-- ALL OTHER -->
   <div class="section-head" style="margin-top: 20px;">
     <span class="dot-blue"></span>
     All New Pairs
@@ -650,23 +694,35 @@ body {
   <div class="grid" id="allGrid">
     <div class="empty-state"><h3>Loading...</h3><p><span class="spin"></span></p></div>
   </div>
+</div>
 
-  <!-- VOLUME SPIKES -->
-  <div class="section-head" style="margin-top: 20px;">
-    <span style="width:8px;height:8px;background:#ff3355;border-radius:50%;"></span>
-    Volume Spikes
-    <span class="count" id="volCount">0 alerts</span>
-  </div>
-  <div id="volSection"></div>
-
-  <!-- TWITTER BUZZ -->
-  <div class="section-head" style="margin-top: 20px;">
-    <span style="width:8px;height:8px;background:#1da1f2;border-radius:50%;"></span>
-    Twitter Buzz Rankings
-    <span class="count" id="buzzCount">0 trending</span>
+<!-- ═══ TAB 2: TWITTER TRACTION ═══ -->
+<div class="panel" id="panelBuzz">
+  <div style="margin-bottom: 12px;">
+    <h2 style="font-size: 16px; color: #1da1f2; margin-bottom: 4px;">Twitter Traction Tracker</h2>
+    <p style="font-size: 12px; color: #666; line-height: 1.5;">Tokens ranked by social buzz score — calculated from buy pressure, volume velocity, transaction count, price momentum, and how new the token is. Higher score = more likely being discussed on X/Twitter right now. Click any link to search X instantly.</p>
   </div>
   <div id="buzzSection"></div>
+</div>
 
+<!-- ═══ TAB 3: VOLUME BOT ═══ -->
+<div class="panel" id="panelVolume">
+  <div style="margin-bottom: 12px;">
+    <h2 style="font-size: 16px; color: #ff3355; margin-bottom: 4px;">Volume Spike Alerts</h2>
+    <p style="font-size: 12px; color: #666; line-height: 1.5;">Monitoring for unusual volume activity — 5 minute volume exceeding 20% of liquidity, volume jumping 3x+ between scans, or 1 hour volume exceeding 5x liquidity. These signal either a breakout or an incoming rug.</p>
+  </div>
+  <div id="volSection"></div>
+</div>
+
+<!-- ═══ TAB 4: WATCHLIST ═══ -->
+<div class="panel" id="panelWatchlist">
+  <div style="margin-bottom: 12px;">
+    <h2 style="font-size: 16px; color: #f3ba2f; margin-bottom: 4px;">Your Watchlist</h2>
+    <p style="font-size: 12px; color: #666;">Tokens you're tracking. Star any pair to add it here. Data auto-updates every scan.</p>
+  </div>
+  <div class="grid" id="watchlistGrid">
+    <div class="empty-state"><h3>No tokens watched yet</h3><p>Click the ☆ star on any pair card to track it here</p></div>
+  </div>
 </div>
 
 <div class="toast" id="toastEl"></div>
@@ -1275,9 +1331,13 @@ function render() {
     }).join('');
   }
 
+  // Tab badges
+  document.getElementById('tabPairsCount').textContent = sortedPump.length + sortedOther.length;
+  document.getElementById('tabVolCount').textContent = volAlerts.length;
+
   // Buzz rankings
   const buzzItems = allPairs.map(p => ({ p, b: buzzScore(p) })).filter(x => x.b > 5).sort((a, b) => b.b - a.b).slice(0, 25);
-  document.getElementById('buzzCount').textContent = buzzItems.filter(x => x.b >= 40).length + ' trending';
+  document.getElementById('tabBuzzCount').textContent = buzzItems.filter(x => x.b >= 40).length;
   const buzzSection = document.getElementById('buzzSection');
   if (buzzItems.length === 0) {
     buzzSection.innerHTML = '<div class="empty-state"><h3>No buzz data yet</h3></div>';
@@ -1301,8 +1361,31 @@ function render() {
     }).join('');
   }
 
+  // Watchlist
+  document.getElementById('tabWLCount').textContent = watchlist.size;
+  const wlGrid = document.getElementById('watchlistGrid');
+  if (watchlist.size === 0) {
+    wlGrid.innerHTML = '<div class="empty-state"><h3>No tokens watched yet</h3><p>Click the ☆ star on any pair card to track it here</p></div>';
+  } else {
+    const wlPairs = [...watchlist].map(addr => pairs.get(addr)).filter(Boolean);
+    if (wlPairs.length === 0) {
+      wlGrid.innerHTML = '<div class="empty-state"><h3>Watched tokens loading...</h3><p>Will appear after next scan</p></div>';
+    } else {
+      wlGrid.innerHTML = wlPairs.map(p => buildCard(p)).join('');
+    }
+  }
+
   // Mark seen
   pairs.forEach(p => seenIds.add(p.pairAddress));
+}
+
+// ============ TABS ============
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const panelMap = { pairs: 'panelPairs', buzz: 'panelBuzz', volume: 'panelVolume', watchlist: 'panelWatchlist' };
+  document.getElementById(panelMap[name]).classList.add('active');
 }
 
 // ============ CONTROLS ============
