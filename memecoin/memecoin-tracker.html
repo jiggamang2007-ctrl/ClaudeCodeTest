@@ -16,25 +16,26 @@ body {
 
 .header {
   background: linear-gradient(135deg, #1a1a2e, #16213e);
-  padding: 20px 30px;
+  padding: 16px 24px;
   border-bottom: 1px solid #2a2a4a;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 }
 
 .header h1 {
-  font-size: 22px;
+  font-size: 20px;
   background: linear-gradient(90deg, #00f0ff, #b026ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
 .controls {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -43,43 +44,30 @@ body {
   background: #111;
   color: #e0e0e0;
   border: 1px solid #333;
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.controls select:focus, .controls input:focus {
-  outline: none;
-  border-color: #00f0ff;
-}
+.controls select:focus, .controls input:focus { outline: none; border-color: #00f0ff; }
 
 .btn {
-  padding: 8px 16px;
+  padding: 7px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   transition: all 0.2s;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #00f0ff, #0080ff);
-  color: #000;
-}
-
+.btn-primary { background: linear-gradient(135deg, #00f0ff, #0080ff); color: #000; }
 .btn-primary:hover { opacity: 0.85; }
-
-.btn-danger {
-  background: #ff3355;
-  color: #fff;
-}
-
-.btn-danger:hover { opacity: 0.85; }
+.btn-sm { padding: 4px 10px; font-size: 11px; }
 
 .status-bar {
   background: #111118;
-  padding: 10px 30px;
+  padding: 8px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,9 +76,8 @@ body {
   border-bottom: 1px solid #1a1a2a;
 }
 
-.status-bar .live-dot {
-  width: 8px;
-  height: 8px;
+.live-dot {
+  width: 8px; height: 8px;
   background: #00ff88;
   border-radius: 50%;
   display: inline-block;
@@ -98,31 +85,129 @@ body {
   animation: pulse 1.5s infinite;
 }
 
-.status-bar.paused .live-dot {
-  background: #ff3355;
-  animation: none;
-}
+.paused .live-dot { background: #ff3355; animation: none; }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-.main {
-  padding: 20px 30px;
-}
-
-.filters {
+/* Filter panel */
+.filter-panel {
+  background: #111118;
+  border-bottom: 1px solid #1a1a2a;
+  padding: 12px 24px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-group label {
+  font-size: 10px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-group input, .filter-group select {
+  background: #0a0a0f;
+  color: #e0e0e0;
+  border: 1px solid #2a2a3a;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 120px;
+}
+
+.filter-group input:focus, .filter-group select:focus { outline: none; border-color: #00f0ff; }
+
+.filter-group .toggle-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.toggle input { display: none; }
+
+.toggle .slider {
+  position: absolute;
+  inset: 0;
+  background: #333;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.toggle .slider::before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  left: 3px; top: 3px;
+  background: #888;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.toggle input:checked + .slider { background: #00f0ff44; }
+.toggle input:checked + .slider::before { transform: translateX(16px); background: #00f0ff; }
+
+.filter-preset {
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid #333;
+  background: #111;
+  color: #aaa;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.filter-preset:hover { border-color: #555; }
+.filter-preset.active { background: #00f0ff22; border-color: #00f0ff; color: #00f0ff; }
+
+.main { padding: 16px 24px; }
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
 }
 
-.filter-chip {
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
+.stat-box {
+  background: #12121e;
+  border: 1px solid #1e1e35;
+  border-radius: 8px;
+  padding: 10px 16px;
+  min-width: 130px;
+  flex: 1;
+}
+
+.stat-box .stat-label { font-size: 10px; color: #666; margin-bottom: 3px; }
+.stat-box .stat-value { font-size: 18px; font-weight: 700; color: #fff; }
+
+.chain-chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 11px;
   cursor: pointer;
   border: 1px solid #333;
   background: #111;
@@ -130,38 +215,28 @@ body {
   transition: all 0.2s;
 }
 
-.filter-chip.active {
-  background: #00f0ff22;
-  border-color: #00f0ff;
-  color: #00f0ff;
-}
-
-.filter-chip:hover { border-color: #555; }
+.chip.active { background: #00f0ff22; border-color: #00f0ff; color: #00f0ff; }
+.chip:hover { border-color: #555; }
 
 .pair-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 12px;
 }
 
 .pair-card {
   background: #12121e;
   border: 1px solid #1e1e35;
   border-radius: 10px;
-  padding: 16px;
+  padding: 14px;
   transition: all 0.2s;
   position: relative;
   overflow: hidden;
 }
 
-.pair-card:hover {
-  border-color: #3a3a5a;
-  transform: translateY(-1px);
-}
-
-.pair-card.new-flash {
-  animation: flash 1s ease-out;
-}
+.pair-card:hover { border-color: #3a3a5a; transform: translateY(-1px); }
+.pair-card.new-flash { animation: flash 1.5s ease-out; }
+.pair-card.flagged { border-color: #ff335544; }
 
 @keyframes flash {
   0% { border-color: #00f0ff; box-shadow: 0 0 20px #00f0ff33; }
@@ -172,18 +247,14 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.pair-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-}
+.pair-name { font-size: 15px; font-weight: 700; color: #fff; }
 
 .pair-chain {
-  font-size: 11px;
-  padding: 3px 8px;
+  font-size: 10px;
+  padding: 2px 7px;
   border-radius: 4px;
   font-weight: 600;
   text-transform: uppercase;
@@ -195,34 +266,82 @@ body {
 .chain-base { background: #0052ff22; color: #0052ff; }
 .chain-other { background: #55555522; color: #888; }
 
+.pair-age { font-size: 11px; color: #666; margin-top: 2px; }
+.pair-addr { font-size: 10px; color: #444; margin-top: 2px; word-break: break-all; cursor: pointer; }
+.pair-addr:hover { color: #666; }
+
 .pair-meta {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 11px;
 }
 
-.meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.meta-label { color: #666; }
+.meta-item { display: flex; flex-direction: column; gap: 1px; }
+.meta-label { color: #555; font-size: 10px; }
 .meta-value { color: #ccc; font-weight: 600; }
 .meta-value.green { color: #00ff88; }
 .meta-value.red { color: #ff3355; }
+.meta-value.yellow { color: #f3ba2f; }
+
+/* Safety score bar */
+.safety-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.safety-bar {
+  flex: 1;
+  height: 6px;
+  background: #1a1a2a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.safety-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.safety-label {
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 55px;
+  text-align: right;
+}
+
+.flags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.flag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.flag-danger { background: #ff335522; color: #ff3355; }
+.flag-warn { background: #f3ba2f22; color: #f3ba2f; }
+.flag-good { background: #00ff8822; color: #00ff88; }
 
 .pair-links {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .pair-link {
-  font-size: 11px;
-  padding: 5px 10px;
+  font-size: 10px;
+  padding: 4px 9px;
   border-radius: 5px;
   text-decoration: none;
   font-weight: 600;
@@ -230,118 +349,37 @@ body {
 }
 
 .pair-link:hover { opacity: 0.8; }
-
-.link-twitter {
-  background: #1da1f222;
-  color: #1da1f2;
-}
-
-.link-dex {
-  background: #00f0ff22;
-  color: #00f0ff;
-}
-
-.link-chart {
-  background: #b026ff22;
-  color: #b026ff;
-}
-
-.link-scan {
-  background: #00ff8822;
-  color: #00ff88;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: #555;
-}
-
-.empty-state h2 { margin-bottom: 8px; color: #666; }
-
-.pair-age {
-  font-size: 11px;
-  color: #666;
-  margin-top: 2px;
-}
-
-.twitter-results {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #1e1e35;
-}
-
-.twitter-results summary {
-  font-size: 12px;
-  color: #1da1f2;
-  cursor: pointer;
-  user-select: none;
-}
-
-.twitter-results summary:hover { color: #4db8ff; }
-
-.tweet-count {
-  font-size: 11px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  background: #1da1f222;
-  color: #1da1f2;
-  margin-left: 4px;
-}
+.link-twitter { background: #1da1f222; color: #1da1f2; }
+.link-dex { background: #00f0ff22; color: #00f0ff; }
+.link-scan { background: #00ff8822; color: #00ff88; }
+.link-rugcheck { background: #b026ff22; color: #b026ff; }
 
 .traction-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 10px;
-  padding: 3px 8px;
+  top: 10px;
+  right: 10px;
+  font-size: 9px;
+  padding: 2px 7px;
   border-radius: 4px;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.traction-hot {
-  background: #ff335522;
-  color: #ff3355;
-}
+.traction-hot { background: #ff335522; color: #ff3355; }
+.traction-warm { background: #f3ba2f22; color: #f3ba2f; }
+.traction-new { background: #00ff8822; color: #00ff88; }
 
-.traction-warm {
-  background: #f3ba2f22;
-  color: #f3ba2f;
-}
-
-.traction-new {
-  background: #00ff8822;
-  color: #00ff88;
-}
-
-.stats-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-.stat-box {
-  background: #12121e;
-  border: 1px solid #1e1e35;
-  border-radius: 8px;
-  padding: 12px 18px;
-  min-width: 140px;
-}
-
-.stat-box .stat-label { font-size: 11px; color: #666; margin-bottom: 4px; }
-.stat-box .stat-value { font-size: 20px; font-weight: 700; color: #fff; }
+.empty-state { text-align: center; padding: 50px 20px; color: #555; }
+.empty-state h2 { margin-bottom: 8px; color: #666; }
 
 .loading-spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 14px; height: 14px;
   border: 2px solid #333;
   border-top-color: #00f0ff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-right: 6px;
+  margin-right: 5px;
   vertical-align: middle;
 }
 
@@ -350,20 +388,41 @@ body {
 .search-box {
   background: #111;
   border: 1px solid #333;
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: 6px;
   color: #e0e0e0;
-  font-size: 13px;
-  width: 200px;
+  font-size: 12px;
+  width: 180px;
 }
 
 .search-box:focus { outline: none; border-color: #00f0ff; }
 
-@media (max-width: 600px) {
-  .header { padding: 14px; }
-  .main { padding: 14px; }
+.hidden-count {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  background: #12121e;
+  border-radius: 6px;
+  border: 1px solid #1e1e35;
+  display: none;
+}
+
+.sound-toggle {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #111;
+  border: 1px solid #333;
+}
+
+@media (max-width: 700px) {
+  .header { padding: 12px; }
+  .main { padding: 12px; }
   .pair-grid { grid-template-columns: 1fr; }
-  .header h1 { font-size: 18px; }
+  .filter-panel { padding: 10px 12px; }
+  .pair-meta { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -372,51 +431,110 @@ body {
 <div class="header">
   <h1>MEMECOIN PAIR TRACKER</h1>
   <div class="controls">
-    <input type="text" class="search-box" id="searchInput" placeholder="Search token name...">
-    <select id="chainFilter">
-      <option value="all">All Chains</option>
-      <option value="solana">Solana</option>
-      <option value="ethereum">Ethereum</option>
-      <option value="bsc">BSC</option>
-      <option value="base">Base</option>
-    </select>
+    <input type="text" class="search-box" id="searchInput" placeholder="Search token / CA...">
     <select id="sortBy">
       <option value="newest">Newest First</option>
+      <option value="safety">Safest First</option>
       <option value="liquidity">Highest Liquidity</option>
       <option value="volume">Highest Volume</option>
       <option value="priceChange">Biggest Gainers</option>
+      <option value="txns">Most Transactions</option>
     </select>
     <select id="refreshInterval">
+      <option value="5000">Refresh: 5s</option>
+      <option value="10000" selected>Refresh: 10s</option>
       <option value="15000">Refresh: 15s</option>
-      <option value="30000" selected>Refresh: 30s</option>
-      <option value="60000">Refresh: 60s</option>
+      <option value="30000">Refresh: 30s</option>
       <option value="0">Manual Only</option>
     </select>
     <button class="btn btn-primary" onclick="fetchPairs()">Refresh Now</button>
+    <span class="sound-toggle" id="soundToggle" title="Alert sound on new pairs" onclick="toggleSound()">🔇</span>
   </div>
 </div>
 
 <div class="status-bar" id="statusBar">
   <div>
     <span class="live-dot"></span>
-    <span id="statusText">Connecting to DEXScreener...</span>
+    <span id="statusText">Connecting...</span>
   </div>
   <div id="lastUpdate">Last update: --</div>
 </div>
 
-<div class="main">
-  <div class="stats-row" id="statsRow">
-    <div class="stat-box">
-      <div class="stat-label">New Pairs (Last Hour)</div>
-      <div class="stat-value" id="statPairsHour">--</div>
+<!-- SCAM FILTER PANEL -->
+<div class="filter-panel" id="filterPanel">
+  <div class="filter-group">
+    <label>Min Liquidity ($)</label>
+    <input type="number" id="filterMinLiq" value="1000" min="0" step="500">
+  </div>
+  <div class="filter-group">
+    <label>Min 24h Volume ($)</label>
+    <input type="number" id="filterMinVol" value="500" min="0" step="500">
+  </div>
+  <div class="filter-group">
+    <label>Min Transactions (24h)</label>
+    <input type="number" id="filterMinTxns" value="10" min="0" step="5">
+  </div>
+  <div class="filter-group">
+    <label>Max Age</label>
+    <select id="filterMaxAge">
+      <option value="0">Any</option>
+      <option value="5">5 min</option>
+      <option value="15">15 min</option>
+      <option value="30">30 min</option>
+      <option value="60" selected>1 hour</option>
+      <option value="360">6 hours</option>
+      <option value="1440">24 hours</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Min Buy/Sell Ratio</label>
+    <input type="number" id="filterMinBuySell" value="0.3" min="0" max="10" step="0.1" title="Min ratio of sells to buys (low = possible honeypot)">
+  </div>
+  <div class="filter-group">
+    <label>Hide Honeypots</label>
+    <div class="toggle-row">
+      <label class="toggle">
+        <input type="checkbox" id="filterHoneypot" checked>
+        <span class="slider"></span>
+      </label>
     </div>
+  </div>
+  <div class="filter-group">
+    <label>Hide Low Score</label>
+    <div class="toggle-row">
+      <label class="toggle">
+        <input type="checkbox" id="filterLowScore" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+  <div class="filter-group">
+    <label>Presets</label>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <span class="filter-preset" onclick="applyPreset('degen')">Degen (No Filter)</span>
+      <span class="filter-preset active" onclick="applyPreset('safe')">Safe</span>
+      <span class="filter-preset" onclick="applyPreset('strict')">Strict</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="stats-row">
     <div class="stat-box">
-      <div class="stat-label">Total Tracked</div>
+      <div class="stat-label">New Pairs Found</div>
       <div class="stat-value" id="statTotal">--</div>
     </div>
     <div class="stat-box">
-      <div class="stat-label">Avg Liquidity</div>
-      <div class="stat-value" id="statAvgLiq">--</div>
+      <div class="stat-label">Showing (After Filters)</div>
+      <div class="stat-value" id="statShowing">--</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Filtered Out (Trash)</div>
+      <div class="stat-value" id="statFiltered">--</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Avg Safety Score</div>
+      <div class="stat-value" id="statAvgSafety">--</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">Top Gainer</div>
@@ -424,74 +542,191 @@ body {
     </div>
   </div>
 
-  <div class="filters" id="chainFilters">
-    <div class="filter-chip active" data-filter="all" onclick="setChainFilter(this, 'all')">All</div>
-    <div class="filter-chip" data-filter="solana" onclick="setChainFilter(this, 'solana')">Solana</div>
-    <div class="filter-chip" data-filter="ethereum" onclick="setChainFilter(this, 'ethereum')">Ethereum</div>
-    <div class="filter-chip" data-filter="bsc" onclick="setChainFilter(this, 'bsc')">BSC</div>
-    <div class="filter-chip" data-filter="base" onclick="setChainFilter(this, 'base')">Base</div>
+  <div class="chain-chips">
+    <div class="chip active" data-chain="all" onclick="setChain(this,'all')">All Chains</div>
+    <div class="chip" data-chain="solana" onclick="setChain(this,'solana')">Solana</div>
+    <div class="chip" data-chain="ethereum" onclick="setChain(this,'ethereum')">Ethereum</div>
+    <div class="chip" data-chain="bsc" onclick="setChain(this,'bsc')">BSC</div>
+    <div class="chip" data-chain="base" onclick="setChain(this,'base')">Base</div>
   </div>
+
+  <div class="hidden-count" id="hiddenCount"></div>
 
   <div class="pair-grid" id="pairGrid">
     <div class="empty-state">
       <h2>Loading new pairs...</h2>
-      <p><span class="loading-spinner"></span> Fetching from DEXScreener</p>
+      <p><span class="loading-spinner"></span> Fetching latest pairs from DEXScreener</p>
     </div>
   </div>
 </div>
 
 <script>
 let allPairs = [];
-let seenPairAddresses = new Set();
+let seenAddresses = new Set();
 let refreshTimer = null;
-let currentChainFilter = 'all';
-let currentSort = 'newest';
+let chainFilter = 'all';
+let soundEnabled = false;
+let fetchInProgress = false;
+let pairScoreCache = new Map();
 
-const CHAIN_MAP = {
-  solana: 'solana',
-  ethereum: 'ethereum',
-  bsc: 'bsc',
-  base: 'base',
-  polygon: 'polygon',
-  arbitrum: 'arbitrum',
-  avalanche: 'avalanche',
-};
+// ==================== SAFETY SCORING ====================
+// This analyzes each pair for red flags and gives a 0-100 score
 
-const CHAIN_EXPLORERS = {
-  solana: 'https://solscan.io/token/',
-  ethereum: 'https://etherscan.io/token/',
-  bsc: 'https://bscscan.com/token/',
-  base: 'https://basescan.org/token/',
-  polygon: 'https://polygonscan.com/token/',
-  arbitrum: 'https://arbiscan.io/token/',
-};
+function scorePair(pair) {
+  const cached = pairScoreCache.get(pair.pairAddress);
+  if (cached && cached.ts > Date.now() - 30000) return cached;
+
+  let score = 50; // start neutral
+  const flags = [];
+  const buys = pair.txns?.h24?.buys || 0;
+  const sells = pair.txns?.h24?.sells || 0;
+  const totalTxns = buys + sells;
+  const liq = pair.liquidity?.usd || 0;
+  const vol = pair.volume?.h24 || 0;
+  const fdv = pair.fdv || 0;
+  const priceChange5m = pair.priceChange?.m5 || 0;
+  const priceChange1h = pair.priceChange?.h1 || 0;
+  const priceChange24h = pair.priceChange?.h24 || 0;
+
+  // --- HONEYPOT DETECTION ---
+  // If there are buys but zero sells, likely honeypot
+  if (buys > 10 && sells === 0) {
+    score -= 40;
+    flags.push({ text: 'HONEYPOT: 0 sells', type: 'danger' });
+  } else if (buys > 5 && sells <= 1) {
+    score -= 25;
+    flags.push({ text: 'Possible honeypot', type: 'danger' });
+  }
+
+  // Very low sell ratio
+  if (totalTxns > 10) {
+    const sellRatio = sells / buys;
+    if (sellRatio < 0.1) {
+      score -= 20;
+      flags.push({ text: 'Sell ratio ' + (sellRatio * 100).toFixed(0) + '%', type: 'danger' });
+    } else if (sellRatio < 0.3) {
+      score -= 10;
+      flags.push({ text: 'Low sell ratio', type: 'warn' });
+    } else if (sellRatio >= 0.3) {
+      score += 5;
+      flags.push({ text: 'Healthy buy/sell', type: 'good' });
+    }
+  }
+
+  // --- LIQUIDITY CHECKS ---
+  if (liq < 500) {
+    score -= 25;
+    flags.push({ text: 'Micro liq: ' + formatUSD(liq), type: 'danger' });
+  } else if (liq < 2000) {
+    score -= 10;
+    flags.push({ text: 'Low liq', type: 'warn' });
+  } else if (liq >= 10000) {
+    score += 10;
+    flags.push({ text: 'Good liquidity', type: 'good' });
+  } else if (liq >= 5000) {
+    score += 5;
+  }
+
+  // --- VOLUME vs LIQUIDITY (wash trading detection) ---
+  if (liq > 0 && vol > 0) {
+    const volLiqRatio = vol / liq;
+    if (volLiqRatio > 50) {
+      score -= 15;
+      flags.push({ text: 'Suspicious vol/liq ratio', type: 'danger' });
+    } else if (volLiqRatio > 20) {
+      score -= 5;
+      flags.push({ text: 'High vol/liq ratio', type: 'warn' });
+    }
+  }
+
+  // --- FDV vs LIQUIDITY (rug indicator) ---
+  if (fdv > 0 && liq > 0) {
+    const fdvLiqRatio = fdv / liq;
+    if (fdvLiqRatio > 100) {
+      score -= 15;
+      flags.push({ text: 'FDV/Liq ratio ' + fdvLiqRatio.toFixed(0) + 'x', type: 'danger' });
+    } else if (fdvLiqRatio > 30) {
+      score -= 5;
+      flags.push({ text: 'High FDV/Liq', type: 'warn' });
+    }
+  }
+
+  // --- TRANSACTION COUNT ---
+  if (totalTxns < 5) {
+    score -= 10;
+    flags.push({ text: 'Very few txns', type: 'warn' });
+  } else if (totalTxns >= 100) {
+    score += 10;
+    flags.push({ text: totalTxns + ' txns', type: 'good' });
+  } else if (totalTxns >= 30) {
+    score += 5;
+  }
+
+  // --- PRICE DUMP DETECTION ---
+  if (priceChange5m < -50) {
+    score -= 20;
+    flags.push({ text: '5m dump ' + priceChange5m.toFixed(0) + '%', type: 'danger' });
+  } else if (priceChange1h < -70) {
+    score -= 15;
+    flags.push({ text: '1h dump ' + priceChange1h.toFixed(0) + '%', type: 'danger' });
+  }
+
+  // --- DEV/INSIDER PROXY: check if top holders own too much ---
+  // DEXScreener doesn't give holder data directly, but we can infer:
+  // If FDV is huge but liq is tiny and few txns, likely insider-held
+  if (fdv > 1000000 && liq < 5000 && totalTxns < 20) {
+    score -= 20;
+    flags.push({ text: 'Likely insider-held', type: 'danger' });
+  }
+
+  // If price pumped 1000%+ with low txns, probably dev manipulation
+  if (priceChange24h > 1000 && totalTxns < 30) {
+    score -= 15;
+    flags.push({ text: 'Pump w/ low txns', type: 'danger' });
+  }
+
+  // Clamp score
+  score = Math.max(0, Math.min(100, score));
+
+  const result = { score, flags, ts: Date.now() };
+  pairScoreCache.set(pair.pairAddress, result);
+  return result;
+}
+
+function getSafetyColor(score) {
+  if (score >= 70) return '#00ff88';
+  if (score >= 40) return '#f3ba2f';
+  return '#ff3355';
+}
+
+function getSafetyLabel(score) {
+  if (score >= 70) return 'SAFE';
+  if (score >= 40) return 'RISKY';
+  return 'DANGER';
+}
+
+// ==================== HELPERS ====================
 
 function formatUSD(n) {
   if (n == null) return '--';
   if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
   if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
-  return '$' + n.toFixed(2);
+  return '$' + n.toFixed(0);
 }
 
-function formatNum(n) {
-  if (n == null) return '--';
-  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
-  return n.toFixed(0);
-}
-
-function timeAgo(timestamp) {
-  const diff = Date.now() - timestamp;
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const secs = Math.floor(diff / 1000);
+  if (secs < 60) return secs + 's ago';
+  const mins = Math.floor(secs / 60);
   if (mins < 60) return mins + 'm ago';
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return hrs + 'h ago';
   return Math.floor(hrs / 24) + 'd ago';
 }
 
-function getChainClass(chainId) {
-  const id = (chainId || '').toLowerCase();
+function getChainClass(id) {
+  id = (id || '').toLowerCase();
   if (id.includes('solana')) return 'chain-solana';
   if (id.includes('ethereum') || id === 'eth') return 'chain-ethereum';
   if (id.includes('bsc') || id.includes('bnb')) return 'chain-bsc';
@@ -499,8 +734,8 @@ function getChainClass(chainId) {
   return 'chain-other';
 }
 
-function getChainName(chainId) {
-  const id = (chainId || '').toLowerCase();
+function getChainName(id) {
+  id = (id || '').toLowerCase();
   if (id.includes('solana')) return 'solana';
   if (id.includes('ethereum') || id === 'eth') return 'ethereum';
   if (id.includes('bsc') || id.includes('bnb')) return 'bsc';
@@ -508,119 +743,212 @@ function getChainName(chainId) {
   return id;
 }
 
-function getTwitterSearchURL(tokenName, tokenSymbol) {
-  const query = `${tokenSymbol} OR ${tokenName} memecoin`;
-  return `https://x.com/search?q=${encodeURIComponent(query)}&f=live`;
-}
+const EXPLORERS = {
+  solana: 'https://solscan.io/token/',
+  ethereum: 'https://etherscan.io/token/',
+  bsc: 'https://bscscan.com/token/',
+  base: 'https://basescan.org/token/',
+};
 
-function getTwitterCashtagURL(symbol) {
-  return `https://x.com/search?q=%24${encodeURIComponent(symbol)}&f=live`;
-}
-
-function getDexScreenerURL(chainId, pairAddress) {
-  return `https://dexscreener.com/${chainId}/${pairAddress}`;
-}
-
-function getExplorerURL(chainId, tokenAddress) {
+function getExplorerURL(chainId, addr) {
   const chain = getChainName(chainId);
-  const base = CHAIN_EXPLORERS[chain] || '';
-  return base ? base + tokenAddress : '#';
+  return (EXPLORERS[chain] || '') + (addr || '');
 }
 
-function getTractionBadge(pair) {
-  const vol = pair.volume?.h24 || 0;
-  const liq = pair.liquidity?.usd || 0;
-  const txns = (pair.txns?.h24?.buys || 0) + (pair.txns?.h24?.sells || 0);
-
-  if (vol > 100000 || txns > 500) return { label: 'HOT', class: 'traction-hot' };
-  if (vol > 10000 || txns > 50) return { label: 'WARM', class: 'traction-warm' };
-  return { label: 'NEW', class: 'traction-new' };
+function getRugCheckURL(chainId, addr) {
+  const chain = getChainName(chainId);
+  if (chain === 'solana') return 'https://rugcheck.xyz/tokens/' + addr;
+  if (chain === 'ethereum') return 'https://tokensniffer.com/token/eth/' + addr;
+  if (chain === 'bsc') return 'https://tokensniffer.com/token/bsc/' + addr;
+  if (chain === 'base') return 'https://tokensniffer.com/token/base/' + addr;
+  return '#';
 }
+
+function copyCA(addr) {
+  navigator.clipboard.writeText(addr).catch(() => {});
+}
+
+// ==================== RENDERING ====================
 
 function renderCard(pair) {
-  const baseToken = pair.baseToken || {};
-  const chainClass = getChainClass(pair.chainId);
-  const chainName = getChainName(pair.chainId);
-  const traction = getTractionBadge(pair);
-  const priceChange = pair.priceChange?.h24;
-  const isNew = !seenPairAddresses.has(pair.pairAddress);
-
-  const twitterSearch = getTwitterSearchURL(baseToken.name || '', baseToken.symbol || '');
-  const twitterCashtag = getTwitterCashtagURL(baseToken.symbol || '');
-  const dexURL = getDexScreenerURL(pair.chainId, pair.pairAddress);
-  const explorerURL = getExplorerURL(pair.chainId, baseToken.address || '');
+  const bt = pair.baseToken || {};
+  const qt = pair.quoteToken || {};
+  const { score, flags } = scorePair(pair);
+  const safetyColor = getSafetyColor(score);
+  const safetyLabel = getSafetyLabel(score);
+  const isNew = !seenAddresses.has(pair.pairAddress);
 
   const buys = pair.txns?.h24?.buys || 0;
   const sells = pair.txns?.h24?.sells || 0;
+  const pc5m = pair.priceChange?.m5;
+  const pc1h = pair.priceChange?.h1;
+  const pc24h = pair.priceChange?.h24;
+
+  const twitterSearch = `https://x.com/search?q=${encodeURIComponent(bt.symbol + ' OR ' + bt.name)}&f=live`;
+  const twitterCashtag = `https://x.com/search?q=%24${encodeURIComponent(bt.symbol || '')}&f=live`;
+  const dexURL = `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
+  const explorerURL = getExplorerURL(pair.chainId, bt.address);
+  const rugcheckURL = getRugCheckURL(pair.chainId, bt.address);
+
+  const flagsHTML = flags.map(f =>
+    `<span class="flag flag-${f.type}">${f.text}</span>`
+  ).join('');
+
+  const vol = pair.volume?.h24 || 0;
+  const txns = buys + sells;
+  let tractionClass = 'traction-new', tractionLabel = 'NEW';
+  if (vol > 100000 || txns > 500) { tractionClass = 'traction-hot'; tractionLabel = 'HOT'; }
+  else if (vol > 10000 || txns > 50) { tractionClass = 'traction-warm'; tractionLabel = 'WARM'; }
 
   return `
-    <div class="pair-card ${isNew ? 'new-flash' : ''}" data-chain="${chainName}" data-address="${pair.pairAddress}">
-      <span class="traction-badge ${traction.class}">${traction.label}</span>
+    <div class="pair-card ${isNew ? 'new-flash' : ''} ${score < 30 ? 'flagged' : ''}" data-score="${score}">
+      <span class="traction-badge ${tractionClass}">${tractionLabel}</span>
       <div class="pair-top">
         <div>
-          <div class="pair-name">${baseToken.symbol || '???'} / ${pair.quoteToken?.symbol || '???'}</div>
+          <div class="pair-name">${bt.symbol || '???'} / ${qt.symbol || '???'}</div>
           <div class="pair-age">${pair.pairCreatedAt ? timeAgo(pair.pairCreatedAt) : 'Unknown age'}</div>
-          <div style="font-size:11px;color:#555;margin-top:2px;word-break:break-all;">${baseToken.address ? baseToken.address.slice(0, 8) + '...' + baseToken.address.slice(-6) : ''}</div>
+          <div class="pair-addr" onclick="copyCA('${bt.address || ''}')" title="Click to copy CA">${bt.address ? bt.address.slice(0, 6) + '...' + bt.address.slice(-4) + ' (copy)' : ''}</div>
         </div>
-        <span class="pair-chain ${chainClass}">${chainName}</span>
+        <span class="pair-chain ${getChainClass(pair.chainId)}">${getChainName(pair.chainId)}</span>
       </div>
+
+      <div class="safety-row">
+        <span style="font-size:10px;color:#666;">Safety</span>
+        <div class="safety-bar">
+          <div class="safety-fill" style="width:${score}%;background:${safetyColor};"></div>
+        </div>
+        <span class="safety-label" style="color:${safetyColor};">${score}/100 ${safetyLabel}</span>
+      </div>
+
+      <div class="flags">${flagsHTML}</div>
+
       <div class="pair-meta">
         <div class="meta-item">
           <span class="meta-label">Price</span>
           <span class="meta-value">${pair.priceUsd ? '$' + parseFloat(pair.priceUsd).toFixed(8) : '--'}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">24h Change</span>
-          <span class="meta-value ${priceChange > 0 ? 'green' : priceChange < 0 ? 'red' : ''}">${priceChange != null ? (priceChange > 0 ? '+' : '') + priceChange.toFixed(1) + '%' : '--'}</span>
+          <span class="meta-label">5m</span>
+          <span class="meta-value ${pc5m > 0 ? 'green' : pc5m < 0 ? 'red' : ''}">${pc5m != null ? (pc5m > 0 ? '+' : '') + pc5m.toFixed(1) + '%' : '--'}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">1h</span>
+          <span class="meta-value ${pc1h > 0 ? 'green' : pc1h < 0 ? 'red' : ''}">${pc1h != null ? (pc1h > 0 ? '+' : '') + pc1h.toFixed(1) + '%' : '--'}</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">Liquidity</span>
           <span class="meta-value">${formatUSD(pair.liquidity?.usd)}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">24h Volume</span>
+          <span class="meta-label">Volume 24h</span>
           <span class="meta-value">${formatUSD(pair.volume?.h24)}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Buys / Sells (24h)</span>
-          <span class="meta-value"><span class="green">${buys}</span> / <span class="red">${sells}</span></span>
         </div>
         <div class="meta-item">
           <span class="meta-label">FDV</span>
           <span class="meta-value">${formatUSD(pair.fdv)}</span>
         </div>
+        <div class="meta-item">
+          <span class="meta-label">Buys</span>
+          <span class="meta-value green">${buys}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Sells</span>
+          <span class="meta-value red">${sells}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">B/S Ratio</span>
+          <span class="meta-value ${buys > 0 && sells === 0 ? 'red' : ''}">${buys > 0 ? (sells / buys).toFixed(2) : '--'}</span>
+        </div>
       </div>
+
       <div class="pair-links">
         <a href="${twitterSearch}" target="_blank" class="pair-link link-twitter">X Search</a>
-        <a href="${twitterCashtag}" target="_blank" class="pair-link link-twitter">$${baseToken.symbol || ''}</a>
+        <a href="${twitterCashtag}" target="_blank" class="pair-link link-twitter">$${bt.symbol || ''}</a>
         <a href="${dexURL}" target="_blank" class="pair-link link-dex">DEXScreener</a>
         <a href="${explorerURL}" target="_blank" class="pair-link link-scan">Explorer</a>
+        <a href="${rugcheckURL}" target="_blank" class="pair-link link-rugcheck">RugCheck</a>
       </div>
     </div>
   `;
 }
 
-function getFilteredPairs() {
-  let pairs = [...allPairs];
+function getFilterValues() {
+  return {
+    minLiq: parseFloat(document.getElementById('filterMinLiq').value) || 0,
+    minVol: parseFloat(document.getElementById('filterMinVol').value) || 0,
+    minTxns: parseInt(document.getElementById('filterMinTxns').value) || 0,
+    maxAge: parseInt(document.getElementById('filterMaxAge').value) || 0,
+    minBuySell: parseFloat(document.getElementById('filterMinBuySell').value) || 0,
+    hideHoneypot: document.getElementById('filterHoneypot').checked,
+    hideLowScore: document.getElementById('filterLowScore').checked,
+  };
+}
+
+function applyFilters(pairs) {
+  const f = getFilterValues();
   const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const now = Date.now();
 
-  if (currentChainFilter !== 'all') {
-    pairs = pairs.filter(p => getChainName(p.chainId) === currentChainFilter);
-  }
+  return pairs.filter(p => {
+    // Chain filter
+    if (chainFilter !== 'all' && getChainName(p.chainId) !== chainFilter) return false;
 
-  if (search) {
-    pairs = pairs.filter(p => {
+    // Search
+    if (search) {
       const name = (p.baseToken?.name || '').toLowerCase();
       const symbol = (p.baseToken?.symbol || '').toLowerCase();
       const addr = (p.baseToken?.address || '').toLowerCase();
-      return name.includes(search) || symbol.includes(search) || addr.includes(search);
-    });
-  }
+      if (!name.includes(search) && !symbol.includes(search) && !addr.includes(search)) return false;
+    }
 
+    const liq = p.liquidity?.usd || 0;
+    const vol = p.volume?.h24 || 0;
+    const buys = p.txns?.h24?.buys || 0;
+    const sells = p.txns?.h24?.sells || 0;
+    const totalTxns = buys + sells;
+
+    // Min liquidity
+    if (liq < f.minLiq) return false;
+
+    // Min volume
+    if (vol < f.minVol) return false;
+
+    // Min transactions
+    if (totalTxns < f.minTxns) return false;
+
+    // Max age
+    if (f.maxAge > 0 && p.pairCreatedAt) {
+      const ageMinutes = (now - p.pairCreatedAt) / 60000;
+      if (ageMinutes > f.maxAge) return false;
+    }
+
+    // Buy/sell ratio
+    if (buys > 5 && f.minBuySell > 0) {
+      const ratio = sells / buys;
+      if (ratio < f.minBuySell) return false;
+    }
+
+    // Honeypot filter
+    if (f.hideHoneypot && buys > 10 && sells === 0) return false;
+
+    // Low score filter
+    if (f.hideLowScore) {
+      const { score } = scorePair(p);
+      if (score < 30) return false;
+    }
+
+    return true;
+  });
+}
+
+function sortPairs(pairs) {
   const sortBy = document.getElementById('sortBy').value;
   switch (sortBy) {
     case 'newest':
       pairs.sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0));
+      break;
+    case 'safety':
+      pairs.sort((a, b) => scorePair(b).score - scorePair(a).score);
       break;
     case 'liquidity':
       pairs.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
@@ -631,174 +959,235 @@ function getFilteredPairs() {
     case 'priceChange':
       pairs.sort((a, b) => (b.priceChange?.h24 || -999) - (a.priceChange?.h24 || -999));
       break;
+    case 'txns':
+      pairs.sort((a, b) => {
+        const ta = (b.txns?.h24?.buys || 0) + (b.txns?.h24?.sells || 0);
+        const tb = (a.txns?.h24?.buys || 0) + (a.txns?.h24?.sells || 0);
+        return ta - tb;
+      });
+      break;
   }
-
   return pairs;
 }
 
-function renderPairs() {
+function render() {
   const grid = document.getElementById('pairGrid');
-  const filtered = getFilteredPairs();
+  const filtered = sortPairs(applyFilters([...allPairs]));
+  const hiddenCount = allPairs.length - filtered.length;
+
+  // Stats
+  document.getElementById('statTotal').textContent = allPairs.length;
+  document.getElementById('statShowing').textContent = filtered.length;
+  document.getElementById('statFiltered').textContent = hiddenCount;
+
+  const scores = filtered.map(p => scorePair(p).score);
+  const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(0) : '--';
+  document.getElementById('statAvgSafety').textContent = avgScore + (avgScore !== '--' ? '/100' : '');
+
+  const topGainer = allPairs.reduce((best, p) => {
+    return (p.priceChange?.h24 || -999) > (best.priceChange?.h24 || -999) ? p : best;
+  }, allPairs[0] || {});
+  document.getElementById('statTopGainer').textContent = topGainer?.baseToken?.symbol
+    ? topGainer.baseToken.symbol + ' +' + (topGainer.priceChange?.h24 || 0).toFixed(0) + '%'
+    : '--';
+
+  // Hidden count
+  const hcEl = document.getElementById('hiddenCount');
+  if (hiddenCount > 0) {
+    hcEl.style.display = 'block';
+    hcEl.textContent = `${hiddenCount} pairs hidden by filters (honeypots, low liq, scams)`;
+  } else {
+    hcEl.style.display = 'none';
+  }
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><h2>No pairs found</h2><p>Adjust your filters or wait for new pairs</p></div>`;
+    grid.innerHTML = `<div class="empty-state"><h2>No pairs passed filters</h2><p>Try loosening your filters or switch to "Degen" preset</p></div>`;
     return;
   }
 
   grid.innerHTML = filtered.map(renderCard).join('');
-
-  // Update seen pairs after render
-  allPairs.forEach(p => seenPairAddresses.add(p.pairAddress));
+  allPairs.forEach(p => seenAddresses.add(p.pairAddress));
 }
 
-function updateStats() {
-  const now = Date.now();
-  const hourAgo = now - 3600000;
-  const recentPairs = allPairs.filter(p => (p.pairCreatedAt || 0) > hourAgo);
-
-  document.getElementById('statPairsHour').textContent = recentPairs.length;
-  document.getElementById('statTotal').textContent = allPairs.length;
-
-  const liqs = allPairs.map(p => p.liquidity?.usd || 0).filter(l => l > 0);
-  const avgLiq = liqs.length > 0 ? liqs.reduce((a, b) => a + b, 0) / liqs.length : 0;
-  document.getElementById('statAvgLiq').textContent = formatUSD(avgLiq);
-
-  let topGainer = allPairs.reduce((best, p) => {
-    const change = p.priceChange?.h24 || -999;
-    return change > (best.priceChange?.h24 || -999) ? p : best;
-  }, allPairs[0] || {});
-
-  document.getElementById('statTopGainer').textContent = topGainer?.baseToken?.symbol
-    ? topGainer.baseToken.symbol + ' +' + (topGainer.priceChange?.h24 || 0).toFixed(0) + '%'
-    : '--';
-}
+// ==================== DATA FETCHING ====================
 
 async function fetchPairs() {
+  if (fetchInProgress) return;
+  fetchInProgress = true;
+
   const statusText = document.getElementById('statusText');
-  statusText.innerHTML = '<span class="loading-spinner"></span> Fetching new pairs...';
+  statusText.innerHTML = '<span class="loading-spinner"></span> Scanning for new pairs...';
+
+  const prevCount = allPairs.length;
 
   try {
-    // DEXScreener latest pairs endpoint
-    const response = await fetch('https://api.dexscreener.com/token-profiles/latest/v1');
-
-    if (!response.ok) throw new Error('API returned ' + response.status);
-
-    const profiles = await response.json();
-
-    // Get token addresses from profiles to look up pairs
-    // Fetch from the token boosts and new pairs endpoints too
-    const [boostsRes, latestPairsRes] = await Promise.all([
+    // Hit multiple endpoints in parallel for maximum coverage
+    const [profilesRes, boostsRes] = await Promise.all([
+      fetch('https://api.dexscreener.com/token-profiles/latest/v1').catch(() => null),
       fetch('https://api.dexscreener.com/token-boosts/latest/v1').catch(() => null),
-      fetch('https://api.dexscreener.com/latest/dex/pairs/solana,ethereum,bsc,base').catch(() => null),
     ]);
 
-    // Collect unique token addresses grouped by chain
+    // Collect token addresses by chain
     const tokensByChain = {};
-    for (const profile of profiles) {
-      const chain = profile.chainId || 'solana';
-      const addr = profile.tokenAddress;
-      if (!addr) continue;
-      if (!tokensByChain[chain]) tokensByChain[chain] = [];
-      if (tokensByChain[chain].length < 15) {
-        tokensByChain[chain].push(addr);
+    const addToken = (chain, addr) => {
+      if (!addr) return;
+      chain = chain || 'solana';
+      if (!tokensByChain[chain]) tokensByChain[chain] = new Set();
+      tokensByChain[chain].add(addr);
+    };
+
+    if (profilesRes && profilesRes.ok) {
+      const profiles = await profilesRes.json();
+      for (const p of profiles) addToken(p.chainId, p.tokenAddress);
+    }
+
+    if (boostsRes && boostsRes.ok) {
+      const boosts = await boostsRes.json();
+      for (const b of boosts) addToken(b.chainId, b.tokenAddress);
+    }
+
+    // Batch fetch pair data per chain (API allows up to 30 addresses)
+    const pairFetches = [];
+    for (const [chain, addrSet] of Object.entries(tokensByChain)) {
+      const addrs = [...addrSet];
+      // Split into batches of 30
+      for (let i = 0; i < addrs.length; i += 30) {
+        const batch = addrs.slice(i, i + 30).join(',');
+        pairFetches.push(
+          fetch(`https://api.dexscreener.com/tokens/v1/${chain}/${batch}`)
+            .then(r => r.ok ? r.json() : [])
+            .catch(() => [])
+        );
       }
     }
 
-    // Also add boosted tokens
-    if (boostsRes && boostsRes.ok) {
-      const boosts = await boostsRes.json();
-      for (const b of boosts) {
-        const chain = b.chainId || 'solana';
-        const addr = b.tokenAddress;
-        if (!addr) continue;
-        if (!tokensByChain[chain]) tokensByChain[chain] = [];
-        if (tokensByChain[chain].length < 15 && !tokensByChain[chain].includes(addr)) {
-          tokensByChain[chain].push(addr);
+    // Also search for trending meme terms to catch more
+    const memeTerms = ['pepe', 'doge', 'shib', 'wojak', 'moon', 'inu', 'cat', 'ai', 'trump', 'elon'];
+    const randomTerms = memeTerms.sort(() => Math.random() - 0.5).slice(0, 3);
+    for (const term of randomTerms) {
+      pairFetches.push(
+        fetch(`https://api.dexscreener.com/latest/dex/search?q=${term}`)
+          .then(r => r.ok ? r.json().then(d => d.pairs || []) : [])
+          .catch(() => [])
+      );
+    }
+
+    const results = await Promise.all(pairFetches);
+
+    // Merge results
+    const existingMap = new Map(allPairs.map(p => [p.pairAddress, true]));
+    let newCount = 0;
+
+    for (const result of results) {
+      const pairs = Array.isArray(result) ? result : [];
+      for (const pair of pairs) {
+        if (!pair.pairAddress) continue;
+        if (existingMap.has(pair.pairAddress)) {
+          // Update existing
+          const idx = allPairs.findIndex(p => p.pairAddress === pair.pairAddress);
+          if (idx >= 0) allPairs[idx] = pair;
+        } else {
+          allPairs.push(pair);
+          existingMap.set(pair.pairAddress, true);
+          newCount++;
         }
       }
     }
 
-    // Fetch pair data for each chain's tokens
-    const pairPromises = Object.entries(tokensByChain).map(([chain, addrs]) =>
-      fetch(`https://api.dexscreener.com/tokens/v1/${chain}/${addrs.join(',')}`)
-        .then(r => r.ok ? r.json() : [])
-        .catch(() => [])
-    );
-
-    const pairResults = await Promise.all(pairPromises);
-    const newPairs = [];
-
-    for (const result of pairResults) {
-      if (Array.isArray(result)) {
-        newPairs.push(...result);
-      }
-    }
-
-    // Merge with existing, avoid duplicates
-    const existingAddresses = new Set(allPairs.map(p => p.pairAddress));
-    for (const pair of newPairs) {
-      if (!existingAddresses.has(pair.pairAddress)) {
-        allPairs.push(pair);
-        existingAddresses.add(pair.pairAddress);
-      } else {
-        // Update existing pair data
-        const idx = allPairs.findIndex(p => p.pairAddress === pair.pairAddress);
-        if (idx >= 0) allPairs[idx] = pair;
-      }
-    }
-
-    // Cap to last 500 pairs to prevent memory issues
-    if (allPairs.length > 500) {
+    // Cap at 1000 pairs, keep newest
+    if (allPairs.length > 1000) {
       allPairs.sort((a, b) => (b.pairCreatedAt || 0) - (a.pairCreatedAt || 0));
-      allPairs = allPairs.slice(0, 500);
+      allPairs = allPairs.slice(0, 1000);
     }
 
-    renderPairs();
-    updateStats();
+    // Play sound if new pairs found
+    if (newCount > 0 && soundEnabled && prevCount > 0) {
+      playAlert();
+    }
+
+    render();
 
     const now = new Date();
-    document.getElementById('lastUpdate').textContent = 'Last update: ' + now.toLocaleTimeString();
-    statusText.innerHTML = `<span class="live-dot"></span> Live — tracking ${allPairs.length} pairs`;
+    document.getElementById('lastUpdate').textContent = 'Last: ' + now.toLocaleTimeString();
+    statusText.innerHTML = `<span class="live-dot"></span> Live — ${allPairs.length} pairs tracked | ${newCount} new`;
     document.getElementById('statusBar').classList.remove('paused');
 
   } catch (err) {
     console.error('Fetch error:', err);
-    statusText.textContent = 'Error: ' + err.message + '. Retrying...';
+    statusText.textContent = 'Error: ' + err.message;
     document.getElementById('statusBar').classList.add('paused');
-
-    // Try the simpler search endpoint as fallback
-    try {
-      const fallbackRes = await fetch('https://api.dexscreener.com/latest/dex/search?q=pepe doge wojak');
-      if (fallbackRes.ok) {
-        const data = await fallbackRes.json();
-        if (data.pairs) {
-          const existingAddresses = new Set(allPairs.map(p => p.pairAddress));
-          for (const pair of data.pairs) {
-            if (!existingAddresses.has(pair.pairAddress)) {
-              allPairs.push(pair);
-            }
-          }
-          renderPairs();
-          updateStats();
-          statusText.innerHTML = `<span class="live-dot"></span> Live (fallback) — tracking ${allPairs.length} pairs`;
-          document.getElementById('statusBar').classList.remove('paused');
-        }
-      }
-    } catch (e2) {
-      console.error('Fallback also failed:', e2);
-    }
   }
+
+  fetchInProgress = false;
 }
 
-function setChainFilter(el, chain) {
-  currentChainFilter = chain;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+// ==================== CONTROLS ====================
+
+function setChain(el, chain) {
+  chainFilter = chain;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('chainFilter').value = chain;
-  renderPairs();
+  render();
 }
 
-function setupRefreshTimer() {
+function applyPreset(preset) {
+  document.querySelectorAll('.filter-preset').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+
+  switch (preset) {
+    case 'degen':
+      document.getElementById('filterMinLiq').value = 0;
+      document.getElementById('filterMinVol').value = 0;
+      document.getElementById('filterMinTxns').value = 0;
+      document.getElementById('filterMaxAge').value = '0';
+      document.getElementById('filterMinBuySell').value = 0;
+      document.getElementById('filterHoneypot').checked = false;
+      document.getElementById('filterLowScore').checked = false;
+      break;
+    case 'safe':
+      document.getElementById('filterMinLiq').value = 1000;
+      document.getElementById('filterMinVol').value = 500;
+      document.getElementById('filterMinTxns').value = 10;
+      document.getElementById('filterMaxAge').value = '60';
+      document.getElementById('filterMinBuySell').value = 0.3;
+      document.getElementById('filterHoneypot').checked = true;
+      document.getElementById('filterLowScore').checked = true;
+      break;
+    case 'strict':
+      document.getElementById('filterMinLiq').value = 5000;
+      document.getElementById('filterMinVol').value = 5000;
+      document.getElementById('filterMinTxns').value = 50;
+      document.getElementById('filterMaxAge').value = '60';
+      document.getElementById('filterMinBuySell').value = 0.5;
+      document.getElementById('filterHoneypot').checked = true;
+      document.getElementById('filterLowScore').checked = true;
+      break;
+  }
+  render();
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+}
+
+function playAlert() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 800;
+    osc.type = 'sine';
+    gain.gain.value = 0.15;
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.stop(ctx.currentTime + 0.3);
+  } catch (e) {}
+}
+
+function setupTimer() {
   if (refreshTimer) clearInterval(refreshTimer);
   const interval = parseInt(document.getElementById('refreshInterval').value);
   if (interval > 0) {
@@ -807,21 +1196,21 @@ function setupRefreshTimer() {
 }
 
 // Event listeners
-document.getElementById('chainFilter').addEventListener('change', (e) => {
-  currentChainFilter = e.target.value;
-  document.querySelectorAll('.filter-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.filter === currentChainFilter);
-  });
-  renderPairs();
-});
+document.getElementById('sortBy').addEventListener('change', render);
+document.getElementById('refreshInterval').addEventListener('change', setupTimer);
+document.getElementById('searchInput').addEventListener('input', render);
 
-document.getElementById('sortBy').addEventListener('change', renderPairs);
-document.getElementById('refreshInterval').addEventListener('change', setupRefreshTimer);
-document.getElementById('searchInput').addEventListener('input', renderPairs);
+// Filter change listeners
+['filterMinLiq', 'filterMinVol', 'filterMinTxns', 'filterMaxAge', 'filterMinBuySell'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+['filterHoneypot', 'filterLowScore'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
 
 // Start
 fetchPairs();
-setupRefreshTimer();
+setupTimer();
 </script>
 </body>
 </html>
