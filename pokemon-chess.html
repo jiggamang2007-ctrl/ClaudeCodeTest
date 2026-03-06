@@ -51,9 +51,15 @@ body {
 }
 .panel-piece:hover { background: #1a3a5c; }
 .panel-piece .mini-circle {
-  width: 20px; height: 20px; border-radius: 50%;
+  width: 28px; height: 28px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 8px; font-weight: bold; flex-shrink: 0;
+  overflow: hidden;
+}
+.panel-piece .mini-circle img {
+  width: 26px; height: 26px;
+  image-rendering: pixelated;
+  pointer-events: none;
 }
 .panel-piece .info { line-height: 1.3; }
 .panel-piece .pname { font-weight: bold; }
@@ -100,7 +106,7 @@ body {
 .square.last-move { background: rgba(255,255,0,0.2); }
 
 .piece-circle {
-  width: 48px; height: 48px; border-radius: 50%;
+  width: 52px; height: 52px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-weight: bold; font-size: 11px;
   text-align: center; line-height: 1.1;
@@ -109,10 +115,17 @@ body {
   transition: transform 0.15s;
   cursor: grab;
   text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.piece-circle img {
+  width: 44px; height: 44px;
+  image-rendering: pixelated;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
 }
 .piece-circle:hover { transform: scale(1.08); }
-.piece-circle.white { background: #f0e68c; color: #333; border-color: #b8860b; }
-.piece-circle.black { background: #6a5acd; color: #fff; border-color: #483d8b; }
+.piece-circle.white { background: radial-gradient(circle, #fffbe6, #f0e68c); color: #333; border-color: #b8860b; }
+.piece-circle.black { background: radial-gradient(circle, #9381ff, #6a5acd); color: #fff; border-color: #483d8b; }
 .piece-circle.evolved1 { box-shadow: 0 0 6px 2px rgba(0,200,255,0.5); }
 .piece-circle.evolved2 { box-shadow: 0 0 8px 3px rgba(255,215,0,0.7); }
 
@@ -191,6 +204,7 @@ body {
   border: 2px solid #555; text-align: center; line-height: 1.1;
 }
 .promo-opt:hover { border-color: #ffd700; transform: scale(1.1); }
+.promo-opt img { width: 44px; height: 44px; image-rendering: pixelated; pointer-events: none; }
 
 /* Ability targeting */
 .square.ability-target { box-shadow: inset 0 0 0 3px #ff00ff; cursor: crosshair; }
@@ -271,6 +285,29 @@ const ABILITY_NAMES = {
 };
 
 const PAWN_COLS = [0,1,2,3,4,5,6,7]; // pawn1..pawn8 mapped to columns
+
+// PokeAPI sprite IDs for each evolution stage [base, evo1, evo2]
+const SPRITE_IDS = {
+  king:   [493, 493, 493],         // Arceus (same sprite, CSS effects for mega/gmax)
+  queen:  [150, 10191, 10191],     // Mewtwo -> Mega Mewtwo Y
+  rook:   [143, 143, 143],         // Snorlax
+  bishop: [94, 10038, 10038],      // Gengar -> Mega Gengar
+  knight: [78, 78, 78],            // Rapidash
+  pawn1:  [1, 2, 3],              // Bulbasaur -> Ivysaur -> Venusaur
+  pawn2:  [4, 5, 6],              // Charmander -> Charmeleon -> Charizard
+  pawn3:  [7, 8, 9],              // Squirtle -> Wartortle -> Blastoise
+  pawn4:  [152, 153, 154],        // Chikorita -> Bayleef -> Meganium
+  pawn5:  [155, 156, 157],        // Cyndaquil -> Quilava -> Typhlosion
+  pawn6:  [158, 159, 160],        // Totodile -> Croconaw -> Feraligatr
+  pawn7:  [252, 253, 254],        // Treecko -> Grovyle -> Sceptile
+  pawn8:  [255, 256, 257]         // Torchic -> Combusken -> Blaziken
+};
+const SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+function getSpriteUrl(piece) {
+  const ids = SPRITE_IDS[piece.dataKey];
+  if (!ids) return '';
+  return SPRITE_URL + ids[piece.evoStage] + '.png';
+}
 
 // ===== GAME STATE =====
 let board = []; // 8x8 array, null or piece object
@@ -913,7 +950,12 @@ function showPromotionModal(pawn) {
     btn.style.background = pawn.color === 'white' ? '#f0e68c' : '#6a5acd';
     btn.style.color = pawn.color === 'white' ? '#333' : '#fff';
     const d = PIECE_DATA[ct];
-    btn.textContent = d.label[0];
+    const ids = SPRITE_IDS[ct];
+    const pimg = document.createElement('img');
+    pimg.src = SPRITE_URL + ids[0] + '.png';
+    pimg.alt = d.base;
+    pimg.draggable = false;
+    btn.appendChild(pimg);
     btn.title = d.base;
     btn.onclick = () => doPromotion(ct);
     opts.appendChild(btn);
@@ -1119,7 +1161,11 @@ function renderBoard() {
         if (piece.evoStage === 2) circle.classList.add('evolved2');
         if (immunePieces[piece.id]) circle.classList.add('immune');
 
-        circle.textContent = getPieceLabel(piece);
+        const img = document.createElement('img');
+        img.src = getSpriteUrl(piece);
+        img.alt = getPokemonName(piece);
+        img.draggable = false;
+        circle.appendChild(img);
 
         if (piece.evoStage > 0) {
           const dot = document.createElement('div');
@@ -1164,8 +1210,11 @@ function renderPanels() {
       const mc = document.createElement('div');
       mc.className = 'mini-circle';
       mc.style.background = color === 'white' ? '#f0e68c' : '#6a5acd';
-      mc.style.color = color === 'white' ? '#333' : '#fff';
-      mc.textContent = getPieceLabel(p).substr(0,3);
+      const mimg = document.createElement('img');
+      mimg.src = getSpriteUrl(p);
+      mimg.alt = getPokemonName(p);
+      mimg.draggable = false;
+      mc.appendChild(mimg);
 
       const info = document.createElement('div');
       info.className = 'info';
