@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokemon Center Exclusive Restock Tracker</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0a0a1a; color: #e0e0e0; min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #1a1a3e 0%, #2d1b4e 50%, #1a1a3e 100%);
+  border-bottom: 2px solid #e3350d; padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; position: relative; overflow: hidden;
+}
+.header::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(227,53,13,0.06) 0%, transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(255,203,5,0.04) 0%, transparent 50%);
+  animation: headerGlow 8s ease-in-out infinite;
+}
+@keyframes headerGlow { 0%,100%{opacity:0.5} 50%{opacity:1} }
+.header-left { display: flex; align-items: center; gap: 14px; z-index: 1; }
+.pokeball {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(to bottom, #e3350d 48%, #222 48%, #222 52%, #fff 52%);
+  border: 3px solid #333; position: relative; flex-shrink: 0;
+  animation: pokeFloat 3s ease-in-out infinite;
+}
+@keyframes pokeFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+.pokeball::after {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%); width: 10px; height: 10px;
+  border-radius: 50%; background: #fff; border: 3px solid #333;
+}
+.header h1 {
+  font-size: 20px; font-weight: 700;
+  background: linear-gradient(90deg, #ffcb05, #e3350d, #ffcb05);
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+@keyframes shimmer { to { background-position: 200% center; } }
+.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; z-index: 1; }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: #4caf50; animation: pulse 2s infinite; }
+.status-dot.paused { background: #ff9800; animation: none; }
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 4px #4caf50} 50%{opacity:0.4;box-shadow:none} }
+.controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+/* ── BUTTONS / INPUTS ── */
+button {
+  background: #2a2a4a; color: #e0e0e0; border: 1px solid #444;
+  padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
+  transition: all 0.2s; white-space: nowrap;
+}
+button:hover { background: #3a3a5a; border-color: #e3350d; }
+button.active, button.btn-primary { background: #e3350d; border-color: #e3350d; color: #fff; }
+select, input, textarea {
+  background: #1a1a3e; color: #e0e0e0; border: 1px solid #444;
+  padding: 6px 10px; border-radius: 6px; font-size: 12px; outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: #6c3ec1; }
+
+/* ── TABS ── */
+.tabs {
+  background: #111128; padding: 0 24px; display: flex; gap: 0;
+  border-bottom: 1px solid #222; overflow-x: auto;
+}
+.tab {
+  padding: 12px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+  color: #888; border-bottom: 2px solid transparent; transition: all 0.2s;
+  white-space: nowrap; position: relative;
+}
+.tab:hover { color: #ccc; }
+.tab.active { color: #ffcb05; border-bottom-color: #ffcb05; }
+.tab .tab-badge {
+  position: absolute; top: 6px; right: 4px; background: #e3350d;
+  color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 10px;
+  font-weight: 700;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  background: #0d0d22; padding: 10px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #1a1a2e;
+}
+.toolbar-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.filter-group, .cat-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.filter-btn, .cat-btn { padding: 4px 10px; font-size: 11px; border-radius: 20px; }
+.filter-btn.active { background: #e3350d; border-color: #e3350d; color: #fff; }
+.cat-btn.active { background: #6c3ec1; border-color: #6c3ec1; color: #fff; }
+.stats { display: flex; gap: 16px; font-size: 12px; color: #888; flex-wrap: wrap; }
+.stats span { color: #ffcb05; font-weight: 600; }
+.search-box { width: 180px; }
+.sort-select { font-size: 11px; padding: 4px 8px; }
+
+/* ── GRID ── */
+.container { max-width: 1500px; margin: 0 auto; padding: 16px 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+
+/* ── PRODUCT CARD ── */
+.card {
+  background: #141430; border: 1px solid #2a2a4a; border-radius: 10px;
+  overflow: hidden; transition: all 0.25s;
+}
+.card:hover { border-color: #e3350d; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(227,53,13,0.1); }
+.card.in-stock { border-color: #4caf50; box-shadow: 0 0 16px rgba(76,175,80,0.12); }
+.card.in-stock .card-badge:first-child { background: #4caf50; }
+.card-row1 { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 0; }
+.card-badges { display: flex; gap: 6px; align-items: center; }
+.card-badge {
+  padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; background: #c62828; color: #fff; letter-spacing: 0.4px;
+}
+.card-badge.exclusive { background: #6c3ec1; }
+.card-cat { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+.card-body { padding: 10px 14px; }
+.card-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; line-height: 1.3; }
+.card-set { font-size: 11px; color: #777; margin-bottom: 8px; }
+
+.roi-row { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.price-block { font-size: 12px; }
+.price-block .lbl { color: #666; font-size: 10px; text-transform: uppercase; }
+.price-block .val { font-weight: 700; }
+.price-block .val.retail { color: #ffcb05; }
+.price-block .val.resale { color: #90caf9; }
+.roi-badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.roi-badge.positive { background: rgba(76,175,80,0.15); color: #4caf50; }
+.roi-badge.negative { background: rgba(244,67,54,0.15); color: #f44336; }
+.roi-badge.neutral { background: rgba(255,255,255,0.08); color: #888; }
+
+.card-meta { display: flex; gap: 12px; font-size: 11px; color: #555; margin-bottom: 8px; flex-wrap: wrap; }
+.card-meta .lbl { color: #666; } .card-meta .val { color: #999; }
+
+/* ── HYPE BAR ── */
+.hype-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.hype-bar-bg { flex: 1; height: 6px; background: #1a1a3e; border-radius: 3px; overflow: hidden; }
+.hype-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+.hype-label { font-size: 10px; color: #888; white-space: nowrap; }
+.hype-btn {
+  background: none; border: none; cursor: pointer; font-size: 14px; padding: 2px 4px;
+  transition: transform 0.2s; color: #e0e0e0;
+}
+.hype-btn:hover { transform: scale(1.3); background: none; border: none; }
+
+.card-footer { display: flex; gap: 6px; padding: 0 14px 12px; flex-wrap: wrap; }
+.btn-buy {
+  flex: 1; background: #e3350d; color: #fff; border: none;
+  padding: 8px; border-radius: 6px; font-weight: 600; font-size: 12px;
+  text-decoration: none; text-align: center; display: inline-block; min-width: 80px;
+}
+.btn-buy:hover { background: #ff4422; }
+.btn-chase { background: #1a1a4e; border: 1px solid #6c3ec1; color: #b388ff; padding: 8px 10px; border-radius: 6px; font-size: 12px; }
+.btn-chase:hover { background: #2a2a5e; border-color: #b388ff; }
+.btn-watch { background: #2a2a4a; border: 1px solid #444; color: #ffcb05; padding: 8px 12px; border-radius: 6px; font-size: 12px; }
+.btn-watch.watching { background: #3a2a0a; border-color: #ffcb05; }
+.btn-edit { background: #2a2a4a; border: 1px solid #444; color: #90caf9; padding: 8px 10px; border-radius: 6px; font-size: 12px; }
+
+/* ── CHASE PANEL ── */
+.chase-panel { background: #0d0d25; border-top: 1px solid #2a2a4a; padding: 12px 14px; display: none; }
+.chase-panel.open { display: block; }
+.chase-panel h3 { font-size: 13px; color: #b388ff; margin-bottom: 10px; }
+.chase-list { display: flex; flex-direction: column; gap: 6px; }
+.chase-card {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 10px; background: #141430; border: 1px solid #1e1e40;
+  border-radius: 8px; font-size: 12px;
+}
+.chase-card:hover { border-color: #6c3ec1; }
+.chase-rank { color: #ffcb05; font-weight: 700; width: 24px; flex-shrink: 0; }
+.chase-info { flex: 1; margin: 0 10px; }
+.chase-name { color: #fff; font-weight: 600; }
+.chase-rarity { color: #888; font-size: 10px; text-transform: uppercase; margin-top: 1px; }
+.chase-val { font-weight: 700; color: #4caf50; white-space: nowrap; }
+
+/* ── CHASE TAB ── */
+.chase-tab-panel { padding: 16px 20px; max-width: 1500px; margin: 0 auto; }
+.set-selector { margin-bottom: 16px; }
+.set-selector select { padding: 8px 14px; font-size: 13px; min-width: 280px; }
+.chase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+.chase-big-card {
+  background: #141430; border: 1px solid #2a2a4a; border-radius: 10px;
+  padding: 14px; display: flex; align-items: center; gap: 14px; transition: all 0.2s;
+}
+.chase-big-card:hover { border-color: #6c3ec1; transform: translateY(-1px); }
+.chase-big-rank { font-size: 22px; font-weight: 800; width: 36px; text-align: center; flex-shrink: 0; }
+.chase-big-rank.top1 { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.4); }
+.chase-big-rank.top2 { color: #c0c0c0; }
+.chase-big-rank.top3 { color: #cd7f32; }
+.chase-big-rank { color: #ffcb05; }
+.chase-big-info { flex: 1; }
+.chase-big-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+.chase-big-rarity { font-size: 11px; color: #b388ff; margin-bottom: 4px; }
+.chase-big-number { font-size: 10px; color: #666; }
+.chase-big-price { font-size: 18px; font-weight: 700; color: #4caf50; white-space: nowrap; }
+
+/* ── PACK SIMULATOR ── */
+.sim-panel { padding: 20px; max-width: 900px; margin: 0 auto; text-align: center; }
+.sim-panel h2 { color: #ffcb05; margin-bottom: 6px; font-size: 20px; }
+.sim-sub { color: #888; font-size: 13px; margin-bottom: 20px; }
+.sim-controls { display: flex; gap: 10px; justify-content: center; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+.sim-controls select { padding: 10px 16px; font-size: 14px; }
+.btn-open-pack {
+  background: linear-gradient(135deg, #e3350d, #ff6b35);
+  color: #fff; border: none; padding: 14px 32px; border-radius: 10px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+}
+.btn-open-pack:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(227,53,13,0.4); background: linear-gradient(135deg, #ff4422, #ff8844); }
+.btn-open-pack:active { transform: scale(0.98); }
+
+.pack-wrapper {
+  perspective: 800px; margin: 20px auto; width: 200px; height: 280px;
+  cursor: pointer; display: none;
+}
+.pack-wrapper.show { display: block; }
+.pack-visual {
+  width: 100%; height: 100%; position: relative;
+  transform-style: preserve-3d; transition: transform 0.8s;
+  border-radius: 14px;
+}
+.pack-wrapper.flipped .pack-visual { transform: rotateY(180deg); }
+.pack-front, .pack-back {
+  position: absolute; inset: 0; border-radius: 14px;
+  backface-visibility: hidden; display: flex; align-items: center;
+  justify-content: center; flex-direction: column;
+}
+.pack-front {
+  background: linear-gradient(135deg, #2d1b6e, #6c3ec1, #2d1b6e);
+  border: 2px solid #8855dd; box-shadow: 0 0 30px rgba(108,62,193,0.3);
+}
+.pack-front-text { color: #fff; font-size: 14px; font-weight: 700; margin-top: 10px; text-align: center; padding: 0 12px; }
+.pack-front-icon { font-size: 50px; }
+.pack-front-hint { color: #b388ff; font-size: 11px; margin-top: 8px; }
+.pack-back {
+  background: #141430; border: 2px solid #2a2a4a;
+  transform: rotateY(180deg); padding: 16px; overflow-y: auto;
+}
+
+.pull-results { margin-top: 20px; }
+.pull-card {
+  background: #141430; border: 1px solid #2a2a4a; border-radius: 10px;
+  padding: 14px 18px; margin-bottom: 10px; display: flex;
+  justify-content: space-between; align-items: center;
+  animation: pullIn 0.4s ease-out;
+}
+@keyframes pullIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: none; } }
+.pull-card.hit { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+.pull-card.big-hit { border-color: #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.4); animation: pullIn 0.4s ease-out, bigHitGlow 1.5s ease-in-out infinite; }
+@keyframes bigHitGlow { 0%,100%{box-shadow:0 0 15px rgba(255,215,0,0.3)} 50%{box-shadow:0 0 35px rgba(255,215,0,0.6)} }
+.pull-card-info { flex: 1; }
+.pull-card-name { font-size: 14px; font-weight: 600; color: #fff; }
+.pull-card-rarity { font-size: 11px; color: #b388ff; }
+.pull-card-value { font-size: 16px; font-weight: 700; color: #4caf50; }
+
+.sim-stats {
+  display: flex; gap: 20px; justify-content: center; margin-top: 20px;
+  padding: 14px; background: #141430; border-radius: 10px; flex-wrap: wrap;
+}
+.sim-stat { text-align: center; }
+.sim-stat .num { font-size: 20px; font-weight: 700; color: #ffcb05; }
+.sim-stat .lab { font-size: 11px; color: #888; }
+
+/* ── PULL TRACKER ── */
+.tracker-panel { padding: 16px 20px; max-width: 1200px; margin: 0 auto; }
+.tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.tracker-header h2 { color: #ffcb05; font-size: 18px; }
+.tracker-totals { display: flex; gap: 20px; flex-wrap: wrap; }
+.tracker-total { text-align: center; }
+.tracker-total .num { font-size: 22px; font-weight: 700; color: #4caf50; }
+.tracker-total .lab { font-size: 11px; color: #888; }
+.tracker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+.tracker-item {
+  background: #141430; border: 1px solid #2a2a4a; border-radius: 8px;
+  padding: 12px; display: flex; justify-content: space-between; align-items: center;
+}
+.tracker-item-info { flex: 1; }
+.tracker-item-name { font-size: 13px; font-weight: 600; color: #fff; }
+.tracker-item-set { font-size: 11px; color: #777; }
+.tracker-item-val { font-size: 15px; font-weight: 700; color: #4caf50; margin-right: 10px; }
+.tracker-item-del { background: none; border: none; color: #c62828; cursor: pointer; font-size: 14px; padding: 4px; }
+.tracker-item-del:hover { color: #ff4444; background: none; border: none; }
+
+/* ── CHAT ── */
+.chat-panel { padding: 16px 20px; max-width: 900px; margin: 0 auto; }
+.chat-setup { background: #141430; border: 1px solid #2a2a4a; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.chat-setup h3 { color: #ffcb05; margin-bottom: 8px; }
+.chat-setup p { font-size: 12px; color: #888; line-height: 1.6; margin-bottom: 10px; }
+.chat-setup code { background: #0d0d25; padding: 2px 6px; border-radius: 4px; font-size: 11px; color: #b388ff; }
+.chat-setup input { width: 100%; margin-bottom: 6px; padding: 8px; }
+.chat-connected { display: none; }
+.chat-connected.show { display: block; }
+.chat-messages {
+  background: #0d0d20; border: 1px solid #2a2a4a; border-radius: 10px;
+  height: 400px; overflow-y: auto; padding: 12px; margin-bottom: 10px;
+}
+.chat-msg { margin-bottom: 8px; animation: pullIn 0.3s ease-out; }
+.chat-msg-user { font-size: 11px; font-weight: 700; color: #ffcb05; }
+.chat-msg-text { font-size: 13px; color: #e0e0e0; line-height: 1.4; }
+.chat-msg-time { font-size: 10px; color: #555; }
+.chat-msg.system .chat-msg-text { color: #888; font-style: italic; }
+.chat-input-row { display: flex; gap: 8px; }
+.chat-input-row input { flex: 1; padding: 10px; font-size: 13px; }
+.chat-input-row button { padding: 10px 20px; font-size: 13px; }
+.chat-local-notice { background: #1a1a3e; border: 1px solid #6c3ec1; border-radius: 8px; padding: 12px; margin-bottom: 12px; font-size: 12px; color: #b388ff; line-height: 1.6; }
+
+/* ── RELEASES ── */
+.releases-panel { padding: 16px 20px; max-width: 1500px; margin: 0 auto; }
+.release-card {
+  background: #141430; border: 1px solid #2a2a4a; border-radius: 10px;
+  padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between;
+  align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.release-card:hover { border-color: #6c3ec1; }
+.release-info { flex: 1; min-width: 200px; }
+.release-name { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.release-details { font-size: 12px; color: #888; line-height: 1.6; }
+.release-date { font-size: 13px; font-weight: 700; color: #ffcb05; white-space: nowrap; }
+.release-countdown { font-size: 11px; color: #e3350d; margin-top: 2px; }
+.release-source { font-size: 10px; color: #555; margin-top: 4px; }
+
+/* ── NEWS ── */
+.news-panel { padding: 16px 20px; max-width: 1500px; margin: 0 auto; }
+.news-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.news-auto { font-size: 11px; color: #888; }
+.news-item {
+  background: #141430; border: 1px solid #2a2a4a; border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 10px;
+}
+.news-item:hover { border-color: #e3350d; }
+.news-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.news-title a { color: #90caf9; text-decoration: none; }
+.news-title a:hover { text-decoration: underline; }
+.news-meta { font-size: 11px; color: #666; }
+.news-snippet { font-size: 12px; color: #999; margin-top: 6px; line-height: 1.5; }
+
+/* ── ALERT ── */
+.alert-banner {
+  display: none; background: linear-gradient(90deg, #1b5e20, #2e7d32);
+  color: #fff; padding: 10px 24px; text-align: center;
+  font-weight: 600; font-size: 13px; cursor: pointer;
+}
+.alert-banner.show { display: block; animation: slideDown 0.4s; }
+@keyframes slideDown { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ── LOG ── */
+.log-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; background: #0d0d20;
+  border-top: 1px solid #2a2a4a; max-height: 160px; overflow-y: auto;
+  padding: 8px 24px; font-family: 'Consolas', monospace; font-size: 11px;
+  display: none; z-index: 50;
+}
+.log-panel.show { display: block; }
+.log-entry { padding: 1px 0; color: #555; }
+.log-entry.check { color: #777; } .log-entry.restock { color: #4caf50; font-weight: 600; }
+.log-entry.error { color: #e74c3c; } .log-entry .time { color: #444; margin-right: 8px; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: #1a1a3e; border: 1px solid #333; border-radius: 12px;
+  padding: 24px; width: 90%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+}
+.modal h2 { margin-bottom: 14px; font-size: 17px; color: #ffcb05; }
+.modal label { display: block; font-size: 12px; color: #888; margin-bottom: 3px; margin-top: 10px; }
+.modal input, .modal select { width: 100%; padding: 9px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+
+.empty-state { text-align: center; padding: 50px 20px; color: #555; }
+.empty-state h2 { color: #777; margin-bottom: 6px; font-size: 16px; }
+
+@media (max-width: 700px) {
+  .header h1 { font-size: 16px; }
+  .grid, .chase-grid, .tracker-grid { grid-template-columns: 1fr; }
+  .toolbar { flex-direction: column; align-items: flex-start; }
+  .search-box { width: 100%; }
+  .sim-panel { padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="alert-banner" id="alertBanner" onclick="this.classList.remove('show')"></div>
+
+<div class="header">
+  <div class="header-left">
+    <div class="pokeball"></div>
+    <h1>Pokemon Center Exclusive Tracker</h1>
+  </div>
+  <div class="header-right">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText" style="font-size:12px;color:#888">Monitoring</span>
+    <div class="controls">
+      <select id="intervalSelect" title="Check interval">
+        <option value="30">30s</option><option value="60" selected>60s</option>
+        <option value="120">2m</option><option value="300">5m</option>
+      </select>
+      <button id="toggleBtn" onclick="toggleMonitoring()">Pause</button>
+      <button onclick="checkAllNow()">Check Now</button>
+      <button onclick="toggleLog()">Log</button>
+      <button onclick="openAddModal()">+ Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('products', this)">Products</div>
+  <div class="tab" onclick="switchTab('chase', this)">Chase Cards</div>
+  <div class="tab" onclick="switchTab('sim', this)">Pack Simulator</div>
+  <div class="tab" onclick="switchTab('pulls', this)">My Pulls</div>
+  <div class="tab" onclick="switchTab('upcoming', this)">Releases</div>
+  <div class="tab" onclick="switchTab('news', this)">News</div>
+  <div class="tab" onclick="switchTab('chat', this)">Chat<span class="tab-badge" id="chatBadge" style="display:none">0</span></div>
+</div>
+
+<!-- PRODUCTS TAB -->
+<div class="tab-content active" id="tab-products">
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <input class="search-box" id="searchBox" placeholder="Search products..." oninput="render()" />
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('in-stock',this)">In Stock</button>
+        <button class="filter-btn" onclick="setFilter('oos',this)">OOS</button>
+        <button class="filter-btn" onclick="setFilter('watching',this)">Watching</button>
+      </div>
+      <div class="cat-group">
+        <button class="cat-btn active" onclick="setCat('all',this)">All</button>
+        <button class="cat-btn" onclick="setCat('ETB',this)">ETB</button>
+        <button class="cat-btn" onclick="setCat('UPC',this)">UPC</button>
+        <button class="cat-btn" onclick="setCat('Booster Bundle',this)">Bundles</button>
+        <button class="cat-btn" onclick="setCat('Collection',this)">Collections</button>
+        <button class="cat-btn" onclick="setCat('Tin',this)">Tins</button>
+        <button class="cat-btn" onclick="setCat('Binder',this)">Binders</button>
+      </div>
+      <select class="sort-select" id="sortSelect" onchange="render()">
+        <option value="roi-desc">ROI High-Low</option><option value="roi-asc">ROI Low-High</option>
+        <option value="name-asc">Name A-Z</option><option value="resale-desc">Resale High-Low</option>
+      </select>
+    </div>
+    <div class="stats">
+      Tracking: <span id="trackingCount">0</span> | In Stock: <span id="instockCount">0</span> |
+      Avg ROI: <span id="avgRoi">--</span> | Last Check: <span id="lastCheck">--</span>
+    </div>
+  </div>
+  <div class="container"><div class="grid" id="productGrid"></div></div>
+</div>
+
+<!-- CHASE CARDS TAB -->
+<div class="tab-content" id="tab-chase">
+  <div class="chase-tab-panel">
+    <div class="set-selector"><select id="chaseSetSelect" onchange="renderChaseTab()"></select></div>
+    <div class="chase-grid" id="chaseGrid"></div>
+  </div>
+</div>
+
+<!-- PACK SIMULATOR TAB -->
+<div class="tab-content" id="tab-sim">
+  <div class="sim-panel">
+    <h2>Pack Opening Simulator</h2>
+    <p class="sim-sub">Pick a set and rip packs. See if you can hit the chase cards!</p>
+    <div class="sim-controls">
+      <select id="simSetSelect"></select>
+      <button class="btn-open-pack" onclick="openPack()">Open Pack</button>
+      <button onclick="resetSimStats()">Reset Stats</button>
+    </div>
+    <div class="pack-wrapper" id="packWrapper" onclick="flipPack()">
+      <div class="pack-visual">
+        <div class="pack-front">
+          <div class="pack-front-icon">&#127183;</div>
+          <div class="pack-front-text" id="packSetLabel"></div>
+          <div class="pack-front-hint">Click to reveal!</div>
+        </div>
+        <div class="pack-back" id="packBack"></div>
+      </div>
+    </div>
+    <div class="pull-results" id="pullResults"></div>
+    <div class="sim-stats">
+      <div class="sim-stat"><div class="num" id="simPacks">0</div><div class="lab">Packs Opened</div></div>
+      <div class="sim-stat"><div class="num" id="simSpent">$0</div><div class="lab">Spent (est.)</div></div>
+      <div class="sim-stat"><div class="num" id="simValue">$0</div><div class="lab">Total Pull Value</div></div>
+      <div class="sim-stat"><div class="num" id="simProfit" style="color:#4caf50">$0</div><div class="lab">Net Profit/Loss</div></div>
+      <div class="sim-stat"><div class="num" id="simHits">0</div><div class="lab">Hits</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MY PULLS TAB -->
+<div class="tab-content" id="tab-pulls">
+  <div class="tracker-panel">
+    <div class="tracker-header">
+      <h2>My Pull Tracker</h2>
+      <div class="tracker-totals">
+        <div class="tracker-total"><div class="num" id="pullsCount">0</div><div class="lab">Cards Logged</div></div>
+        <div class="tracker-total"><div class="num" id="pullsValue">$0</div><div class="lab">Total Value</div></div>
+      </div>
+      <button onclick="clearPulls()">Clear All</button>
+    </div>
+    <div class="tracker-grid" id="pullsGrid"></div>
+  </div>
+</div>
+
+<!-- RELEASES TAB -->
+<div class="tab-content" id="tab-upcoming">
+  <div class="releases-panel" id="releasesPanel"></div>
+</div>
+
+<!-- NEWS TAB -->
+<div class="tab-content" id="tab-news">
+  <div class="news-panel">
+    <div class="news-bar">
+      <button onclick="fetchNews()">Refresh Now</button>
+      <span class="news-auto" id="newsStatus">Auto-refreshes every 10 min</span>
+    </div>
+    <div id="newsPanel"><div class="empty-state"><h2>Loading news...</h2></div></div>
+  </div>
+</div>
+
+<!-- CHAT TAB -->
+<div class="tab-content" id="tab-chat">
+  <div class="chat-panel">
+    <div class="chat-local-notice">
+      <strong>Firebase Chat Setup (Free):</strong><br>
+      1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:#ffcb05">console.firebase.google.com</a> and create a free project<br>
+      2. Go to Realtime Database > Create Database > Start in test mode<br>
+      3. Copy your database URL (looks like <code>https://your-project.firebaseio.com</code>)<br>
+      4. Paste it below and pick a username. Your chat will be live with anyone on this page!<br>
+      <em>Without Firebase, chat works locally (your messages only).</em>
+    </div>
+    <div class="chat-setup">
+      <h3>Join Chat</h3>
+      <input id="chatDbUrl" placeholder="Firebase DB URL (optional - leave blank for local chat)" />
+      <input id="chatUsername" placeholder="Your username" />
+      <button class="btn-primary" onclick="connectChat()" style="margin-top:8px">Connect</button>
+    </div>
+    <div class="chat-connected" id="chatArea">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-row">
+        <input id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()" />
+        <button class="btn-primary" onclick="sendChat()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="log-panel" id="logPanel"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">Add Product</h2>
+    <input type="hidden" id="editId" />
+    <label>Pokemon Center URL</label><input id="mUrl" placeholder="https://www.pokemoncenter.com/product/..." />
+    <label>Product Name</label><input id="mName" placeholder="e.g. Prismatic Evolutions Pokemon Center ETB" />
+    <label>Category</label>
+    <select id="mCat"><option>ETB</option><option>UPC</option><option>Booster Bundle</option><option>Collection</option><option>Tin</option><option>Binder</option><option>Other</option></select>
+    <label>Set / Series</label><input id="mSet" placeholder="e.g. SV - Prismatic Evolutions" />
+    <div style="display:flex;gap:10px">
+      <div style="flex:1"><label>Retail ($)</label><input id="mRetail" type="number" step="0.01" /></div>
+      <div style="flex:1"><label>Resale ($)</label><input id="mResale" type="number" step="0.01" /></div>
+    </div>
+    <label>PC Exclusive?</label>
+    <select id="mExcl"><option value="true">Yes</option><option value="false">No</option></select>
+    <div class="modal-actions">
+      <button onclick="closeModal()">Cancel</button>
+      <button onclick="deleteFromModal()" id="deleteBtn" style="background:#c62828;border-color:#c62828;color:#fff;display:none">Delete</button>
+      <button class="btn-primary" onclick="saveModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PROXY = 'https://api.allorigins.win/raw?url=';
+
+// ═══════════════════════════════════
+// CHASE CARDS DATABASE
+// ═══════════════════════════════════
+const CHASE_CARDS = {
+  'SV - Prismatic Evolutions': [
+    { rank:1, name:'Umbreon ex', rarity:'Special Illustration Rare', number:'SIR 186', value:350 },
+    { rank:2, name:'Sylveon ex', rarity:'Special Illustration Rare', number:'SIR 184', value:120 },
+    { rank:3, name:'Espeon ex', rarity:'Special Illustration Rare', number:'SIR 183', value:100 },
+    { rank:4, name:'Glaceon ex', rarity:'Special Illustration Rare', number:'SIR 182', value:85 },
+    { rank:5, name:'Vaporeon ex', rarity:'Special Illustration Rare', number:'SIR 179', value:80 },
+    { rank:6, name:'Leafeon ex', rarity:'Special Illustration Rare', number:'SIR 181', value:75 },
+    { rank:7, name:'Jolteon ex', rarity:'Special Illustration Rare', number:'SIR 180', value:70 },
+    { rank:8, name:'Flareon ex', rarity:'Special Illustration Rare', number:'SIR 178', value:65 },
+    { rank:9, name:'Eevee', rarity:'Illustration Rare', number:'IR 167', value:45 },
+    { rank:10, name:'Umbreon ex', rarity:'Ultra Rare', number:'UR 144', value:30 },
+  ],
+  'SV - Journey Together': [
+    { rank:1, name:"N's Zoroark ex", rarity:'Special Illustration Rare', number:'SIR', value:80 },
+    { rank:2, name:"N (Supporter)", rarity:'Special Illustration Rare', number:'SIR', value:65 },
+    { rank:3, name:"Lisia's Altaria ex", rarity:'Special Illustration Rare', number:'SIR', value:55 },
+    { rank:4, name:"N's Reshiram ex", rarity:'Special Illustration Rare', number:'SIR', value:50 },
+    { rank:5, name:"Hop's Zacian ex", rarity:'Special Illustration Rare', number:'SIR', value:45 },
+    { rank:6, name:"Marnie's Morpeko ex", rarity:'Special Illustration Rare', number:'SIR', value:40 },
+    { rank:7, name:"Lisia (Supporter)", rarity:'Special Illustration Rare', number:'SIR', value:35 },
+    { rank:8, name:"Marnie (Supporter)", rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:9, name:"Hop (Supporter)", rarity:'Special Illustration Rare', number:'SIR', value:25 },
+    { rank:10, name:"N's Zoroark ex", rarity:'Ultra Rare', number:'UR', value:15 },
+  ],
+  'SV - Surging Sparks': [
+    { rank:1, name:'Pikachu ex', rarity:'Special Illustration Rare', number:'SIR 268', value:200 },
+    { rank:2, name:'Arceus (Gold Hyper Rare)', rarity:'Hyper Rare', number:'HR', value:55 },
+    { rank:3, name:'Cynthia (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:50 },
+    { rank:4, name:'Dialga ex', rarity:'Special Illustration Rare', number:'SIR', value:45 },
+    { rank:5, name:'Palkia ex', rarity:'Special Illustration Rare', number:'SIR', value:40 },
+    { rank:6, name:'Giratina ex', rarity:'Special Illustration Rare', number:'SIR', value:35 },
+    { rank:7, name:'Darkrai ex', rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:8, name:'N (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:28 },
+    { rank:9, name:'Pikachu ex', rarity:'Ultra Rare', number:'UR', value:25 },
+    { rank:10, name:'Eevee', rarity:'Illustration Rare', number:'IR', value:20 },
+  ],
+  'SV - Stellar Crown': [
+    { rank:1, name:'Terapagos ex', rarity:'Special Illustration Rare', number:'SIR', value:40 },
+    { rank:2, name:'Briar (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:35 },
+    { rank:3, name:'Lapras ex', rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:4, name:'Hydrapple ex', rarity:'Special Illustration Rare', number:'SIR', value:22 },
+    { rank:5, name:'Carmine (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:18 },
+    { rank:6, name:'Archaludon ex', rarity:'Special Illustration Rare', number:'SIR', value:15 },
+    { rank:7, name:'Terapagos ex', rarity:'Ultra Rare', number:'UR', value:12 },
+    { rank:8, name:'Briar (Supporter)', rarity:'Ultra Rare', number:'UR', value:10 },
+    { rank:9, name:'Galvantula ex', rarity:'Illustration Rare', number:'IR', value:8 },
+    { rank:10, name:'Miraidon', rarity:'Illustration Rare', number:'IR', value:7 },
+  ],
+  'SV - Shrouded Fable': [
+    { rank:1, name:'Darkrai ex', rarity:'Special Illustration Rare', number:'SIR', value:45 },
+    { rank:2, name:'Greninja ex', rarity:'Special Illustration Rare', number:'SIR', value:40 },
+    { rank:3, name:'Kingdra ex', rarity:'Special Illustration Rare', number:'SIR', value:28 },
+    { rank:4, name:'Ceruledge ex', rarity:'Special Illustration Rare', number:'SIR', value:25 },
+    { rank:5, name:'Mandibuzz ex', rarity:'Special Illustration Rare', number:'SIR', value:15 },
+    { rank:6, name:'Darkrai ex', rarity:'Ultra Rare', number:'UR', value:12 },
+    { rank:7, name:'Greninja ex', rarity:'Ultra Rare', number:'UR', value:10 },
+    { rank:8, name:'Dragapult ex', rarity:'Illustration Rare', number:'IR', value:8 },
+    { rank:9, name:'Jangmo-o', rarity:'Illustration Rare', number:'IR', value:8 },
+    { rank:10, name:'Ceruledge ex', rarity:'Ultra Rare', number:'UR', value:6 },
+  ],
+  'SV - Twilight Masquerade': [
+    { rank:1, name:'Bloodmoon Ursaluna ex', rarity:'Special Illustration Rare', number:'SIR', value:35 },
+    { rank:2, name:'Ogerpon ex (Teal)', rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:3, name:'Kieran (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:28 },
+    { rank:4, name:'Carmine (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:22 },
+    { rank:5, name:'Dragapult ex', rarity:'Special Illustration Rare', number:'SIR', value:20 },
+    { rank:6, name:'Ogerpon ex (Cornerstone)', rarity:'Special Illustration Rare', number:'SIR', value:18 },
+    { rank:7, name:'Sinistcha ex', rarity:'Special Illustration Rare', number:'SIR', value:15 },
+    { rank:8, name:'Perrin (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:12 },
+    { rank:9, name:'Bloodmoon Ursaluna ex', rarity:'Ultra Rare', number:'UR', value:10 },
+    { rank:10, name:'Dragapult ex', rarity:'Ultra Rare', number:'UR', value:8 },
+  ],
+  'SV - Temporal Forces': [
+    { rank:1, name:"Bianca's Devotion", rarity:'Special Illustration Rare', number:'SIR', value:45 },
+    { rank:2, name:'Walking Wake ex', rarity:'Special Illustration Rare', number:'SIR', value:35 },
+    { rank:3, name:'Iron Leaves ex', rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:4, name:'Ace Spec: Prime Catcher', rarity:'Ace Spec Rare', number:'ACE', value:28 },
+    { rank:5, name:'Raging Bolt ex', rarity:'Special Illustration Rare', number:'SIR', value:25 },
+    { rank:6, name:'Gouging Fire ex', rarity:'Special Illustration Rare', number:'SIR', value:20 },
+    { rank:7, name:"Explorer's Guidance", rarity:'Special Illustration Rare', number:'SIR', value:18 },
+    { rank:8, name:'Iron Crown ex', rarity:'Special Illustration Rare', number:'SIR', value:15 },
+    { rank:9, name:'Walking Wake ex', rarity:'Ultra Rare', number:'UR', value:10 },
+    { rank:10, name:'Raging Bolt ex', rarity:'Ultra Rare', number:'UR', value:8 },
+  ],
+  'SV - Paldean Fates': [
+    { rank:1, name:'Charizard ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR 329', value:150 },
+    { rank:2, name:'Iono (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:60 },
+    { rank:3, name:'Gardevoir ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR', value:50 },
+    { rank:4, name:'Mimikyu ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR', value:35 },
+    { rank:5, name:'Meowscarada ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:6, name:'Ceruledge ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR', value:25 },
+    { rank:7, name:'Charizard ex (Shiny)', rarity:'Ultra Rare', number:'UR', value:25 },
+    { rank:8, name:'Penny (Supporter)', rarity:'Special Illustration Rare', number:'SIR', value:20 },
+    { rank:9, name:'Skeledirge ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR', value:18 },
+    { rank:10, name:'Palafin ex (Shiny)', rarity:'Special Illustration Rare', number:'SIR', value:12 },
+  ],
+  'SV - 151': [
+    { rank:1, name:'Charizard ex', rarity:'Special Illustration Rare', number:'SIR 199', value:200 },
+    { rank:2, name:'Mew ex', rarity:'Special Illustration Rare', number:'SIR 205', value:80 },
+    { rank:3, name:"Erika's Invitation", rarity:'Special Illustration Rare', number:'SIR 203', value:70 },
+    { rank:4, name:'Mewtwo ex', rarity:'Special Illustration Rare', number:'SIR 202', value:50 },
+    { rank:5, name:'Blastoise ex', rarity:'Special Illustration Rare', number:'SIR 200', value:45 },
+    { rank:6, name:'Venusaur ex', rarity:'Special Illustration Rare', number:'SIR 198', value:40 },
+    { rank:7, name:'Alakazam ex', rarity:'Special Illustration Rare', number:'SIR 201', value:35 },
+    { rank:8, name:'Zapdos ex', rarity:'Special Illustration Rare', number:'SIR', value:30 },
+    { rank:9, name:'Charizard ex', rarity:'Ultra Rare', number:'UR 006', value:30 },
+    { rank:10, name:'Gengar ex', rarity:'Special Illustration Rare', number:'SIR', value:25 },
+  ],
+  'SV - Obsidian Flames': [
+    { rank:1, name:'Charizard ex', rarity:'Special Illustration Rare', number:'SIR 223', value:65 },
+    { rank:2, name:'Tyranitar ex', rarity:'Special Illustration Rare', number:'SIR', value:25 },
+    { rank:3, name:'Dragonite ex', rarity:'Special Illustration Rare', number:'SIR', value:22 },
+    { rank:4, name:'Pidgeot ex', rarity:'Special Illustration Rare', number:'SIR', value:20 },
+    { rank:5, name:'Charizard ex', rarity:'Ultra Rare', number:'UR', value:15 },
+    { rank:6, name:'Revavroom ex', rarity:'Special Illustration Rare', number:'SIR', value:12 },
+    { rank:7, name:'Greedent ex', rarity:'Special Illustration Rare', number:'SIR', value:8 },
+    { rank:8, name:'Vespiquen ex', rarity:'Special Illustration Rare', number:'SIR', value:7 },
+    { rank:9, name:'Tyranitar ex', rarity:'Ultra Rare', number:'UR', value:6 },
+    { rank:10, name:'Dragonite ex', rarity:'Ultra Rare', number:'UR', value:5 },
+  ],
+  'SWSH - Crown Zenith': [
+    { rank:1, name:'Giratina VSTAR (Gold)', rarity:'Gold Secret Rare', number:'GG73', value:80 },
+    { rank:2, name:'Charizard VSTAR (Gold)', rarity:'Gold Secret Rare', number:'GG70', value:65 },
+    { rank:3, name:'Pikachu VMAX', rarity:'Galarian Gallery', number:'GG58', value:50 },
+    { rank:4, name:'Mewtwo VSTAR', rarity:'Galarian Gallery', number:'GG44', value:30 },
+    { rank:5, name:'Rayquaza VMAX', rarity:'Galarian Gallery', number:'GG56', value:25 },
+    { rank:6, name:'Leafeon VSTAR', rarity:'Galarian Gallery', number:'GG42', value:25 },
+    { rank:7, name:'Glaceon VSTAR', rarity:'Galarian Gallery', number:'GG40', value:22 },
+    { rank:8, name:'Sylveon VMAX', rarity:'Galarian Gallery', number:'GG54', value:20 },
+    { rank:9, name:'Umbreon VMAX', rarity:'Galarian Gallery', number:'GG52', value:20 },
+    { rank:10, name:'Mew VMAX', rarity:'Galarian Gallery', number:'GG46', value:18 },
+  ],
+};
+
+// ═══════════════════════════════════
+// DEFAULT PRODUCTS
+// ═══════════════════════════════════
+const DEFAULT_PRODUCTS = [
+  { id:'pe-etb', name:'Prismatic Evolutions Elite Trainer Box', cat:'ETB', set:'SV - Prismatic Evolutions', retail:49.99, resale:110, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85956/pokemon-tcg-scarlet-and-violet-prismatic-evolutions-elite-trainer-box', watching:true },
+  { id:'pe-binder', name:'Prismatic Evolutions Binder Collection', cat:'Binder', set:'SV - Prismatic Evolutions', retail:39.99, resale:70, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85960/pokemon-tcg-scarlet-and-violet-prismatic-evolutions-binder-collection', watching:true },
+  { id:'pe-super-premium', name:'Prismatic Evolutions Super Premium Collection', cat:'Collection', set:'SV - Prismatic Evolutions', retail:129.99, resale:250, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85964/pokemon-tcg-scarlet-and-violet-prismatic-evolutions-super-premium-collection', watching:true },
+  { id:'pe-poster', name:'Prismatic Evolutions Poster Collection', cat:'Collection', set:'SV - Prismatic Evolutions', retail:24.99, resale:45, exclusive:false, url:'https://www.pokemoncenter.com/product/290-85962/pokemon-tcg-scarlet-and-violet-prismatic-evolutions-poster-collection', watching:true },
+  { id:'pe-surprise', name:'Prismatic Evolutions Surprise Box', cat:'Collection', set:'SV - Prismatic Evolutions', retail:39.99, resale:85, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85966/pokemon-tcg-scarlet-and-violet-prismatic-evolutions-surprise-box', watching:true },
+  { id:'pe-tins', name:'Prismatic Evolutions Mini Tins Display', cat:'Tin', set:'SV - Prismatic Evolutions', retail:49.99, resale:75, exclusive:false, url:'https://www.pokemoncenter.com/category/trading-card-game?q=prismatic+evolutions+mini+tin', watching:false },
+  { id:'jt-etb', name:'Journey Together Elite Trainer Box', cat:'ETB', set:'SV - Journey Together', retail:49.99, resale:55, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85980/pokemon-tcg-scarlet-and-violet-journey-together-elite-trainer-box', watching:true },
+  { id:'ss-pc-etb', name:'Surging Sparks Pokemon Center ETB', cat:'ETB', set:'SV - Surging Sparks', retail:49.99, resale:65, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85912/pokemon-tcg-scarlet-and-violet-surging-sparks-pokemon-center-elite-trainer-box', watching:true },
+  { id:'ss-upc', name:'Surging Sparks Ultra Premium Collection', cat:'UPC', set:'SV - Surging Sparks', retail:89.99, resale:100, exclusive:false, url:'https://www.pokemoncenter.com/product/290-85920/pokemon-tcg-scarlet-and-violet-surging-sparks-ultra-premium-collection', watching:true },
+  { id:'sf-pc-etb', name:'Shrouded Fable Pokemon Center ETB', cat:'ETB', set:'SV - Shrouded Fable', retail:49.99, resale:75, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85867/pokemon-tcg-scarlet-and-violet-shrouded-fable-pokemon-center-elite-trainer-box', watching:true },
+  { id:'pf-pc-etb', name:'Paldean Fates Pokemon Center ETB', cat:'ETB', set:'SV - Paldean Fates', retail:49.99, resale:85, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85773/pokemon-tcg-scarlet-and-violet-paldean-fates-pokemon-center-elite-trainer-box', watching:true },
+  { id:'151-pc-etb', name:'151 Pokemon Center ETB', cat:'ETB', set:'SV - 151', retail:49.99, resale:120, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85652/pokemon-tcg-scarlet-and-violet-151-pokemon-center-elite-trainer-box', watching:true },
+  { id:'151-upc', name:'151 Ultra Premium Collection', cat:'UPC', set:'SV - 151', retail:89.99, resale:200, exclusive:false, url:'https://www.pokemoncenter.com/product/290-85654/pokemon-tcg-scarlet-and-violet-151-ultra-premium-collection', watching:true },
+  { id:'151-bb', name:'151 Booster Bundle', cat:'Booster Bundle', set:'SV - 151', retail:29.99, resale:60, exclusive:false, url:'https://www.pokemoncenter.com/product/290-85650/pokemon-tcg-scarlet-and-violet-151-booster-bundle', watching:false },
+  { id:'cz-pc-etb', name:'Crown Zenith Pokemon Center ETB Plus', cat:'ETB', set:'SWSH - Crown Zenith', retail:59.99, resale:95, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85478/pokemon-tcg-sword-and-shield-crown-zenith-pokemon-center-elite-trainer-box-plus', watching:true },
+  { id:'sv-upc', name:'SV Ultra Premium Collection Charizard', cat:'UPC', set:'SV - Obsidian Flames', retail:89.99, resale:130, exclusive:false, url:'https://www.pokemoncenter.com/product/290-85576/pokemon-tcg-scarlet-and-violet-ultra-premium-collection', watching:true },
+  { id:'tm-pc-etb', name:'Twilight Masquerade Pokemon Center ETB', cat:'ETB', set:'SV - Twilight Masquerade', retail:49.99, resale:58, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85847/pokemon-tcg-scarlet-and-violet-twilight-masquerade-pokemon-center-elite-trainer-box', watching:false },
+  { id:'tf-pc-etb', name:'Temporal Forces Pokemon Center ETB', cat:'ETB', set:'SV - Temporal Forces', retail:49.99, resale:62, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85797/pokemon-tcg-scarlet-and-violet-temporal-forces-pokemon-center-elite-trainer-box', watching:false },
+  { id:'sc-pc-etb', name:'Stellar Crown Pokemon Center ETB', cat:'ETB', set:'SV - Stellar Crown', retail:49.99, resale:55, exclusive:true, url:'https://www.pokemoncenter.com/product/290-85886/pokemon-tcg-scarlet-and-violet-stellar-crown-pokemon-center-elite-trainer-box', watching:false },
+];
+
+const UPCOMING_RELEASES = [
+  { name:'SV9 - Next Main Expansion', date:'2026-06-06', details:'Next SV main set. PC exclusives expected.', source:'PokeBeach', confirmed:false },
+  { name:'Prismatic Evolutions Restock Wave', date:'2026-03-15', details:'Pokemon Center periodic wave drops.', source:'Restock patterns', confirmed:false },
+  { name:'Journey Together Booster Bundle', date:'2026-03-28', details:'Booster bundle w/ main set.', source:'Official Pokemon', confirmed:true },
+  { name:'TCG Pocket Tie-In Collection', date:'2026-04-01', details:'Physical product tied to TCG Pocket. PC exclusive expected.', source:'Rumors', confirmed:false },
+  { name:'SV8.5 Special Subset', date:'2026-05-01', details:'Mini-set like Paldean Fates pattern.', source:'Speculation', confirmed:false },
+  { name:'TCG 30th Anniversary (JP)', date:'2026-10-01', details:'Japan TCG 30th anniversary. English product likely.', source:'Speculation', confirmed:false },
+];
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let products=[], monitoring=true, checkInterval=null, currentFilter='all', currentCat='all';
+let openChaseIds=new Set(), myPulls=[], simStats={packs:0,spent:0,value:0,hits:0};
+let chatDb=null, chatUser='', chatMessages=[], chatUnread=0;
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+function init() {
+  const saved = localStorage.getItem('pc-tracker-v4');
+  if (saved) {
+    products = JSON.parse(saved);
+    DEFAULT_PRODUCTS.forEach(dp => {
+      if (!products.find(p => p.id === dp.id)) products.push({...dp, inStock:false, lastChecked:null, hype:50});
+    });
+  } else {
+    products = DEFAULT_PRODUCTS.map(p => ({...p, inStock:false, lastChecked:null, hype:50}));
+  }
+  const sp = localStorage.getItem('pc-pulls'); if(sp) myPulls=JSON.parse(sp);
+  const ss = localStorage.getItem('pc-simstats'); if(ss) simStats=JSON.parse(ss);
+  const su = localStorage.getItem('pc-chatuser'); if(su) document.getElementById('chatUsername').value=su;
+  const sd = localStorage.getItem('pc-chatdb'); if(sd) document.getElementById('chatDbUrl').value=sd;
+
+  render(); renderReleases(); populateChaseSelect(); renderChaseTab(); populateSimSelect(); renderPulls(); updateSimUI();
+  startMonitoring(); fetchNews(); setInterval(fetchNews, 600000);
+  log('Tracker initialized: ' + products.length + ' products', 'check');
+}
+
+function save() { localStorage.setItem('pc-tracker-v4', JSON.stringify(products)); }
+function savePulls() { localStorage.setItem('pc-pulls', JSON.stringify(myPulls)); }
+function saveSimStats() { localStorage.setItem('pc-simstats', JSON.stringify(simStats)); }
+
+// ── TABS ──
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if (tab === 'chat') { chatUnread=0; updateChatBadge(); }
+}
+
+// ── FILTERS ──
+function setFilter(f,btn) { currentFilter=f; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+function setCat(c,btn) { currentCat=c; document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+
+// ── ROI ──
+function calcRoi(r,s){return(r&&s)?((s-r)/r*100):null}
+function roiClass(r){return r===null?'neutral':r>=0?'positive':'negative'}
+function roiText(r){return r===null?'N/A':(r>=0?'+':'')+r.toFixed(0)+'%'}
+
+// ── HYPE ──
+function hypeColor(h) {
+  if(h>=80) return '#ff4444';
+  if(h>=60) return '#ff9800';
+  if(h>=40) return '#ffcb05';
+  return '#4caf50';
+}
+function voteHype(id, dir) {
+  const p=products.find(x=>x.id===id);
+  if(p){ p.hype=Math.max(0,Math.min(100,(p.hype||50)+dir)); save(); render(); }
+}
+
+// ── RENDER PRODUCTS ──
+function render() {
+  const search=(document.getElementById('searchBox')?.value||'').toLowerCase();
+  const sort=document.getElementById('sortSelect')?.value||'roi-desc';
+  let f=products.filter(p=>{
+    if(currentFilter==='in-stock'&&!p.inStock)return false;
+    if(currentFilter==='oos'&&p.inStock)return false;
+    if(currentFilter==='watching'&&!p.watching)return false;
+    if(currentCat!=='all'&&p.cat!==currentCat)return false;
+    if(search&&!p.name.toLowerCase().includes(search)&&!(p.set||'').toLowerCase().includes(search))return false;
+    return true;
+  });
+  f.sort((a,b)=>{const ra=calcRoi(a.retail,a.resale),rb=calcRoi(b.retail,b.resale);
+    switch(sort){case'roi-desc':return(rb||0)-(ra||0);case'roi-asc':return(ra||0)-(rb||0);
+    case'name-asc':return a.name.localeCompare(b.name);case'resale-desc':return(b.resale||0)-(a.resale||0)}return 0});
+
+  document.getElementById('trackingCount').textContent=products.length;
+  document.getElementById('instockCount').textContent=products.filter(p=>p.inStock).length;
+  const rois=products.map(p=>calcRoi(p.retail,p.resale)).filter(r=>r!==null);
+  document.getElementById('avgRoi').textContent=rois.length?(rois.reduce((a,b)=>a+b,0)/rois.length).toFixed(0)+'%':'--';
+
+  const grid=document.getElementById('productGrid');
+  if(!f.length){grid.innerHTML='<div class="empty-state"><h2>No products match</h2></div>';return}
+
+  grid.innerHTML=f.map(p=>{
+    const roi=calcRoi(p.retail,p.resale), ch=CHASE_CARDS[p.set], isO=openChaseIds.has(p.id);
+    const hype=p.hype||50;
+    return`<div class="card ${p.inStock?'in-stock':''}">
+      <div class="card-row1">
+        <div class="card-badges"><span class="card-badge">${p.inStock?'In Stock':'OOS'}</span>${p.exclusive?'<span class="card-badge exclusive">PC Exclusive</span>':''}</div>
+        <span class="card-cat">${esc(p.cat)}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${esc(p.name)}</div>
+        <div class="card-set">${esc(p.set||'')}</div>
+        <div class="roi-row">
+          <div class="price-block"><div class="lbl">Retail</div><div class="val retail">$${(p.retail||0).toFixed(2)}</div></div>
+          <div class="price-block"><div class="lbl">Resale</div><div class="val resale">$${(p.resale||0).toFixed(2)}</div></div>
+          <div class="price-block"><div class="lbl">Profit</div><div class="val" style="color:${roi>=0?'#4caf50':'#f44336'}">$${((p.resale||0)-(p.retail||0)).toFixed(2)}</div></div>
+          <span class="roi-badge ${roiClass(roi)}">${roiText(roi)} ROI</span>
+        </div>
+        <div class="hype-row">
+          <button class="hype-btn" onclick="voteHype('${p.id}',-5)">&#x1F44E;</button>
+          <div class="hype-bar-bg"><div class="hype-bar-fill" style="width:${hype}%;background:${hypeColor(hype)}"></div></div>
+          <button class="hype-btn" onclick="voteHype('${p.id}',5)">&#x1F525;</button>
+          <span class="hype-label">${hype}% hype</span>
+        </div>
+        <div class="card-meta">
+          <div><span class="lbl">Checked: </span><span class="val">${p.lastChecked?new Date(p.lastChecked).toLocaleTimeString():'Never'}</span></div>
+          ${ch?'<div><span class="lbl">#1 Chase: </span><span class="val" style="color:#b388ff">'+esc(ch[0].name)+' ($'+ch[0].value+')</span></div>':''}
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="btn-buy" href="${esc(p.url)}" target="_blank" rel="noopener">Pokemon Center</a>
+        ${ch?'<button class="btn-chase" onclick="toggleChasePanel(\''+p.id+'\')">Chases</button>':''}
+        <button class="btn-watch ${p.watching?'watching':''}" onclick="toggleWatch('${p.id}')">${p.watching?'Watching':'Watch'}</button>
+        <button class="btn-edit" onclick="openEditModal('${p.id}')">Edit</button>
+      </div>
+      ${ch?renderInlineChase(p.set,isO):''}
+    </div>`}).join('');
+}
+
+function renderInlineChase(s,o){const c=CHASE_CARDS[s];if(!c)return'';
+  return`<div class="chase-panel ${o?'open':''}"><h3>Top 10 Chases - ${esc(s)}</h3><div class="chase-list">${c.map(x=>
+    `<div class="chase-card"><span class="chase-rank">#${x.rank}</span><div class="chase-info"><div class="chase-name">${esc(x.name)}</div><div class="chase-rarity">${esc(x.rarity)} | ${esc(x.number||'')}</div></div><span class="chase-val">$${x.value}</span></div>`).join('')}</div></div>`}
+
+function toggleChasePanel(id){if(openChaseIds.has(id))openChaseIds.delete(id);else openChaseIds.add(id);render()}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function toggleWatch(id){const p=products.find(x=>x.id===id);if(p){p.watching=!p.watching;save();render()}}
+
+// ── CHASE TAB ──
+function populateChaseSelect(){const s=document.getElementById('chaseSetSelect');
+  s.innerHTML=Object.keys(CHASE_CARDS).map(k=>'<option value="'+esc(k)+'">'+esc(k)+'</option>').join('')}
+
+function renderChaseTab(){const s=document.getElementById('chaseSetSelect')?.value,c=CHASE_CARDS[s],g=document.getElementById('chaseGrid');
+  if(!c){g.innerHTML='<div class="empty-state"><h2>Select a set</h2></div>';return}
+  g.innerHTML=c.map(x=>{const rc=x.rank===1?'top1':x.rank===2?'top2':x.rank===3?'top3':'';
+    return`<div class="chase-big-card"><div class="chase-big-rank ${rc}">#${x.rank}</div><div class="chase-big-info"><div class="chase-big-name">${esc(x.name)}</div><div class="chase-big-rarity">${esc(x.rarity)}</div><div class="chase-big-number">${esc(x.number||'')}</div></div><div class="chase-big-price">$${x.value}</div></div>`}).join('')}
+
+// ── PACK SIMULATOR ──
+function populateSimSelect(){const s=document.getElementById('simSetSelect');
+  s.innerHTML=Object.keys(CHASE_CARDS).map(k=>'<option value="'+esc(k)+'">'+esc(k)+'</option>').join('')}
+
+function openPack(){
+  const setName=document.getElementById('simSetSelect').value;
+  const cards=CHASE_CARDS[setName]; if(!cards)return;
+  const packCost=4.50;
+  simStats.packs++; simStats.spent+=packCost;
+
+  // Simulate 10-card pack with realistic pull rates
+  const pulled=[];
+  for(let i=0;i<10;i++){
+    const roll=Math.random();
+    if(roll<0.005){ // 0.5% SIR (top 3)
+      const c=cards[Math.floor(Math.random()*3)];
+      pulled.push({...c, isHit:true, isBigHit:true});
+    } else if(roll<0.02){ // 1.5% SIR (4-8)
+      const pool=cards.filter(x=>x.rank>=4&&x.rank<=8);
+      const c=pool[Math.floor(Math.random()*pool.length)];
+      pulled.push({...c, isHit:true, isBigHit:false});
+    } else if(roll<0.06){ // 4% UR / lower hits
+      const pool=cards.filter(x=>x.rank>=7);
+      const c=pool[Math.floor(Math.random()*pool.length)];
+      pulled.push({...c, isHit:true, isBigHit:false});
+    } else if(roll<0.15){ // 9% Holo/Rare
+      pulled.push({name:'Holo Rare', rarity:'Holo Rare', value:1, isHit:false});
+    } else if(roll<0.35){ // 20% Reverse Holo
+      pulled.push({name:'Reverse Holo', rarity:'Reverse Holo', value:0.25, isHit:false});
+    } else {
+      pulled.push({name:'Common/Uncommon', rarity:'Common', value:0.10, isHit:false});
+    }
+  }
+
+  // Sort hits to end for dramatic reveal
+  pulled.sort((a,b)=>(a.isHit?1:0)-(b.isHit?1:0));
+
+  const totalVal=pulled.reduce((s,c)=>s+c.value,0);
+  simStats.value+=totalVal;
+  simStats.hits+=pulled.filter(c=>c.isHit).length;
+
+  // Show pack animation
+  const wrapper=document.getElementById('packWrapper');
+  const label=document.getElementById('packSetLabel');
+  label.textContent=setName;
+  wrapper.classList.add('show');
+  wrapper.classList.remove('flipped');
+
+  // Show results
+  const res=document.getElementById('pullResults');
+  res.innerHTML='<h3 style="color:#ffcb05;margin-bottom:12px;font-size:16px">Pack Results - '+esc(setName)+'</h3>'+
+    pulled.map((c,i)=>`<div class="pull-card ${c.isBigHit?'big-hit':c.isHit?'hit':''}" style="animation-delay:${i*0.08}s">
+      <div class="pull-card-info"><div class="pull-card-name">${esc(c.name)}</div><div class="pull-card-rarity">${esc(c.rarity)}</div></div>
+      <div class="pull-card-value">${c.value>=1?'$'+c.value.toFixed(0):'$'+c.value.toFixed(2)}</div>
+    </div>`).join('')+
+    `<div style="text-align:center;margin-top:12px;font-size:14px;color:#888">Pack value: <span style="color:#4caf50;font-weight:700">$${totalVal.toFixed(2)}</span></div>`;
+
+  // Auto-log big hits to My Pulls
+  pulled.filter(c=>c.isHit&&c.value>=10).forEach(c=>{
+    myPulls.push({name:c.name, rarity:c.rarity, value:c.value, set:setName, date:Date.now()});
+  });
+  savePulls(); saveSimStats(); updateSimUI(); renderPulls();
+}
+
+function flipPack(){document.getElementById('packWrapper').classList.toggle('flipped')}
+
+function updateSimUI(){
+  document.getElementById('simPacks').textContent=simStats.packs;
+  document.getElementById('simSpent').textContent='$'+simStats.spent.toFixed(2);
+  document.getElementById('simValue').textContent='$'+simStats.value.toFixed(2);
+  const net=simStats.value-simStats.spent;
+  const el=document.getElementById('simProfit');
+  el.textContent=(net>=0?'+':'')+('$'+net.toFixed(2));
+  el.style.color=net>=0?'#4caf50':'#f44336';
+  document.getElementById('simHits').textContent=simStats.hits;
+}
+
+function resetSimStats(){simStats={packs:0,spent:0,value:0,hits:0};saveSimStats();updateSimUI();
+  document.getElementById('pullResults').innerHTML='';document.getElementById('packWrapper').classList.remove('show')}
+
+// ── MY PULLS ──
+function renderPulls(){
+  document.getElementById('pullsCount').textContent=myPulls.length;
+  const tv=myPulls.reduce((s,p)=>s+p.value,0);
+  document.getElementById('pullsValue').textContent='$'+tv.toFixed(2);
+  const g=document.getElementById('pullsGrid');
+  if(!myPulls.length){g.innerHTML='<div class="empty-state"><h2>No pulls logged yet</h2><p>Open packs in the simulator or add manually.</p></div>';return}
+  g.innerHTML=[...myPulls].reverse().map((p,i)=>{const ri=myPulls.length-1-i;
+    return`<div class="tracker-item"><div class="tracker-item-info"><div class="tracker-item-name">${esc(p.name)}</div><div class="tracker-item-set">${esc(p.rarity)} | ${esc(p.set||'')}</div></div><span class="tracker-item-val">$${p.value}</span><button class="tracker-item-del" onclick="removePull(${ri})">X</button></div>`}).join('')}
+
+function removePull(i){myPulls.splice(i,1);savePulls();renderPulls()}
+function clearPulls(){if(!confirm('Clear all pulls?'))return;myPulls=[];savePulls();renderPulls()}
+
+// ── RELEASES ──
+function renderReleases(){const panel=document.getElementById('releasesPanel');const now=new Date();
+  const sorted=[...UPCOMING_RELEASES].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  panel.innerHTML='<h2 style="color:#ffcb05;margin-bottom:16px;font-size:18px">Upcoming Pokemon TCG Releases</h2>'+
+    sorted.map(r=>{const d=new Date(r.date);const diff=Math.ceil((d-now)/86400000);
+      const cd=diff>0?diff+' days away':diff===0?'TODAY':Math.abs(diff)+' days ago';
+      return`<div class="release-card"><div class="release-info"><div class="release-name">${esc(r.name)} ${r.confirmed?'<span style="color:#4caf50;font-size:11px">CONFIRMED</span>':'<span style="color:#ff9800;font-size:11px">RUMORED</span>'}</div><div class="release-details">${esc(r.details)}</div><div class="release-source">Source: ${esc(r.source)}</div></div><div style="text-align:right"><div class="release-date">${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div><div class="release-countdown">${cd}</div></div></div>`}).join('')}
+
+// ── NEWS ──
+async function fetchNews(){
+  const panel=document.getElementById('newsPanel'),st=document.getElementById('newsStatus');
+  st.textContent='Fetching...';
+  const feeds=[{name:'PokeBeach',url:'https://www.pokebeach.com/feed'},{name:'PokeGuardian',url:'https://pokeguardian.com/feed'}];
+  let all=[];
+  for(const feed of feeds){try{
+    const r=await fetch(PROXY+encodeURIComponent(feed.url),{signal:AbortSignal.timeout(12000)});
+    const t=await r.text();const x=new DOMParser().parseFromString(t,'text/xml');
+    x.querySelectorAll('item').forEach(item=>{
+      const title=item.querySelector('title')?.textContent||'';
+      const link=item.querySelector('link')?.textContent||'';
+      const pubDate=item.querySelector('pubDate')?.textContent||'';
+      const desc=item.querySelector('description')?.textContent||'';
+      all.push({title,link,date:new Date(pubDate),source:feed.name,desc:stripHtml(desc).slice(0,200)});
+    });log('News: '+feed.name+' OK','check');
+  }catch(e){log('News error: '+feed.name+' - '+e.message,'error')}}
+  all.sort((a,b)=>b.date-a.date); all=all.slice(0,40);
+  st.textContent='Updated: '+new Date().toLocaleTimeString()+' | Auto every 10 min';
+  if(!all.length){panel.innerHTML='<div class="empty-state"><h2>No news loaded</h2></div>';return}
+  panel.innerHTML=all.map(i=>`<div class="news-item"><div class="news-title"><a href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.title)}</a></div><div class="news-meta">${esc(i.source)} - ${i.date.toLocaleDateString()}</div><div class="news-snippet">${esc(i.desc)}</div></div>`).join('')}
+function stripHtml(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent||''}
+
+// ── CHAT (Firebase or Local) ──
+let chatEventSource=null, chatPolling=null;
+
+function connectChat(){
+  chatUser=document.getElementById('chatUsername').value.trim();
+  if(!chatUser){alert('Enter a username.');return}
+  localStorage.setItem('pc-chatuser', chatUser);
+  const dbUrl=document.getElementById('chatDbUrl').value.trim();
+  localStorage.setItem('pc-chatdb', dbUrl);
+
+  document.getElementById('chatArea').classList.add('show');
+
+  if(dbUrl){
+    chatDb=dbUrl.replace(/\/$/,'');
+    startFirebaseChat();
+  } else {
+    addChatMsg('System','Chat is running in local mode. For live multi-user chat, add a Firebase URL above.', true);
+  }
+}
+
+function startFirebaseChat(){
+  // Use Firebase REST API + SSE for real-time without SDK
+  addChatMsg('System','Connecting to live chat...', true);
+
+  // Listen for new messages via SSE (Server-Sent Events)
+  try {
+    if(chatEventSource) chatEventSource.close();
+    chatEventSource = new EventSource(chatDb+'/chat.json?orderBy="ts"&limitToLast=50');
+    chatEventSource.onopen = () => addChatMsg('System','Connected to live chat!', true);
+    chatEventSource.addEventListener('put', (e) => {
+      const data = JSON.parse(e.data);
+      if(data.data){
+        // Initial load or new message
+        if(typeof data.data === 'object' && data.data.user){
+          // Single message
+          displayMsg(data.data);
+        } else if(typeof data.data === 'object'){
+          // Multiple messages on initial load
+          Object.values(data.data).forEach(m => { if(m && m.user) displayMsg(m); });
+        }
+      }
+    });
+    chatEventSource.onerror = () => {
+      addChatMsg('System','Connection lost. Falling back to polling...', true);
+      chatEventSource.close();
+      startPolling();
+    };
+  } catch(e) {
+    addChatMsg('System','SSE not supported, using polling.', true);
+    startPolling();
+  }
+}
+
+function startPolling(){
+  if(chatPolling) clearInterval(chatPolling);
+  let lastKey='';
+  chatPolling=setInterval(async()=>{
+    try{
+      const r=await fetch(chatDb+'/chat.json?orderBy="ts"&limitToLast=10');
+      const d=await r.json();
+      if(d){Object.entries(d).forEach(([k,m])=>{if(k>lastKey&&m&&m.user){lastKey=k;displayMsg(m)}})}
+    }catch(e){}
+  },3000);
+}
+
+function displayMsg(m){
+  const el=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className='chat-msg';
+  div.innerHTML=`<span class="chat-msg-user">${esc(m.user)}</span> <span class="chat-msg-time">${new Date(m.ts).toLocaleTimeString()}</span><div class="chat-msg-text">${esc(m.text)}</div>`;
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+  // Badge if not on chat tab
+  if(!document.getElementById('tab-chat').classList.contains('active')){
+    chatUnread++; updateChatBadge();
+  }
+}
+
+function addChatMsg(user, text, isSystem){
+  const el=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className='chat-msg'+(isSystem?' system':'');
+  div.innerHTML=`<span class="chat-msg-user">${esc(user)}</span><div class="chat-msg-text">${esc(text)}</div>`;
+  el.appendChild(div); el.scrollTop=el.scrollHeight;
+}
+
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';
+
+  const msg={user:chatUser, text:text, ts:Date.now()};
+
+  if(chatDb){
+    try{
+      await fetch(chatDb+'/chat.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(msg)});
+    }catch(e){addChatMsg('System','Failed to send: '+e.message, true)}
+  } else {
+    displayMsg(msg);
+  }
+}
+
+function updateChatBadge(){
+  const b=document.getElementById('chatBadge');
+  if(chatUnread>0){b.style.display='inline';b.textContent=chatUnread}
+  else{b.style.display='none'}
+}
+
+// ── STOCK CHECK ──
+async function checkProduct(p){try{
+  const r=await fetch(PROXY+encodeURIComponent(p.url),{signal:AbortSignal.timeout(15000)});
+  if(!r.ok)throw new Error('HTTP '+r.status);const h=await r.text();const w=p.inStock;const lo=h.toLowerCase();
+  p.inStock=(lo.includes('add to cart')||lo.includes('add to bag'))&&!(lo.includes('out of stock')||lo.includes('sold out')||lo.includes('currently unavailable'));
+  p.lastChecked=Date.now();
+  if(!w&&p.inStock){log('RESTOCK: '+p.name,'restock');if(p.watching){playAlert();showBanner(p.name+' is BACK IN STOCK!');sendNotification(p.name)}}
+  log('Checked: '+p.name+' > '+(p.inStock?'IN STOCK':'OOS'),p.inStock?'restock':'check');
+}catch(e){log('Error: '+p.name+' > '+e.message,'error');p.lastChecked=Date.now()}}
+
+async function checkAllNow(){log('-- Full stock check --','check');
+  document.getElementById('lastCheck').textContent=new Date().toLocaleTimeString();
+  const s=[...products].sort((a,b)=>(b.watching?1:0)-(a.watching?1:0));
+  for(let i=0;i<s.length;i+=3){await Promise.all(s.slice(i,i+3).map(p=>checkProduct(p)));render();save();
+    if(i+3<s.length)await new Promise(r=>setTimeout(r,2000))}render();save()}
+
+function startMonitoring(){if(checkInterval)clearInterval(checkInterval);
+  const sec=parseInt(document.getElementById('intervalSelect').value);
+  checkInterval=setInterval(()=>{if(monitoring)checkAllNow()},sec*1000)}
+
+function toggleMonitoring(){monitoring=!monitoring;
+  document.getElementById('toggleBtn').textContent=monitoring?'Pause':'Resume';
+  document.getElementById('statusDot').className='status-dot'+(monitoring?'':' paused');
+  document.getElementById('statusText').textContent=monitoring?'Monitoring':'Paused'}
+
+document.getElementById('intervalSelect').addEventListener('change',()=>{startMonitoring()});
+
+// ── ALERTS ──
+function playAlert(){try{const c=new(window.AudioContext||window.webkitAudioContext)();
+  [523.25,659.25,783.99,1046.50].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type='sine';
+  g.gain.setValueAtTime(0.15,c.currentTime+i*0.15);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);
+  o.start(c.currentTime+i*0.15);o.stop(c.currentTime+i*0.15+0.3)})}catch(e){}}
+function showBanner(m){const b=document.getElementById('alertBanner');b.textContent=m+' (click to dismiss)';
+  b.classList.add('show');setTimeout(()=>b.classList.remove('show'),30000)}
+function sendNotification(n){if('Notification'in window&&Notification.permission==='granted')
+  new Notification('Pokemon Center Restock!',{body:n+' is back in stock!'})}
+if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();
+
+// ── LOG ──
+function log(m,t=''){const p=document.getElementById('logPanel');const e=document.createElement('div');
+  e.className='log-entry '+t;e.innerHTML='<span class="time">'+new Date().toLocaleTimeString()+'</span>'+esc(m);
+  p.prepend(e);if(p.children.length>200)p.removeChild(p.lastChild)}
+function toggleLog(){document.getElementById('logPanel').classList.toggle('show')}
+
+// ── MODAL ──
+function openAddModal(){document.getElementById('modalTitle').textContent='Add Product';
+  document.getElementById('editId').value='';
+  ['mUrl','mName','mSet','mRetail','mResale'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('mCat').value='ETB';document.getElementById('mExcl').value='true';
+  document.getElementById('deleteBtn').style.display='none';
+  document.getElementById('modal').classList.add('show')}
+
+function openEditModal(id){const p=products.find(x=>x.id===id);if(!p)return;
+  document.getElementById('modalTitle').textContent='Edit Product';
+  document.getElementById('editId').value=p.id;
+  document.getElementById('mUrl').value=p.url||'';document.getElementById('mName').value=p.name||'';
+  document.getElementById('mCat').value=p.cat||'ETB';document.getElementById('mSet').value=p.set||'';
+  document.getElementById('mRetail').value=p.retail||'';document.getElementById('mResale').value=p.resale||'';
+  document.getElementById('mExcl').value=p.exclusive?'true':'false';
+  document.getElementById('deleteBtn').style.display='inline-block';
+  document.getElementById('modal').classList.add('show')}
+
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+function saveModal(){const editId=document.getElementById('editId').value;
+  const name=document.getElementById('mName').value.trim();if(!name){alert('Name required.');return}
+  const data={name,url:document.getElementById('mUrl').value.trim()||'#',cat:document.getElementById('mCat').value,
+    set:document.getElementById('mSet').value.trim(),retail:parseFloat(document.getElementById('mRetail').value)||0,
+    resale:parseFloat(document.getElementById('mResale').value)||0,exclusive:document.getElementById('mExcl').value==='true'};
+  if(editId){const p=products.find(x=>x.id===editId);if(p)Object.assign(p,data)}
+  else{const id=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');
+    if(products.find(p=>p.id===id)){alert('Already exists.');return}
+    products.push({id,...data,inStock:false,watching:true,lastChecked:null,hype:50})}
+  save();render();closeModal()}
+
+function deleteFromModal(){const id=document.getElementById('editId').value;
+  if(!id||!confirm('Delete?'))return;products=products.filter(p=>p.id!==id);save();render();closeModal()}
+
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(python3:*)",
+      "Bash(py:*)",
+      "Bash(export:*)",
+      "Bash(tasklist:*)",
+      "Bash(taskkill:*)",
+      "Bash(python:*)",
+      "Bash(where ollama:*)",
+      "Bash(\"C:/Users/jigga/AppData/Local/Programs/Ollama/ollama.exe\":*)",
+      "Bash(curl:*)",
+      "Bash(\"C:/Users/jigga/AppData/Local/Programs/Ollama/ollama.exe\" pull:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(npm run *)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Edit(/src/**)",
+      "Bash(where:*)",
+      "Bash(curl:*)",
+      "Bash(mkdir:*)",
+      "Bash(gh api:*)",
+      "Bash(start:*)"
+    ]
+  }
+}

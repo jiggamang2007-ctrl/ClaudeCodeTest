@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Hardwoods Miami | Premium Exotic & Domestic Hardwoods</title>
+<meta name="description" content="Miami's premier source for exotic and domestic hardwoods. Quality lumber for contractors, woodworkers, and designers. Get a free quote today.">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rich-brown: #3E2723;
+    --warm-brown: #5D4037;
+    --accent-gold: #D4A24E;
+    --light-gold: #F5E6C8;
+    --cream: #FDF8F0;
+    --dark: #1A1A1A;
+    --text: #2C2C2C;
+    --text-light: #6B6B6B;
+    --white: #FFFFFF;
+    --green-accent: #2E7D32;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text);
+    background: var(--cream);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--rich-brown);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .logo {
+    font-size: 1.3rem; font-weight: 700; color: var(--accent-gold);
+    letter-spacing: 1px; text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .logo span { display: block; font-size: 0.7rem; color: var(--light-gold); letter-spacing: 3px; font-weight: 400; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a {
+    color: var(--light-gold); text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; letter-spacing: 0.5px; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent-gold); }
+  .nav-cta {
+    background: var(--accent-gold) !important; color: var(--rich-brown) !important;
+    padding: 0.5rem 1.2rem; border-radius: 4px; font-weight: 700 !important;
+    transition: background 0.3s !important;
+  }
+  .nav-cta:hover { background: #c4922e !important; }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 5px;
+  }
+  .hamburger span { display: block; width: 25px; height: 2px; background: var(--light-gold); transition: 0.3s; }
+
+  /* HERO */
+  .hero {
+    margin-top: 70px;
+    min-height: 85vh;
+    background: linear-gradient(135deg, rgba(62,39,35,0.92), rgba(62,39,35,0.75)),
+                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(139,90,43,0.08) 40px, rgba(139,90,43,0.08) 41px),
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(139,90,43,0.05) 20px, rgba(139,90,43,0.05) 21px);
+    background-color: var(--warm-brown);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 4rem 2rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(212,162,78,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(212,162,78,0.1) 0%, transparent 50%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; }
+  .hero-badge {
+    display: inline-block; background: rgba(212,162,78,0.2); border: 1px solid var(--accent-gold);
+    color: var(--accent-gold); padding: 0.4rem 1.2rem; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: 3.5rem; font-weight: 800; color: var(--white);
+    line-height: 1.15; margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--accent-gold);
+    text-decoration: underline; text-decoration-color: rgba(212,162,78,0.4);
+    text-underline-offset: 6px;
+  }
+  .hero p {
+    font-size: 1.2rem; color: var(--light-gold); max-width: 600px;
+    margin: 0 auto 2.5rem; opacity: 0.9;
+  }
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 1rem 2.5rem; border-radius: 5px;
+    font-size: 1rem; font-weight: 700; text-decoration: none;
+    cursor: pointer; border: none; transition: all 0.3s;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary {
+    background: var(--accent-gold); color: var(--rich-brown);
+    box-shadow: 0 4px 15px rgba(212,162,78,0.4);
+  }
+  .btn-primary:hover { background: #c4922e; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(212,162,78,0.5); }
+  .btn-secondary {
+    background: transparent; color: var(--white);
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+  .btn-secondary:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; justify-content: center; margin-top: 3.5rem;
+    padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat strong { display: block; font-size: 2rem; color: var(--accent-gold); font-weight: 800; }
+  .hero-stat span { font-size: 0.8rem; color: var(--light-gold); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* SECTION COMMON */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    display: inline-block; color: var(--accent-gold); font-size: 0.8rem;
+    font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: 2.4rem; font-weight: 800; color: var(--rich-brown);
+    margin-bottom: 1rem; line-height: 1.2;
+  }
+  .section-sub {
+    font-size: 1.1rem; color: var(--text-light); max-width: 600px;
+    margin-bottom: 3rem;
+  }
+
+  /* PRODUCTS */
+  .products { background: var(--white); }
+  .products-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .product-card {
+    background: var(--cream); border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(62,39,35,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(62,39,35,0.12); }
+  .product-visual {
+    height: 180px; display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; position: relative; overflow: hidden;
+  }
+  .product-visual::after {
+    content: ''; position: absolute; inset: 0; opacity: 0.15;
+  }
+  .pv-exotic {
+    background: linear-gradient(135deg, #5D4037, #8D6E63);
+  }
+  .pv-domestic {
+    background: linear-gradient(135deg, #A1887F, #D7CCC8);
+  }
+  .pv-decking {
+    background: linear-gradient(135deg, #6D4C41, #4E342E);
+  }
+  .pv-custom {
+    background: linear-gradient(135deg, #795548, #BCAAA4);
+  }
+  .wood-icon {
+    position: relative; z-index: 1; width: 70px; height: 70px;
+    background: rgba(255,255,255,0.15); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: var(--white); backdrop-filter: blur(5px);
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+  .product-info { padding: 1.5rem; }
+  .product-info h3 { font-size: 1.2rem; color: var(--rich-brown); margin-bottom: 0.5rem; }
+  .product-info p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem; }
+  .product-species {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .product-species span {
+    background: var(--white); border: 1px solid rgba(62,39,35,0.1);
+    padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem;
+    color: var(--warm-brown); font-weight: 500;
+  }
+
+  /* WHY US */
+  .why-us { background: var(--cream); }
+  .why-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+  .why-card {
+    background: var(--white); padding: 2rem; border-radius: 10px;
+    border: 1px solid rgba(62,39,35,0.06);
+    transition: box-shadow 0.3s;
+  }
+  .why-card:hover { box-shadow: 0 8px 30px rgba(62,39,35,0.08); }
+  .why-icon {
+    width: 50px; height: 50px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent-gold), #c4922e);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: var(--white); margin-bottom: 1.2rem;
+  }
+  .why-card h3 { font-size: 1.1rem; color: var(--rich-brown); margin-bottom: 0.5rem; }
+  .why-card p { font-size: 0.9rem; color: var(--text-light); }
+
+  /* WHO WE SERVE */
+  .who-serve { background: var(--rich-brown); color: var(--white); }
+  .who-serve .section-label { color: var(--accent-gold); }
+  .who-serve .section-title { color: var(--white); }
+  .who-serve .section-sub { color: var(--light-gold); }
+  .serve-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  .serve-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 2rem; text-align: center;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .serve-card:hover { background: rgba(255,255,255,0.1); border-color: var(--accent-gold); }
+  .serve-card .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .serve-card h3 { font-size: 1rem; color: var(--white); margin-bottom: 0.4rem; }
+  .serve-card p { font-size: 0.8rem; color: var(--light-gold); }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--white); }
+  .test-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .test-card {
+    background: var(--cream); padding: 2rem; border-radius: 10px;
+    border-left: 4px solid var(--accent-gold);
+  }
+  .test-stars { color: var(--accent-gold); font-size: 1rem; margin-bottom: 0.75rem; letter-spacing: 2px; }
+  .test-card blockquote {
+    font-size: 0.95rem; color: var(--text); font-style: italic;
+    margin-bottom: 1rem; line-height: 1.7;
+  }
+  .test-author { font-size: 0.85rem; font-weight: 700; color: var(--rich-brown); }
+  .test-role { font-size: 0.8rem; color: var(--text-light); }
+
+  /* CTA BANNER */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--accent-gold), #c4922e);
+    text-align: center; padding: 4rem 2rem;
+  }
+  .cta-banner h2 { font-size: 2rem; color: var(--rich-brown); margin-bottom: 0.75rem; }
+  .cta-banner p { font-size: 1.1rem; color: rgba(62,39,35,0.7); margin-bottom: 2rem; }
+  .cta-banner .btn-dark {
+    background: var(--rich-brown); color: var(--accent-gold);
+    padding: 1rem 2.5rem; border-radius: 5px; font-size: 1rem; font-weight: 700;
+    text-decoration: none; display: inline-block; transition: all 0.3s;
+    border: none; cursor: pointer;
+  }
+  .cta-banner .btn-dark:hover { background: var(--dark); transform: translateY(-2px); }
+
+  /* CONTACT */
+  .contact { background: var(--cream); }
+  .contact-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+  }
+  .contact-info h3 { font-size: 1.5rem; color: var(--rich-brown); margin-bottom: 1rem; }
+  .contact-info > p { color: var(--text-light); margin-bottom: 2rem; font-size: 0.95rem; }
+  .contact-detail {
+    display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem;
+  }
+  .contact-detail .icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--rich-brown); display: flex; align-items: center;
+    justify-content: center; color: var(--accent-gold); font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .contact-detail strong { display: block; color: var(--rich-brown); font-size: 0.9rem; }
+  .contact-detail span { color: var(--text-light); font-size: 0.9rem; }
+  .contact-detail a { color: var(--warm-brown); text-decoration: none; font-weight: 600; }
+  .contact-detail a:hover { color: var(--accent-gold); }
+
+  .contact-hours {
+    background: var(--white); border-radius: 10px; padding: 1.5rem;
+    border: 1px solid rgba(62,39,35,0.08); margin-top: 1.5rem;
+  }
+  .contact-hours h4 { font-size: 0.9rem; color: var(--rich-brown); margin-bottom: 0.75rem; }
+  .hours-row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; }
+  .hours-row span:first-child { color: var(--text-light); }
+  .hours-row span:last-child { color: var(--text); font-weight: 600; }
+
+  .contact-form {
+    background: var(--white); padding: 2.5rem; border-radius: 12px;
+    box-shadow: 0 4px 25px rgba(62,39,35,0.08);
+    border: 1px solid rgba(62,39,35,0.06);
+  }
+  .contact-form h3 { font-size: 1.3rem; color: var(--rich-brown); margin-bottom: 0.5rem; }
+  .contact-form > p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block; font-size: 0.8rem; font-weight: 600;
+    color: var(--rich-brown); margin-bottom: 0.3rem;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 0.75rem 1rem; border: 1px solid rgba(62,39,35,0.15);
+    border-radius: 6px; font-size: 0.9rem; font-family: inherit;
+    background: var(--cream); color: var(--text);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(212,162,78,0.15);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%; padding: 1rem; background: var(--accent-gold); color: var(--rich-brown);
+    font-size: 1rem; font-weight: 700; border: none; border-radius: 6px;
+    cursor: pointer; transition: all 0.3s; letter-spacing: 0.5px;
+  }
+  .form-submit:hover { background: #c4922e; }
+  .form-note { text-align: center; font-size: 0.75rem; color: var(--text-light); margin-top: 0.75rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); color: rgba(255,255,255,0.5); text-align: center;
+    padding: 2.5rem 2rem;
+  }
+  .footer-brand { color: var(--accent-gold); font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  footer p { font-size: 0.8rem; }
+  footer a { color: var(--accent-gold); text-decoration: none; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none; position: fixed; top: 70px; left: 0; right: 0;
+      background: var(--rich-brown); flex-direction: column; padding: 1.5rem;
+      gap: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero-stats { gap: 1.5rem; }
+    .hero-stat strong { font-size: 1.5rem; }
+    .contact-wrapper { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-buttons { flex-direction: column; align-items: center; }
+    .section-title { font-size: 1.8rem; }
+  }
+
+  /* SUCCESS STATE */
+  .form-success {
+    display: none; text-align: center; padding: 2rem 0;
+  }
+  .form-success.show { display: block; }
+  .form-success .check {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--green-accent); color: white; font-size: 1.5rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .form-success h3 { color: var(--rich-brown); margin-bottom: 0.5rem; }
+  .form-success p { color: var(--text-light); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">International Hardwoods<span>Miami, Florida</span></div>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#why-us">Why Us</a></li>
+    <li><a href="#who">Industries</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">South Florida's Trusted Lumber Supplier</div>
+    <h1>Premium <em>Exotic &amp; Domestic</em> Hardwoods in Miami</h1>
+    <p>Supplying contractors, designers, and woodworkers with the finest hardwood lumber. Competitive pricing, expert guidance, and reliable delivery across South Florida.</p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
+      <a href="#products" class="btn btn-secondary">Browse Our Wood</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>50+</strong><span>Wood Species</span></div>
+      <div class="hero-stat"><strong>15+</strong><span>Years Experience</span></div>
+      <div class="hero-stat"><strong>1000+</strong><span>Projects Supplied</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="container">
+    <div class="section-label">Our Products</div>
+    <h2 class="section-title">Wood for Every Project</h2>
+    <p class="section-sub">From rare exotic species to dependable domestic classics, we carry the inventory professionals need.</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-visual pv-exotic">
+          <div class="wood-icon">E</div>
+        </div>
+        <div class="product-info">
+          <h3>Exotic Hardwoods</h3>
+          <p>Rare, beautiful species sourced from sustainable forests worldwide. Perfect for high-end furniture, flooring, and statement pieces.</p>
+          <div class="product-species">
+            <span>Ipe</span><span>Cumaru</span><span>Tigerwood</span><span>Jatoba</span><span>Sapele</span><span>Purpleheart</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-visual pv-domestic">
+          <div class="wood-icon">D</div>
+        </div>
+        <div class="product-info">
+          <h3>Domestic Hardwoods</h3>
+          <p>Trusted American species with proven performance. Ideal for cabinetry, trim work, structural applications, and more.</p>
+          <div class="product-species">
+            <span>White Oak</span><span>Red Oak</span><span>Walnut</span><span>Maple</span><span>Cherry</span><span>Ash</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-visual pv-decking">
+          <div class="wood-icon">O</div>
+        </div>
+        <div class="product-info">
+          <h3>Outdoor &amp; Decking</h3>
+          <p>Weather-resistant hardwoods built to withstand Miami's tropical climate. Long-lasting beauty for decks, docks, and pergolas.</p>
+          <div class="product-species">
+            <span>Ipe Decking</span><span>Cumaru Decking</span><span>Garapa</span><span>Tigerwood Decking</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-visual pv-custom">
+          <div class="wood-icon">C</div>
+        </div>
+        <div class="product-info">
+          <h3>Custom Milling</h3>
+          <p>Need specific dimensions or surfacing? We offer custom milling, planing, and sizing to your exact specifications.</p>
+          <div class="product-species">
+            <span>S4S</span><span>S2S</span><span>Rough Sawn</span><span>Custom Profiles</span><span>Live Edge</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-us" id="why-us">
+  <div class="container">
+    <div class="section-label">Why International Hardwoods</div>
+    <h2 class="section-title">Built on Quality &amp; Trust</h2>
+    <p class="section-sub">We're not just a lumber yard. We're your partner in building something exceptional.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">Q</div>
+        <h3>Hand-Selected Quality</h3>
+        <p>Every board is inspected for grain, color consistency, and structural integrity before it reaches your project.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">$</div>
+        <h3>Competitive Pricing</h3>
+        <p>Direct import relationships mean better prices. We pass the savings on to you without sacrificing quality.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">T</div>
+        <h3>Fast Local Delivery</h3>
+        <p>Same-week delivery across Miami-Dade, Broward, and Palm Beach counties. We keep your project on schedule.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">X</div>
+        <h3>Expert Guidance</h3>
+        <p>Not sure which species fits your needs? Our team helps you pick the right wood for your application and budget.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section class="who-serve" id="who">
+  <div class="container">
+    <div class="section-label">Who We Serve</div>
+    <h2 class="section-title">Trusted Across Industries</h2>
+    <p class="section-sub">From one-man shops to large-scale commercial builders, we supply them all.</p>
+    <div class="serve-grid">
+      <div class="serve-card">
+        <div class="icon">C</div>
+        <h3>General Contractors</h3>
+        <p>Bulk orders, reliable delivery, competitive pricing</p>
+      </div>
+      <div class="serve-card">
+        <div class="icon">I</div>
+        <h3>Interior Designers</h3>
+        <p>Unique species and finishes for luxury spaces</p>
+      </div>
+      <div class="serve-card">
+        <div class="icon">W</div>
+        <h3>Woodworkers</h3>
+        <p>Specialty cuts and rare species in any quantity</p>
+      </div>
+      <div class="serve-card">
+        <div class="icon">H</div>
+        <h3>Homeowners</h3>
+        <p>DIY-friendly service with expert recommendations</p>
+      </div>
+      <div class="serve-card">
+        <div class="icon">M</div>
+        <h3>Marine &amp; Boat Builders</h3>
+        <p>Water-resistant hardwoods for marine applications</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <div class="container">
+    <div class="section-label">What Our Clients Say</div>
+    <h2 class="section-title">Trusted by Professionals</h2>
+    <p class="section-sub">Hear from the contractors, designers, and builders who rely on us.</p>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars">*****</div>
+        <blockquote>"We've been sourcing our Ipe decking from International Hardwoods for years. The quality is always top-notch and their pricing beats everyone in South Florida."</blockquote>
+        <div class="test-author">Carlos M.</div>
+        <div class="test-role">General Contractor, Miami</div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">*****</div>
+        <blockquote>"They helped me pick the perfect walnut slabs for a client's custom dining table. Incredible selection and the team really knows their wood."</blockquote>
+        <div class="test-author">Sarah L.</div>
+        <div class="test-role">Custom Furniture Maker</div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">*****</div>
+        <blockquote>"Fast delivery, fair prices, and they actually answer the phone. Hard to find that kind of service these days. My go-to lumber supplier."</blockquote>
+        <div class="test-author">James R.</div>
+        <div class="test-role">Home Remodeler, Ft. Lauderdale</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h2>Ready to Start Your Next Project?</h2>
+  <p>Tell us what you need and we'll get you a quote within 24 hours.</p>
+  <a href="#contact" class="btn-dark">Request a Free Quote</a>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Let's Talk Wood</h2>
+    <p class="section-sub">Call us, stop by the yard, or fill out the form. We respond fast.</p>
+    <div class="contact-wrapper">
+      <div class="contact-info">
+        <h3>Contact Information</h3>
+        <p>We're here to help you find the right hardwood for your project. Reach out anytime.</p>
+
+        <div class="contact-detail">
+          <div class="icon">P</div>
+          <div>
+            <strong>Phone</strong>
+            <a href="tel:+13055551234">(305) 555-1234</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">E</div>
+          <div>
+            <strong>Email</strong>
+            <a href="mailto:sales@internationalhardwoodsmiami.com">sales@internationalhardwoodsmiami.com</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="icon">L</div>
+          <div>
+            <strong>Location</strong>
+            <span>Miami, FL</span>
+          </div>
+        </div>
+
+        <div class="contact-hours">
+          <h4>Business Hours</h4>
+          <div class="hours-row"><span>Monday - Friday</span><span>7:00 AM - 5:00 PM</span></div>
+          <div class="hours-row"><span>Saturday</span><span>8:00 AM - 2:00 PM</span></div>
+          <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h3>Request a Free Quote</h3>
+        <p>Fill out the form and our team will get back to you within 24 hours.</p>
+        <form id="quoteForm" onsubmit="return handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First Name *</label>
+              <input type="text" id="fname" name="fname" required placeholder="John">
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name *</label>
+              <input type="text" id="lname" name="lname" required placeholder="Smith">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="(305) 555-0000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="interest">What are you interested in?</label>
+            <select id="interest" name="interest">
+              <option value="">Select a category...</option>
+              <option value="exotic">Exotic Hardwoods</option>
+              <option value="domestic">Domestic Hardwoods</option>
+              <option value="decking">Decking &amp; Outdoor</option>
+              <option value="custom">Custom Milling</option>
+              <option value="bulk">Bulk / Wholesale Order</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Project Details</label>
+            <textarea id="message" name="message" placeholder="Tell us about your project: species, dimensions, quantity, timeline..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Quote Request</button>
+          <div class="form-note">No spam, no obligation. We'll respond within 24 hours.</div>
+        </form>
+        <div class="form-success" id="formSuccess">
+          <div class="check">&#10003;</div>
+          <h3>Quote Request Received!</h3>
+          <p>Thank you! Our team will review your request and get back to you within 24 hours. For immediate assistance, call us at <strong>(305) 555-1234</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">International Hardwoods Miami</div>
+  <p>Premium Exotic &amp; Domestic Lumber &bull; Miami, Florida</p>
+  <p style="margin-top: 1rem;">&copy; 2026 International Hardwoods Miami. All rights reserved.</p>
+</footer>
+
+<script>
+  // Mobile nav - close on link click
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.remove('open');
+    });
+  });
+
+  // Form submission handler
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('quoteForm');
+    const success = document.getElementById('formSuccess');
+
+    // Collect form data
+    const data = {
+      name: form.fname.value + ' ' + form.lname.value,
+      email: form.email.value,
+      phone: form.phone.value,
+      interest: form.interest.value,
+      message: form.message.value
+    };
+
+    // Log for now (replace with actual endpoint later)
+    console.log('Quote request:', data);
+
+    // Show success message
+    form.style.display = 'none';
+    success.classList.add('show');
+
+    return false;
+  }
+
+  // Smooth reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.product-card, .why-card, .serve-card, .test-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s, transform 0.6s';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
