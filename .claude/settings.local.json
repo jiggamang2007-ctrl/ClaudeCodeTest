@@ -24,7 +24,8 @@
       "Bash(curl:*)",
       "Bash(mkdir:*)",
       "Bash(gh api:*)",
-      "Bash(start:*)"
+      "Bash(start:*)",
+      "Bash(gh repo:*)"
     ]
   }
 }
